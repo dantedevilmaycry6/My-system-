@@ -1,11 +1,11 @@
 {
-  "name": "SYSTEM - Solo leveling",
+  "name": "SYSTEM - Протокол роста",
   "short_name": "SYSTEM",
   "description": "Прокачай себя в реальной жизни",
   "start_url": "./index.html",
   "display": "standalone",
-  "background_color": "#030308",
-  "theme_color": "#030308",
+  "background_color": "#06050f",
+  "theme_color": "#06050f",
   "orientation": "portrait",
   "icons": [
     {"src": "icon.png", "sizes": "512x512", "type": "image/png"},
