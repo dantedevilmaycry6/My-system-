@@ -1,5 +1,11 @@
 <!DOCTYPE html>
 <html lang="ru">
+   <script>
+window.onerror = function(msg, url, line, col, error){
+  alert('ОШИБКА СТРАНИЦЫ:\n' + msg + '\nСтрока: ' + line + ', столбец: ' + col);
+  return false;
+};
+</script>
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
@@ -1872,12 +1878,6 @@ h1,h2,h3,h4{font-family:var(--font-head);font-weight:700;letter-spacing:.02em;}
 <div id="toastBox"></div>
 <div id="flashOverlay"></div>
 <script>
-/* =========================================================
-   SYSTEM — ПРОТОКОЛ РОСТА
-   ЧАСТЬ 4 / 5 — JAVASCRIPT (ядро системы)
-   Константы, состояние, HUD, статы, квесты, навыки,
-   навигация, Врата, Испытание недели, стрик + заморозка.
-   ========================================================= */
 
 /* ---------- ХЕЛПЕРЫ ---------- */
 const $  = (id) => document.getElementById(id);
