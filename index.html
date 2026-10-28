@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover, maximum-scale=1, user-scalable=no">
 <meta name="apple-mobile-web-app-capable" content="yes">
-<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-status-bar-style" content="black">
 <meta name="apple-mobile-web-app-title" content="SYSTEM">
 <meta name="theme-color" content="#000000">
 <title>SYSTEM</title>
@@ -42,7 +42,7 @@ body{
   min-height:100vh;
   padding-bottom:calc(72px + var(--safe-bottom));
   background:
-    radial-gradient(ellipse at 50% 20%, rgba(138,43,226,.10), transparent 55%),
+    radial-gradient(ellipse at 50% 30%, rgba(138,43,226,.10), transparent 55%),
     var(--c-bg);
 }
 h1,h2,h3,.font-head{font-family:var(--font-head);}
@@ -50,7 +50,6 @@ button{font-family:var(--font-body);cursor:pointer;}
 ::-webkit-scrollbar{width:4px;}
 ::-webkit-scrollbar-thumb{background:var(--c-gold-dim);}
 
-/* сплошная заливка под чёлку/остров, чтобы ничего не просвечивало */
 #statusbarCover{
   position:fixed;top:0;left:0;right:0;height:var(--safe-top);
   background:#000;z-index:500;pointer-events:none;
@@ -166,28 +165,69 @@ button{font-family:var(--font-body);cursor:pointer;}
 .corner::before{top:-1px;left:-1px;border-right:none;border-bottom:none;}
 .corner::after{bottom:-1px;right:-1px;border-left:none;border-top:none;}
 
-/* ---- STATS ---- */
+/* ---- STATS (ПРЕМИУМ ВЕРСИЯ) ---- */
 .points-banner{
+  position:relative;overflow:hidden;
   display:flex;justify-content:space-between;align-items:center;
-  background:linear-gradient(135deg, rgba(138,43,226,.15), rgba(212,175,55,.1));
-  border:1px solid var(--c-gold-dim);border-radius:var(--radius);padding:10px 14px;margin-bottom:14px;font-size:13px;
+  background:linear-gradient(135deg, rgba(212,175,55,.14), rgba(138,43,226,.14));
+  border:1px solid var(--c-gold);border-radius:16px;padding:14px 18px;margin-bottom:16px;
+  box-shadow:0 0 22px rgba(212,175,55,.18), inset 0 0 24px rgba(138,43,226,.08);
 }
-.points-banner b{color:var(--c-gold-light);font-size:18px;}
-.stat-card{display:flex;align-items:center;gap:10px;}
-.stat-card svg{color:var(--c-gold);flex-shrink:0;}
-.stat-name{font-size:11px;color:var(--c-text-dim);text-transform:uppercase;letter-spacing:1px;}
-.stat-value{font-family:var(--font-head);font-size:19px;color:var(--c-gold-light);}
-.stat-plus{
-  margin-left:auto;width:26px;height:26px;border-radius:50%;border:1px solid var(--c-gold);background:none;
-  color:var(--c-gold);font-size:16px;line-height:1;display:flex;align-items:center;justify-content:center;
+.points-banner .label{font-size:11px;letter-spacing:1.5px;text-transform:uppercase;color:var(--c-text-dim);}
+.points-banner b{font-family:var(--font-head);color:var(--c-gold-light);font-size:24px;text-shadow:0 0 10px rgba(212,175,55,.6);}
+
+.stat-card{
+  position:relative;
+  display:flex;align-items:center;gap:14px;
+  background:linear-gradient(135deg, rgba(255,255,255,.035), rgba(0,0,0,.25));
+  border:1px solid var(--c-border);
+  border-radius:16px;
+  padding:14px 16px;
+  margin-bottom:12px;
+  overflow:hidden;
 }
-.stat-plus:disabled{opacity:.25;}
+.stat-card::before{
+  content:'';
+  position:absolute;top:-50%;left:-15%;
+  width:150px;height:150px;border-radius:50%;
+  background:radial-gradient(circle, var(--accent-glow), transparent 70%);
+  pointer-events:none;
+}
+.stat-icon-badge{
+  position:relative;z-index:1;
+  width:50px;height:50px;border-radius:14px;flex-shrink:0;
+  display:flex;align-items:center;justify-content:center;
+  background:linear-gradient(145deg, rgba(255,255,255,.06), rgba(0,0,0,.35));
+  border:1px solid var(--accent);
+  box-shadow:0 0 14px var(--accent-glow), inset 0 0 8px rgba(0,0,0,.4);
+}
+.stat-icon-badge svg{color:var(--accent);filter:drop-shadow(0 0 4px var(--accent));}
+.stat-body{flex:1;min-width:0;position:relative;z-index:1;}
+.stat-head{display:flex;align-items:center;justify-content:space-between;margin-bottom:5px;}
+.stat-name{font-size:11px;letter-spacing:1.5px;color:var(--c-text-dim);text-transform:uppercase;font-weight:600;}
+.stat-rank-badge{
+  font-family:var(--font-head);font-size:9.5px;font-weight:700;letter-spacing:1px;
+  color:var(--accent);border:1px solid var(--accent);border-radius:5px;padding:2px 7px;
+}
+.stat-value-row{display:flex;align-items:center;justify-content:space-between;}
+.stat-value{font-family:var(--font-head);font-size:26px;color:var(--c-text);font-weight:700;}
+.stat-plus-v2{
+  width:30px;height:30px;border-radius:50%;flex-shrink:0;
+  border:1px solid var(--accent);background:rgba(255,255,255,.02);color:var(--accent);
+  font-size:17px;line-height:1;display:flex;align-items:center;justify-content:center;
+  transition:transform .15s, box-shadow .15s;
+}
+.stat-plus-v2:active{transform:scale(.88);}
+.stat-plus-v2:not(:disabled):active{box-shadow:0 0 10px var(--accent);}
+.stat-plus-v2:disabled{opacity:.2;}
+.stat-progress-track{height:5px;border-radius:4px;background:var(--c-panel-light);margin-top:9px;overflow:hidden;}
+.stat-progress-fill{height:100%;border-radius:4px;background:linear-gradient(90deg, var(--accent), var(--accent-light));transition:width .4s ease;}
 
 .icon-btn-row{display:flex;gap:10px;margin-top:4px;}
 .icon-btn{
-  flex:1;display:flex;align-items:center;justify-content:center;gap:6px;padding:10px;
-  background:var(--c-panel-light);border:1px solid var(--c-border);border-radius:var(--radius-sm);
-  color:var(--c-text-dim);font-size:12px;
+  flex:1;display:flex;align-items:center;justify-content:center;gap:6px;padding:12px;
+  background:var(--c-panel-light);border:1px solid var(--c-border);border-radius:14px;
+  color:var(--c-text-dim);font-size:12px;font-weight:600;letter-spacing:.3px;
 }
 .icon-btn svg{color:var(--c-gold);}
 .icon-btn.danger svg{color:var(--c-red);}
@@ -240,7 +280,7 @@ button{font-family:var(--font-body);cursor:pointer;}
 }
 .shop-buy:disabled{opacity:.3;}
 
-/* ---- CALENDAR (нормальный, месяц) ---- */
+/* ---- CALENDAR ---- */
 .streak-box{
   display:flex;align-items:center;gap:10px;background:rgba(255,155,107,.08);border:1px solid var(--c-orange);
   border-radius:var(--radius);padding:12px;margin-bottom:14px;font-size:13px;
@@ -341,7 +381,6 @@ button{font-family:var(--font-body);cursor:pointer;}
 
 <div id="app">
 
-  <!-- HUD -->
   <div class="hud">
     <div class="hud-top">
       <div class="avatar-wrap">
@@ -365,10 +404,9 @@ button{font-family:var(--font-body);cursor:pointer;}
     <div class="exp-bar"><div class="exp-fill" id="hudExpFill" style="width:0%"></div></div>
   </div>
 
-  <!-- PROFILE TAB -->
   <div class="tab-content active" id="tab-profile">
     <div class="points-banner">
-      <span>Свободные очки</span>
+      <span class="label">Свободные очки</span>
       <b id="pointsVal">0</b>
     </div>
     <div id="statsGrid"></div>
@@ -378,7 +416,6 @@ button{font-family:var(--font-body);cursor:pointer;}
     </div>
   </div>
 
-  <!-- QUESTS TAB -->
   <div class="tab-content" id="tab-quests">
     <div class="section-title">Активные Квесты</div>
     <div id="questsList"></div>
@@ -386,25 +423,21 @@ button{font-family:var(--font-body);cursor:pointer;}
     <button class="lib-btn" onclick="openLibrary()"><span id="icBook"></span> Библиотека квестов</button>
   </div>
 
-  <!-- ACHIEVEMENTS TAB -->
   <div class="tab-content" id="tab-achievements">
     <div class="section-title">Достижения</div>
     <div class="ach-grid" id="achGrid"></div>
   </div>
 
-  <!-- SKILLS TAB -->
   <div class="tab-content" id="tab-skills">
     <div class="section-title">Навыки</div>
     <div id="skillsList"></div>
   </div>
 
-  <!-- SHOP TAB -->
   <div class="tab-content" id="tab-shop">
     <div class="section-title">Магазин Наград</div>
     <div class="shop-grid" id="shopGrid"></div>
   </div>
 
-  <!-- CALENDAR TAB -->
   <div class="tab-content" id="tab-calendar">
     <div class="section-title">Календарь Активности</div>
     <div class="streak-box"><span id="icFlame2"></span> Серия: <b id="streakVal">0</b> дней</div>
@@ -424,7 +457,6 @@ button{font-family:var(--font-body);cursor:pointer;}
     </div>
   </div>
 
-  <!-- NAV -->
   <div class="tabs">
     <button class="nav-btn active" data-tab="profile" onclick="switchTab('profile')"><span id="navProfile"></span>ПРОФИЛЬ</button>
     <button class="nav-btn" data-tab="quests" onclick="switchTab('quests')"><span id="navQuests"></span>КВЕСТЫ</button>
@@ -435,7 +467,6 @@ button{font-family:var(--font-body);cursor:pointer;}
   </div>
 </div>
 
-<!-- ADD QUEST MODAL -->
 <div class="overlay" id="addQuestOverlay">
   <div class="modal corner">
     <div class="modal-title">◆ Новый квест ◆</div>
@@ -462,7 +493,6 @@ button{font-family:var(--font-body);cursor:pointer;}
   </div>
 </div>
 
-<!-- LIBRARY MODAL -->
 <div class="overlay" id="libraryOverlay">
   <div class="modal corner">
     <div class="modal-title">◆ Библиотека квестов ◆</div>
@@ -473,7 +503,6 @@ button{font-family:var(--font-body);cursor:pointer;}
   </div>
 </div>
 
-<!-- SETTINGS MODAL -->
 <div class="overlay" id="settingsOverlay">
   <div class="modal corner">
     <div class="modal-title">◆ Настройки ◆</div>
@@ -497,7 +526,6 @@ button{font-family:var(--font-body);cursor:pointer;}
 </div>
 
 <script>
-/* ==================== SVG ICONS ==================== */
 const SVG_ICONS = {
   str:'<path d="M12 3l9 18H3L12 3z"/>',
   agi:'<path d="M13 2L4 14h6l-1 8 9-12h-6l1-8z"/>',
@@ -521,8 +549,21 @@ const SVG_ICONS = {
 function ic(name,size=20){
   return `<svg width="${size}" height="${size}" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round">${SVG_ICONS[name]||''}</svg>`;
 }
+function hexToRgba(hex, alpha){
+  hex = hex.replace('#','');
+  const r=parseInt(hex.substring(0,2),16), g=parseInt(hex.substring(2,4),16), b=parseInt(hex.substring(4,6),16);
+  return `rgba(${r},${g},${b},${alpha})`;
+}
+function statRank(v){
+  const tiers = [
+    {min:0,label:'F'},{min:10,label:'E'},{min:20,label:'D'},
+    {min:30,label:'C'},{min:40,label:'B'},{min:50,label:'A'},{min:70,label:'S'}
+  ];
+  let r=tiers[0];
+  tiers.forEach(t=>{ if(v>=t.min) r=t; });
+  return r.label;
+}
 
-/* ==================== ДАННЫЕ ИГРЫ ==================== */
 const RANKS = [
   {name:'E-RANK',min:1,color:'#8a7aae'},
   {name:'D-RANK',min:10,color:'#4bff6b'},
@@ -532,8 +573,11 @@ const RANKS = [
   {name:'S-RANK',min:50,color:'#d4af37'}
 ];
 const STAT_INFO = {
-  str:{label:'Сила',icon:'str'}, agi:{label:'Ловкость',icon:'agi'},
-  int:{label:'Интеллект',icon:'int'}, vit:{label:'Выносливость',icon:'vit'}, per:{label:'Восприятие',icon:'per'}
+  str:{label:'Сила',icon:'str',color:'#ff6b4b',light:'#ffb199'},
+  agi:{label:'Ловкость',icon:'agi',color:'#4bff9b',light:'#b3ffe0'},
+  int:{label:'Интеллект',icon:'int',color:'#4a9eff',light:'#a8d4ff'},
+  vit:{label:'Выносливость',icon:'vit',color:'#ff4b6b',light:'#ffb3c2'},
+  per:{label:'Восприятие',icon:'per',color:'#d4af37',light:'#f3dd8a'}
 };
 const QUEST_TYPES = {
   daily:{label:'Ежедневный',color:'var(--c-gold)'},
@@ -613,7 +657,6 @@ const SKILLS_LIST = [
   {name:'Пробуждение Монарха',icon:'🔥',levelReq:25,desc:'Полный контроль над собой'}
 ];
 
-/* ==================== СОСТОЯНИЕ ==================== */
 function defaultData(){
   return {
     name:'Игрок', avatar:'🗡️', level:1, exp:0, gems:0, points:0,
@@ -670,7 +713,6 @@ function levelUpEffect(){
   showToast('LEVEL UP', 'Уровень '+gameData.level+' достигнут');
 }
 
-/* ==================== КВЕСТЫ ==================== */
 let addQuestType = 'daily';
 function openAddQuest(){
   document.getElementById('newQuestName').value='';
@@ -717,7 +759,6 @@ function deleteQuest(id){
   saveData(); render();
 }
 
-/* ==================== БИБЛИОТЕКА ==================== */
 function openLibrary(){
   let html='';
   for(const key in QUEST_LIBRARY){
@@ -739,7 +780,6 @@ function addFromLibrary(catKey, idx){
   showToast('Квест добавлен', it.name);
 }
 
-/* ==================== СТАТЫ / ТИТУЛЫ ==================== */
 function allocatePoint(stat){
   if(gameData.points<=0) return;
   gameData.stats[stat]++; gameData.points--;
@@ -754,7 +794,6 @@ function updateTitleUnlocks(){
   });
 }
 
-/* ==================== ДОСТИЖЕНИЯ ==================== */
 function checkAchievements(){
   ACHIEVEMENTS_LIST.forEach(a=>{
     if(a.cond(gameData) && !gameData.unlockedAchievements.includes(a.id)){
@@ -766,7 +805,6 @@ function checkAchievements(){
   saveData();
 }
 
-/* ==================== МАГАЗИН ==================== */
 function buyItem(id){
   const item = SHOP_ITEMS.find(i=>i.id===id);
   if(!item) return;
@@ -776,7 +814,6 @@ function buyItem(id){
   showToast('Покупка совершена', item.name);
 }
 
-/* ==================== НАСТРОЙКИ ==================== */
 function openSettings(){
   document.getElementById('settingsName').value = gameData.name;
   document.getElementById('settingsAvatar').value = gameData.avatar;
@@ -799,7 +836,6 @@ function resetProgress(){
   }
 }
 
-/* ==================== РЕНДЕР ==================== */
 function switchTab(tab){
   document.querySelectorAll('.tab-content').forEach(el=>el.classList.remove('active'));
   document.getElementById('tab-'+tab).classList.add('active');
@@ -838,10 +874,23 @@ function render(){
   document.getElementById('pointsVal').textContent = gameData.points;
   document.getElementById('statsGrid').innerHTML = Object.keys(STAT_INFO).map(k=>{
     const info = STAT_INFO[k];
-    return `<div class="card stat-card">
-      ${ic(info.icon,20)}
-      <div><div class="stat-name">${info.label}</div><div class="stat-value">${gameData.stats[k]}</div></div>
-      <button class="stat-plus" ${gameData.points<=0?'disabled':''} onclick="allocatePoint('${k}')">+</button>
+    const val = gameData.stats[k];
+    const rank = statRank(val);
+    const progress = (val%10)*10;
+    const glow = hexToRgba(info.color,.45);
+    return `<div class="stat-card" style="--accent:${info.color};--accent-light:${info.light};--accent-glow:${glow}">
+      <div class="stat-icon-badge">${ic(info.icon,24)}</div>
+      <div class="stat-body">
+        <div class="stat-head">
+          <span class="stat-name">${info.label}</span>
+          <span class="stat-rank-badge">${rank}-RANK</span>
+        </div>
+        <div class="stat-value-row">
+          <span class="stat-value">${val}</span>
+          <button class="stat-plus-v2" ${gameData.points<=0?'disabled':''} onclick="allocatePoint('${k}')">+</button>
+        </div>
+        <div class="stat-progress-track"><div class="stat-progress-fill" style="width:${progress}%"></div></div>
+      </div>
     </div>`;
   }).join('');
 
@@ -888,7 +937,6 @@ function render(){
   document.getElementById('streakVal').textContent = gameData.streak;
 }
 
-/* ==================== КАЛЕНДАРЬ (месяц) ==================== */
 let calendarDate = new Date();
 function changeMonth(delta){
   calendarDate.setMonth(calendarDate.getMonth()+delta);
@@ -916,7 +964,6 @@ function renderCalendar(){
   document.getElementById('calDays').innerHTML = html;
 }
 
-/* ==================== FX ==================== */
 function flashOverlay(){
   const el = document.getElementById('flashOverlay');
   el.classList.remove('flash'); void el.offsetWidth; el.classList.add('flash');
@@ -955,7 +1002,6 @@ function showToast(title, msg){
   setTimeout(()=>el.remove(), 3100);
 }
 
-/* ==================== ЧАСТИЦЫ ФОНА ==================== */
 const canvas = document.getElementById('particles');
 const ctx = canvas.getContext('2d');
 let particles = [];
@@ -984,7 +1030,6 @@ function animateParticles(){
 }
 animateParticles();
 
-/* ==================== ИНИЦИАЛИЗАЦИЯ ==================== */
 function init(){
   render();
   setTimeout(()=>{
