@@ -2,1438 +2,905 @@
 <html lang="ru">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-<title>SYSTEM - Monarch Path</title>
-
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <meta name="apple-mobile-web-app-title" content="SYSTEM">
-<meta name="mobile-web-app-capable" content="yes">
 <meta name="theme-color" content="#000000">
-
 <link rel="manifest" href="manifest.json">
-
+<title>SYSTEM</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700;900&family=Rajdhani:wght@400;500;600;700&display=swap" rel="stylesheet">
-
 <style>
-  * {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
-    font-family: 'Rajdhani', sans-serif;
-    -webkit-tap-highlight-color: transparent;
-  }
-
-  html, body {
-    overscroll-behavior: none;
-  }
-
-  body {
-    background: #000000;
-    color: #d4d4e8;
-    overflow-x: hidden;
-    min-height: 100vh;
-    background-image: 
-      radial-gradient(circle at 15% 10%, rgba(138, 43, 226, 0.12) 0%, transparent 45%),
-      radial-gradient(circle at 85% 90%, rgba(212, 175, 55, 0.08) 0%, transparent 45%),
-      radial-gradient(circle at 50% 50%, rgba(75, 0, 130, 0.06) 0%, transparent 60%);
-    padding-top: env(safe-area-inset-top);
-    padding-bottom: env(safe-area-inset-bottom);
-  }
-
-  .particles {
-    position: fixed;
-    top: 0; left: 0;
-    width: 100%; height: 100%;
-    z-index: 0;
-    pointer-events: none;
-  }
-
-  .particle {
-    position: absolute;
-    width: 2px; height: 2px;
-    background: #d4af37;
-    border-radius: 50%;
-    animation: float 18s infinite linear;
-    opacity: 0.5;
-    box-shadow: 0 0 4px #d4af37;
-  }
-
-  @keyframes float {
-    0% { transform: translateY(100vh) translateX(0); opacity: 0; }
-    10% { opacity: 0.7; }
-    90% { opacity: 0.7; }
-    100% { transform: translateY(-10vh) translateX(80px); opacity: 0; }
-  }
-
-  .container {
-    position: relative;
-    z-index: 1;
-    max-width: 1200px;
-    margin: 0 auto;
-    padding: 20px;
-  }
-
-  .system-header {
-    text-align: center;
-    padding: 40px 0 20px;
-  }
-
-  .system-title {
-    font-family: 'Cinzel', serif;
-    font-size: 2.6em;
-    font-weight: 900;
-    background: linear-gradient(135deg, #d4af37 0%, #fff6d9 50%, #d4af37 100%);
-    background-size: 200% 200%;
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-    animation: shine 4s linear infinite;
-    text-shadow: 0 0 40px rgba(212, 175, 55, 0.4);
-    letter-spacing: 4px;
-  }
-
-  @keyframes shine {
-    0% { background-position: 0% 50%; }
-    50% { background-position: 100% 50%; }
-    100% { background-position: 0% 50%; }
-  }
-
-  .subtitle {
-    color: #7a6a9e;
-    font-size: 0.85em;
-    margin-top: 12px;
-    letter-spacing: 3px;
-    text-transform: uppercase;
-    font-weight: 600;
-  }
-
-  .divider {
-    width: 80px;
-    height: 2px;
-    background: linear-gradient(90deg, transparent, #d4af37, transparent);
-    margin: 20px auto;
-  }
-
-  .player-card {
-    background: linear-gradient(145deg, rgba(15, 10, 25, 0.95), rgba(25, 15, 40, 0.95));
-    border: 1px solid rgba(212, 175, 55, 0.3);
-    border-radius: 4px;
-    padding: 30px;
-    margin: 20px 0;
-    box-shadow: 
-      0 0 50px rgba(138, 43, 226, 0.15),
-      inset 0 0 30px rgba(0,0,0,0.5);
-    position: relative;
-  }
-
-  .player-card::before {
-    content: '';
-    position: absolute;
-    top: 0; left: 0; right: 0;
-    height: 1px;
-    background: linear-gradient(90deg, transparent, #d4af37, transparent);
-  }
-
-  .player-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-bottom: 25px;
-    flex-wrap: wrap;
-    gap: 15px;
-  }
-
-  .player-name-section {
-    display: flex;
-    align-items: center;
-    gap: 18px;
-  }
-
-  .player-avatar {
-    width: 65px; height: 65px;
-    border-radius: 4px;
-    background: linear-gradient(145deg, #1a1030, #2d1a4e);
-    border: 1px solid #d4af37;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 1.8em;
-    box-shadow: 0 0 25px rgba(212, 175, 55, 0.25);
-    cursor: pointer;
-  }
-
-  .player-avatar:active { transform: scale(0.95); }
-
-  .player-info h2 {
-    font-family: 'Cinzel', serif;
-    font-size: 1.3em;
-    color: #fff;
-    margin-bottom: 6px;
-    letter-spacing: 1px;
-  }
-
-  .player-rank {
-    display: inline-block;
-    padding: 4px 16px;
-    background: transparent;
-    border: 1px solid;
-    border-radius: 2px;
-    font-weight: 700;
-    font-size: 0.75em;
-    letter-spacing: 2px;
-  }
-
-  .level-display { text-align: right; }
-
-  .level-number {
-    font-family: 'Cinzel', serif;
-    font-size: 2.2em;
-    font-weight: 900;
-    color: #d4af37;
-    text-shadow: 0 0 25px rgba(212, 175, 55, 0.6);
-  }
-
-  .level-label {
-    color: #7a6a9e;
-    font-size: 0.75em;
-    letter-spacing: 3px;
-    font-weight: 600;
-  }
-
-  .exp-container { margin: 18px 0; }
-
-  .exp-labels {
-    display: flex;
-    justify-content: space-between;
-    margin-bottom: 6px;
-    font-size: 0.8em;
-    color: #8a7aae;
-    letter-spacing: 1px;
-  }
-
-  .exp-bar-bg {
-    width: 100%;
-    height: 14px;
-    background: rgba(0,0,0,0.6);
-    border-radius: 2px;
-    overflow: hidden;
-    border: 1px solid rgba(212, 175, 55, 0.2);
-  }
-
-  .exp-bar-fill {
-    height: 100%;
-    background: linear-gradient(90deg, #6b2fbf, #d4af37);
-    transition: width 0.5s ease;
-    box-shadow: 0 0 15px rgba(212, 175, 55, 0.6);
-    position: relative;
-    overflow: hidden;
-  }
-
-  .exp-bar-fill::after {
-    content: '';
-    position: absolute;
-    top: 0; left: 0; right: 0; bottom: 0;
-    background: linear-gradient(90deg, transparent, rgba(255,255,255,0.4), transparent);
-    animation: shimmer 2.5s infinite;
-  }
-
-  @keyframes shimmer {
-    0% { transform: translateX(-100%); }
-    100% { transform: translateX(100%); }
-  }
-
-  .stats-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(130px, 1fr));
-    gap: 12px;
-    margin-top: 22px;
-  }
-
-  .stat-box {
-    background: rgba(0,0,0,0.4);
-    border: 1px solid rgba(138, 43, 226, 0.25);
-    border-radius: 4px;
-    padding: 14px;
-    text-align: center;
-    transition: all 0.3s;
-  }
-
-  .stat-box:active {
-    border-color: #d4af37;
-  }
-
-  .stat-icon { font-size: 1.6em; margin-bottom: 6px; }
-
-  .stat-name {
-    font-size: 0.68em;
-    color: #8a7aae;
-    text-transform: uppercase;
-    letter-spacing: 1.5px;
-    font-weight: 600;
-  }
-
-  .stat-value {
-    font-family: 'Cinzel', serif;
-    font-size: 1.6em;
-    font-weight: 700;
-    color: #fff;
-    margin: 6px 0;
-  }
-
-  .stat-points-btn {
-    background: linear-gradient(145deg, #d4af37, #a8841f);
-    color: #000;
-    border: none;
-    border-radius: 3px;
-    width: 28px; height: 28px;
-    cursor: pointer;
-    font-weight: 900;
-    font-size: 1.1em;
-  }
-
-  .stat-points-btn:active { transform: scale(0.9); }
-
-  .free-points {
-    text-align: center;
-    margin-top: 12px;
-    color: #d4af37;
-    font-weight: 700;
-    letter-spacing: 1px;
-    font-size: 0.9em;
-  }
-
-  .nav-tabs {
-    display: flex;
-    gap: 8px;
-    margin: 25px 0;
-    flex-wrap: wrap;
-  }
-
-  .nav-tab {
-    padding: 13px 20px;
-    background: rgba(15, 10, 25, 0.8);
-    border: 1px solid rgba(138, 43, 226, 0.25);
-    border-radius: 4px;
-    color: #8a7aae;
-    cursor: pointer;
-    font-weight: 600;
-    flex: 1;
-    min-width: 100px;
-    text-align: center;
-    user-select: none;
-    font-size: 0.9em;
-    letter-spacing: 0.5px;
-  }
-
-  .nav-tab.active {
-    background: linear-gradient(145deg, #2d1a4e, #1a1030);
-    border-color: #d4af37;
-    color: #d4af37;
-    box-shadow: 0 0 20px rgba(212, 175, 55, 0.2);
-  }
-
-  .tab-content { display: none; animation: fadeIn 0.4s; }
-  .tab-content.active { display: block; }
-
-  @keyframes fadeIn {
-    from { opacity: 0; transform: translateY(8px); }
-    to { opacity: 1; transform: translateY(0); }
-  }
-
-  .section-title {
-    font-family: 'Cinzel', serif;
-    font-size: 1.3em;
-    color: #d4af37;
-    margin-bottom: 20px;
-    letter-spacing: 1px;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    flex-wrap: wrap;
-    gap: 10px;
-  }
-
-  /* Библиотека квестов */
-  .library-btn {
-    background: linear-gradient(145deg, #2d1a4e, #1a1030);
-    border: 1px solid #d4af37;
-    color: #d4af37;
-    padding: 10px 18px;
-    border-radius: 4px;
-    font-size: 0.75em;
-    font-weight: 700;
-    cursor: pointer;
-    letter-spacing: 1px;
-  }
-
-  .library-category {
-    margin-bottom: 25px;
-  }
-
-  .library-category-title {
-    font-size: 1em;
-    font-weight: 700;
-    margin-bottom: 12px;
-    padding-bottom: 8px;
-    border-bottom: 1px solid rgba(138, 43, 226, 0.3);
-    display: flex;
-    align-items: center;
-    gap: 8px;
-  }
-
-  .library-quest-item {
-    background: rgba(0,0,0,0.4);
-    border: 1px solid rgba(138, 43, 226, 0.2);
-    border-radius: 4px;
-    padding: 14px;
-    margin-bottom: 10px;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    gap: 10px;
-    flex-wrap: wrap;
-  }
-
-  .library-quest-info {
-    flex: 1;
-    min-width: 150px;
-  }
-
-  .library-quest-title {
-    font-weight: 600;
-    color: #fff;
-    font-size: 0.95em;
-    margin-bottom: 4px;
-  }
-
-  .library-quest-meta {
-    font-size: 0.78em;
-    color: #8a7aae;
-  }
-
-  .library-add-btn {
-    background: linear-gradient(145deg, #d4af37, #a8841f);
-    color: #000;
-    border: none;
-    padding: 8px 16px;
-    border-radius: 3px;
-    font-weight: 700;
-    cursor: pointer;
-    font-size: 0.8em;
-    white-space: nowrap;
-  }
-
-  .library-add-btn:active { transform: scale(0.95); }
-
-  .quest-card {
-    background: linear-gradient(145deg, rgba(15, 10, 25, 0.8), rgba(20, 12, 35, 0.8));
-    border: 1px solid rgba(138, 43, 226, 0.25);
-    border-left: 3px solid #8a2be2;
-    border-radius: 4px;
-    padding: 20px;
-    margin-bottom: 14px;
-  }
-
-  .quest-card.completed { opacity: 0.5; border-left-color: #4bff6b; }
-  .quest-card.daily { border-left-color: #d4af37; }
-  .quest-card.mind { border-left-color: #4a9eff; }
-
-  .quest-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: flex-start;
-    margin-bottom: 10px;
-    gap: 10px;
-  }
-
-  .quest-title { font-size: 1.05em; font-weight: 700; color: #fff; }
-
-  .quest-type-badge {
-    padding: 3px 12px;
-    border-radius: 2px;
-    font-size: 0.65em;
-    font-weight: 700;
-    text-transform: uppercase;
-    white-space: nowrap;
-    letter-spacing: 1px;
-  }
-
-  .badge-daily { background: rgba(212,175,55,0.2); color: #d4af37; border: 1px solid #d4af37; }
-  .badge-main { background: rgba(255,107,107,0.2); color: #ff6b6b; border: 1px solid #ff6b6b; }
-  .badge-side { background: rgba(107,155,255,0.2); color: #6b9bff; border: 1px solid #6b9bff; }
-  .badge-mind { background: rgba(74,158,255,0.2); color: #4a9eff; border: 1px solid #4a9eff; }
-
-  .quest-description { color: #8a7aae; font-size: 0.88em; margin-bottom: 15px; }
-
-  .quest-rewards {
-    display: flex;
-    gap: 15px;
-    margin-bottom: 15px;
-    flex-wrap: wrap;
-  }
-
-  .reward-item {
-    display: flex;
-    align-items: center;
-    gap: 5px;
-    font-size: 0.82em;
-    color: #d4af37;
-    font-weight: 600;
-  }
-
-  .quest-actions { display: flex; gap: 10px; flex-wrap: wrap; }
-
-  .btn {
-    padding: 12px 20px;
-    border: none;
-    border-radius: 4px;
-    cursor: pointer;
-    font-weight: 700;
-    font-size: 0.85em;
-    -webkit-appearance: none;
-    letter-spacing: 0.5px;
-  }
-
-  .btn:active { transform: scale(0.96); }
-
-  .btn-primary { background: linear-gradient(145deg, #8a2be2, #5a1b9e); color: white; }
-  .btn-success { background: linear-gradient(145deg, #d4af37, #a8841f); color: #000; }
-  .btn-danger { background: linear-gradient(145deg, #ff4757, #c0392b); color: white; }
-  .btn-secondary { background: rgba(255,255,255,0.08); color: #8a7aae; border: 1px solid rgba(255,255,255,0.15); }
-  .btn:disabled { opacity: 0.4; cursor: not-allowed; }
-
-  .add-quest-form {
-    background: rgba(10, 6, 18, 0.7);
-    border: 1px dashed rgba(212, 175, 55, 0.3);
-    border-radius: 4px;
-    padding: 20px;
-    margin-bottom: 20px;
-  }
-
-  .form-row {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 15px;
-    margin-bottom: 15px;
-  }
-
-  .form-group { display: flex; flex-direction: column; gap: 6px; }
-  .form-group.full { grid-column: 1 / -1; }
-  .form-group label { font-size: 0.8em; color: #8a7aae; letter-spacing: 0.5px; }
-
-  input, select, textarea {
-    background: rgba(0,0,0,0.5);
-    border: 1px solid rgba(138, 43, 226, 0.3);
-    border-radius: 4px;
-    padding: 12px;
-    color: #fff;
-    font-size: 16px;
-    -webkit-appearance: none;
-    font-family: 'Rajdhani', sans-serif;
-  }
-
-  input:focus, select:focus, textarea:focus {
-    outline: none;
-    border-color: #d4af37;
-    box-shadow: 0 0 10px rgba(212, 175, 55, 0.2);
-  }
-
-  textarea { resize: vertical; min-height: 60px; }
-
-  .achievements-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(145px, 1fr));
-    gap: 12px;
-  }
-
-  .achievement-card {
-    background: rgba(10, 6, 18, 0.7);
-    border: 1px solid rgba(138, 43, 226, 0.2);
-    border-radius: 4px;
-    padding: 18px;
-    text-align: center;
-  }
-
-  .achievement-card.unlocked { border-color: #d4af37; box-shadow: 0 0 20px rgba(212, 175, 55, 0.2); }
-  .achievement-card.locked { opacity: 0.35; filter: grayscale(1); }
-
-  .achievement-icon { font-size: 2.6em; margin-bottom: 8px; }
-  .achievement-name { font-weight: 700; color: #fff; margin-bottom: 4px; font-size: 0.85em; }
-  .achievement-desc { font-size: 0.7em; color: #8a7aae; }
-
-  .skills-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
-    gap: 14px;
-  }
-
-  .skill-card {
-    background: rgba(10, 6, 18, 0.7);
-    border: 1px solid rgba(138, 43, 226, 0.25);
-    border-radius: 4px;
-    padding: 20px;
-  }
-
-  .skill-header { display: flex; align-items: center; gap: 10px; margin-bottom: 10px; }
-  .skill-icon { font-size: 1.8em; }
-
-  .skill-level { display: flex; gap: 3px; margin-top: 10px; flex-wrap: wrap; }
-
-  .skill-level-dot {
-    width: 18px; height: 7px;
-    background: rgba(255,255,255,0.08);
-    border-radius: 2px;
-  }
-
-  .skill-level-dot.filled { background: linear-gradient(90deg, #8a2be2, #d4af37); }
-
-  .log-container {
-    background: rgba(0,0,0,0.4);
-    border-radius: 4px;
-    padding: 15px;
-    max-height: 400px;
-    overflow-y: auto;
-  }
-
-  .log-entry {
-    padding: 10px;
-    border-bottom: 1px solid rgba(138, 43, 226, 0.1);
-    display: flex;
-    justify-content: space-between;
-    font-size: 0.82em;
-    gap: 10px;
-    flex-wrap: wrap;
-  }
-
-  .log-time { color: #8a7aae; font-size: 0.8em; white-space: nowrap; }
-
-  .level-up-modal {
-    position: fixed;
-    top: 0; left: 0;
-    width: 100%; height: 100%;
-    background: rgba(0,0,0,0.9);
-    display: none;
-    align-items: center;
-    justify-content: center;
-    z-index: 1000;
-  }
-
-  .level-up-modal.show { display: flex; }
-
-  .level-up-content { text-align: center; animation: levelUpAppear 0.6s ease; padding: 20px; }
-
-  @keyframes levelUpAppear {
-    0% { transform: scale(0.5); opacity: 0; }
-    60% { transform: scale(1.1); }
-    100% { transform: scale(1); opacity: 1; }
-  }
-
-  .level-up-text {
-    font-family: 'Cinzel', serif;
-    font-size: 2.6em;
-    font-weight: 900;
-    background: linear-gradient(135deg, #d4af37, #fff6d9, #d4af37);
-    background-size: 200% 200%;
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-    animation: shine 1.5s linear infinite;
-    margin-bottom: 20px;
-    letter-spacing: 3px;
-  }
-
-  .level-up-subtext { font-size: 1.2em; color: #fff; margin-bottom: 30px; }
-
-  .quest-notification {
-    position: fixed;
-    top: calc(20px + env(safe-area-inset-top));
-    right: 20px; left: 20px;
-    background: linear-gradient(145deg, rgba(15, 10, 25, 0.97), rgba(25, 15, 40, 0.97));
-    border: 1px solid #d4af37;
-    border-radius: 4px;
-    padding: 15px 20px;
-    box-shadow: 0 0 30px rgba(212, 175, 55, 0.3);
-    transform: translateY(-150px);
-    transition: transform 0.4s ease;
-    z-index: 999;
-    text-align: center;
-    font-weight: 600;
-  }
-
-  .quest-notification.show { transform: translateY(0); }
-
-  .empty-state { text-align: center; padding: 40px; color: #5a4a7e; }
-  .empty-state-icon { font-size: 3em; margin-bottom: 15px; opacity: 0.4; }
-
-  @media (max-width: 600px) {
-    .system-title { font-size: 1.8em; }
-    .form-row { grid-template-columns: 1fr; }
-    .player-header { flex-direction: column; align-items: flex-start; }
-    .level-display { text-align: left; }
-    .quest-notification { right: 10px; left: 10px; }
-  }
-
-  ::-webkit-scrollbar { width: 6px; }
-  ::-webkit-scrollbar-track { background: rgba(0,0,0,0.3); }
-  ::-webkit-scrollbar-thumb { background: #d4af37; border-radius: 3px; }
-
-  .modal-overlay {
-    position: fixed;
-    top: 0; left: 0; right: 0; bottom: 0;
-    background: rgba(0,0,0,0.8);
-    display: none;
-    align-items: center;
-    justify-content: center;
-    z-index: 1000;
-    padding: 20px;
-  }
-  .modal-overlay.show { display: flex; }
-  .modal-box {
-    background: linear-gradient(145deg, #0d0815, #150a22);
-    border: 1px solid #d4af37;
-    border-radius: 4px;
-    padding: 30px;
-    max-width: 450px;
-    width: 100%;
-    max-height: 85vh;
-    overflow-y: auto;
-  }
-  .modal-box h3 { 
-    font-family: 'Cinzel', serif;
-    margin-bottom: 20px; 
-    color: #d4af37; 
-    letter-spacing: 1px;
-  }
+*{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent;}
+html,body{height:100%;}
+body{
+  font-family:'Rajdhani',sans-serif;
+  background:
+    radial-gradient(circle at 15% 0%, rgba(138,43,226,.15), transparent 40%),
+    radial-gradient(circle at 85% 5%, rgba(212,175,55,.10), transparent 35%),
+    radial-gradient(circle at 50% 100%, rgba(138,43,226,.12), transparent 45%),
+    linear-gradient(180deg,#000 0%,#0b0714 50%,#000 100%);
+  background-attachment:fixed;
+  color:#d8d4e8;
+  min-height:100vh;
+  overflow-x:hidden;
+  padding-bottom:40px;
+}
+body::before{
+  content:'';position:fixed;inset:0;
+  background-image:repeating-linear-gradient(45deg, rgba(212,175,55,.02) 0px, rgba(212,175,55,.02) 1px, transparent 1px, transparent 60px);
+  pointer-events:none;z-index:0;
+}
+h1,h2,h3{font-family:'Cinzel',serif;}
+::-webkit-scrollbar{width:4px;height:4px;}
+::-webkit-scrollbar-thumb{background:rgba(212,175,55,.4);border-radius:4px;}
+
+.top-fixed{position:sticky;top:0;z-index:50;}
+
+.hud{
+  display:flex;align-items:center;justify-content:space-between;
+  padding:12px 16px 10px;
+  background:rgba(5,3,10,.9);
+  backdrop-filter:blur(14px);
+  border-bottom:1px solid rgba(212,175,55,.25);
+}
+.hud-left{display:flex;align-items:center;gap:10px;}
+.avatar-ring{
+  width:46px;height:46px;border-radius:50%;
+  display:flex;align-items:center;justify-content:center;
+  font-size:22px;flex-shrink:0;
+  background:radial-gradient(circle, rgba(138,43,226,.25), rgba(0,0,0,.6));
+  border:2px solid #8a7aae;
+  transition:.3s;
+}
+.hud-name{font-family:'Cinzel',serif;font-weight:700;font-size:14px;color:#f4e4bc;letter-spacing:.5px;}
+.hud-title{font-size:10px;color:#bb9bff;font-style:italic;letter-spacing:.3px;margin-top:1px;}
+.hud-right{display:flex;align-items:center;gap:6px;flex-wrap:wrap;justify-content:flex-end;}
+.hud-stat{
+  font-size:10.5px;background:rgba(212,175,55,.08);
+  border:1px solid rgba(212,175,55,.3);
+  padding:4px 7px;border-radius:20px;
+  display:flex;align-items:center;gap:3px;color:#e8c874;white-space:nowrap;
+}
+.hud-level{
+  font-family:'Cinzel',serif;font-weight:900;font-size:12px;
+  background:linear-gradient(135deg,#d4af37,#f4e4bc);
+  -webkit-background-clip:text;background-clip:text;color:transparent;
+  padding:4px 9px;border:1px solid rgba(212,175,55,.4);border-radius:20px;white-space:nowrap;
+}
+
+.exp-bar-wrap{padding:0 16px 8px;background:rgba(5,3,10,.9);backdrop-filter:blur(14px);border-bottom:1px solid rgba(138,43,226,.2);}
+.exp-bar{height:7px;border-radius:10px;background:rgba(255,255,255,.06);overflow:hidden;border:1px solid rgba(212,175,55,.2);}
+.exp-fill{
+  height:100%;border-radius:10px;
+  background:linear-gradient(90deg,#8a2be2,#d4af37,#8a2be2);
+  background-size:200% 100%;
+  animation:shimmer 3s linear infinite;
+  transition:width .5s ease;
+}
+.exp-text{font-size:10px;color:#8a84a8;text-align:right;margin-top:3px;}
+@keyframes shimmer{0%{background-position:0 0;}100%{background-position:200% 0;}}
+
+.tabs{
+  display:flex;background:rgba(5,3,10,.95);backdrop-filter:blur(14px);
+  border-bottom:1px solid rgba(212,175,55,.2);padding:4px 2px;
+}
+.nav-btn{
+  flex:1;background:none;border:none;color:#6a6482;
+  display:flex;flex-direction:column;align-items:center;gap:2px;
+  padding:7px 2px;border-radius:10px;transition:.25s;
+}
+.nav-btn span{font-size:16px;}
+.nav-btn small{font-size:8px;letter-spacing:.2px;text-transform:uppercase;}
+.nav-btn.active{color:#d4af37;background:rgba(212,175,55,.08);box-shadow:inset 0 0 0 1px rgba(212,175,55,.25);}
+
+main{position:relative;z-index:1;padding:16px;max-width:560px;margin:0 auto;}
+.tab-pane{display:none;animation:fadeIn .3s ease;}
+.tab-pane.active{display:block;}
+@keyframes fadeIn{from{opacity:0;transform:translateY(6px);}to{opacity:1;transform:translateY(0);}}
+
+.card{
+  background:rgba(18,13,28,.65);
+  border:1px solid rgba(212,175,55,.25);
+  border-radius:16px;padding:16px;margin-bottom:14px;
+  backdrop-filter:blur(10px);
+  box-shadow:0 8px 24px rgba(0,0,0,.4), inset 0 1px 0 rgba(255,255,255,.03);
+  position:relative;overflow:hidden;
+}
+.card::before{
+  content:'';position:absolute;top:0;left:0;right:0;height:1px;
+  background:linear-gradient(90deg,transparent,rgba(212,175,55,.6),transparent);
+}
+.card-title{font-size:13px;color:#e8c874;margin-bottom:12px;letter-spacing:1px;text-transform:uppercase;}
+
+.profile-top{display:flex;align-items:center;gap:14px;margin-bottom:12px;}
+.profile-avatar{
+  width:64px;height:64px;border-radius:50%;font-size:32px;flex-shrink:0;
+  display:flex;align-items:center;justify-content:center;
+  background:radial-gradient(circle,rgba(138,43,226,.3),rgba(0,0,0,.7));
+  border:2px solid #d4af37;box-shadow:0 0 20px rgba(212,175,55,.4);
+}
+.profile-name{font-family:'Cinzel',serif;font-weight:700;font-size:18px;color:#f4e4bc;}
+.profile-title{font-size:11px;color:#bb9bff;font-style:italic;margin:2px 0;}
+.profile-rank{
+  display:inline-block;font-family:'Cinzel',serif;font-size:10px;font-weight:700;
+  padding:2px 10px;border-radius:20px;border:1px solid currentColor;letter-spacing:1px;
+}
+.profile-level{font-size:14px;color:#d4af37;font-weight:600;margin:8px 0;}
+.profile-currency{display:flex;gap:16px;font-size:12px;color:#c8c4dd;flex-wrap:wrap;}
+
+.stats-grid{display:flex;flex-direction:column;gap:10px;}
+.stat-row{display:flex;align-items:center;gap:10px;padding:8px 10px;background:rgba(0,0,0,.25);border-radius:10px;border:1px solid rgba(255,255,255,.05);}
+.stat-icon{font-size:18px;width:24px;text-align:center;}
+.stat-name{flex:1;font-size:13px;color:#c8c4dd;}
+.stat-value{font-weight:700;color:#f4e4bc;font-size:15px;}
+.stat-add{
+  width:26px;height:26px;border-radius:50%;border:1px solid #d4af37;background:transparent;
+  color:#d4af37;font-size:16px;cursor:pointer;
+}
+.stat-add:active{background:rgba(212,175,55,.2);}
+
+.btn-gold{
+  background:linear-gradient(135deg,#d4af37,#f4e4bc);
+  color:#1a1205;border:none;font-weight:700;font-family:'Rajdhani',sans-serif;
+  letter-spacing:.5px;padding:11px 18px;border-radius:10px;
+  box-shadow:0 4px 16px rgba(212,175,55,.35);cursor:pointer;
+  text-transform:uppercase;font-size:12.5px;
+}
+.btn-gold:active{transform:scale(.97);}
+.btn-ghost{
+  background:rgba(138,43,226,.08);color:#bb9bff;border:1px solid rgba(138,43,226,.4);
+  padding:10px 16px;border-radius:10px;font-weight:600;font-size:12.5px;cursor:pointer;
+}
+.btn-danger{
+  width:100%;margin-top:14px;background:rgba(255,60,60,.08);color:#ff7a7a;
+  border:1px solid rgba(255,60,60,.3);padding:10px;border-radius:10px;font-size:12px;cursor:pointer;
+}
+
+.section-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:14px;}
+.section-header h2{font-size:17px;color:#f4e4bc;letter-spacing:1px;}
+.count-badge{font-size:11px;color:#d4af37;background:rgba(212,175,55,.1);padding:3px 10px;border-radius:20px;border:1px solid rgba(212,175,55,.3);}
+
+.streak-banner{
+  display:flex;align-items:center;gap:6px;background:linear-gradient(90deg,rgba(255,107,53,.15),rgba(212,175,55,.1));
+  border:1px solid rgba(255,159,27,.4);color:#ffb45c;padding:9px 14px;border-radius:12px;
+  font-size:12.5px;margin-bottom:12px;font-weight:600;
+}
+
+.quest-toolbar{display:flex;gap:8px;margin-bottom:12px;flex-wrap:wrap;}
+.custom-form{flex-direction:column;gap:8px;margin-bottom:14px;background:rgba(0,0,0,.3);padding:12px;border-radius:12px;border:1px solid rgba(212,175,55,.2);}
+.custom-form input,.custom-form select{
+  width:100%;padding:9px 10px;background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.1);
+  border-radius:8px;color:#d8d4e8;font-family:'Rajdhani';font-size:13px;margin-bottom:0;
+}
+.form-row{display:flex;gap:6px;}
+.form-row select,.form-row input{flex:1;}
+
+.quests-list{display:flex;flex-direction:column;gap:10px;}
+.quest-card{
+  display:flex;align-items:center;gap:10px;background:rgba(18,13,28,.6);
+  border:1px solid rgba(255,255,255,.08);border-radius:12px;padding:12px;position:relative;
+  border-left:3px solid #d4af37;transition:.25s;
+}
+.quest-card.completed{opacity:.45;}
+.quest-card.completed .quest-title{text-decoration:line-through;}
+.quest-badge{font-size:9px;padding:3px 8px;border-radius:20px;border:1px solid;white-space:nowrap;font-weight:700;text-transform:uppercase;}
+.quest-main{flex:1;min-width:0;}
+.quest-title{font-size:14px;font-weight:600;color:#e8e4f5;}
+.quest-desc{font-size:11.5px;color:#8a84a8;margin-top:2px;}
+.quest-meta{font-size:11px;color:#d4af37;margin-top:4px;}
+.quest-actions{display:flex;flex-direction:column;gap:6px;align-items:center;}
+.quest-check{
+  width:30px;height:30px;border-radius:50%;border:2px solid #d4af37;background:transparent;
+  color:#d4af37;font-weight:700;cursor:pointer;font-size:14px;
+}
+.quest-check:disabled{background:linear-gradient(135deg,#d4af37,#f4e4bc);color:#1a1205;}
+.quest-del{background:none;border:none;color:#5a5472;font-size:14px;cursor:pointer;}
+.empty-state{text-align:center;color:#6a6482;padding:30px 10px;font-size:13px;line-height:1.6;}
+
+.ach-grid{display:flex;flex-direction:column;gap:10px;}
+.ach-card{display:flex;align-items:center;gap:12px;padding:12px;border-radius:12px;background:rgba(18,13,28,.5);border:1px solid rgba(255,255,255,.06);}
+.ach-card.unlocked{border-color:rgba(212,175,55,.4);box-shadow:0 0 14px rgba(212,175,55,.15);}
+.ach-card.locked{opacity:.4;}
+.ach-icon{font-size:24px;width:36px;text-align:center;}
+.ach-name{font-size:13.5px;font-weight:700;color:#f4e4bc;}
+.ach-desc{font-size:11px;color:#8a84a8;margin-top:2px;}
+
+.skills-list{display:flex;flex-direction:column;gap:12px;}
+.skill-card{display:flex;align-items:center;gap:12px;background:rgba(18,13,28,.5);padding:12px;border-radius:12px;border:1px solid rgba(138,43,226,.25);}
+.skill-icon{font-size:22px;}
+.skill-info{flex:1;}
+.skill-name{font-size:13px;color:#d8d4e8;margin-bottom:5px;}
+.skill-bar{height:5px;background:rgba(255,255,255,.07);border-radius:10px;overflow:hidden;}
+.skill-fill{height:100%;background:linear-gradient(90deg,#8a2be2,#bb6bff);border-radius:10px;}
+.skill-level{font-family:'Cinzel',serif;font-size:12px;color:#bb9bff;font-weight:700;}
+
+.last-purchase{font-size:11.5px;color:#8a84a8;margin-bottom:12px;text-align:center;}
+.shop-list{display:flex;flex-direction:column;gap:10px;}
+.shop-item{display:flex;align-items:center;gap:12px;background:rgba(18,13,28,.6);border:1px solid rgba(212,175,55,.2);padding:12px;border-radius:12px;}
+.shop-item.disabled{opacity:.4;}
+.shop-icon{width:40px;height:40px;border-radius:50%;background:radial-gradient(circle,rgba(212,175,55,.2),transparent);display:flex;align-items:center;justify-content:center;font-size:20px;flex-shrink:0;}
+.shop-info{flex:1;}
+.shop-name{font-size:13px;font-weight:700;color:#e8e4f5;}
+.shop-desc{font-size:10.5px;color:#8a84a8;margin-top:2px;}
+.shop-buy{background:linear-gradient(135deg,#d4af37,#f4e4bc);border:none;color:#1a1205;font-weight:700;padding:8px 12px;border-radius:20px;font-size:12px;white-space:nowrap;cursor:pointer;}
+.shop-buy:disabled{background:rgba(255,255,255,.08);color:#6a6482;}
+
+.cal-stats{display:flex;justify-content:space-around;margin-bottom:16px;}
+.cal-stat{text-align:center;}
+.cal-stat b{display:block;font-family:'Cinzel',serif;font-size:20px;color:#d4af37;}
+.cal-stat span{font-size:10px;color:#8a84a8;}
+.cal-scroll{overflow-x:auto;padding-bottom:6px;}
+.cal-grid{display:grid;grid-template-rows:repeat(7,13px);grid-auto-flow:column;grid-auto-columns:13px;gap:3px;width:max-content;}
+.cal-cell{width:13px;height:13px;border-radius:3px;}
+.cal-l0{background:rgba(255,255,255,.05);}
+.cal-l1{background:rgba(212,175,55,.25);}
+.cal-l2{background:rgba(212,175,55,.5);}
+.cal-l3{background:rgba(212,175,55,.75);}
+.cal-l4{background:#d4af37;box-shadow:0 0 6px rgba(212,175,55,.8);}
+.cal-legend{display:flex;align-items:center;gap:4px;justify-content:center;margin-top:12px;font-size:10px;color:#6a6482;}
+.cal-legend .cal-cell{width:10px;height:10px;}
+
+.modal-overlay{
+  position:fixed;inset:0;background:rgba(0,0,0,.75);backdrop-filter:blur(6px);
+  display:flex;align-items:center;justify-content:center;z-index:200;
+  opacity:0;pointer-events:none;transition:.3s;padding:20px;
+}
+.modal-overlay.open{opacity:1;pointer-events:auto;}
+.modal-box{
+  background:linear-gradient(160deg,#120d1c,#0a0714);
+  border:1px solid rgba(212,175,55,.4);border-radius:18px;padding:22px;
+  width:100%;max-width:380px;box-shadow:0 20px 60px rgba(0,0,0,.6), 0 0 40px rgba(138,43,226,.15);
+  max-height:85vh;overflow-y:auto;
+}
+.modal-title{font-size:16px;color:#f4e4bc;margin-bottom:14px;}
+.modal-label{font-size:11px;color:#8a84a8;margin:10px 0 4px;display:block;}
+.modal-box input,.modal-box select{
+  width:100%;padding:10px;background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.12);
+  border-radius:8px;color:#d8d4e8;font-family:'Rajdhani';font-size:13px;
+}
+.modal-actions{display:flex;gap:8px;margin-top:16px;}
+.modal-actions button{flex:1;}
+.modal-header-row{display:flex;justify-content:space-between;align-items:center;}
+.modal-close{background:none;border:none;color:#8a84a8;font-size:18px;cursor:pointer;}
+
+.lib-tabs{display:flex;gap:6px;margin:14px 0;}
+.lib-tab{flex:1;padding:8px 4px;background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.1);border-radius:8px;color:#8a84a8;font-size:11px;cursor:pointer;}
+.lib-tab.active{background:rgba(212,175,55,.15);border-color:#d4af37;color:#d4af37;font-weight:700;}
+.lib-list{display:flex;flex-direction:column;gap:8px;max-height:50vh;overflow-y:auto;}
+.lib-item{display:flex;align-items:center;gap:10px;background:rgba(0,0,0,.3);border:1px solid rgba(255,255,255,.08);border-radius:10px;padding:10px;}
+.lib-item-main{flex:1;}
+.lib-item-title{font-size:13px;font-weight:700;color:#e8e4f5;}
+.lib-item-desc{font-size:10.5px;color:#8a84a8;margin-top:2px;}
+.lib-item-meta{font-size:10px;color:#d4af37;margin-top:3px;}
+.lib-add-btn{background:rgba(212,175,55,.15);border:1px solid #d4af37;color:#d4af37;padding:7px 10px;border-radius:8px;font-size:11px;white-space:nowrap;cursor:pointer;}
+
+.levelup-box{text-align:center;}
+.levelup-icon{font-size:40px;}
+.levelup-label{font-family:'Cinzel',serif;letter-spacing:4px;color:#bb9bff;font-size:12px;margin:8px 0;}
+.levelup-level{font-family:'Cinzel',serif;font-size:28px;font-weight:900;background:linear-gradient(135deg,#d4af37,#f4e4bc);-webkit-background-clip:text;background-clip:text;color:transparent;}
+.levelup-rank{font-size:13px;margin:8px 0 4px;font-weight:700;letter-spacing:2px;}
+.levelup-sub{font-size:12px;color:#8a84a8;margin-bottom:16px;}
+
+.toast-container{position:fixed;bottom:20px;left:0;right:0;display:flex;flex-direction:column;align-items:center;gap:8px;z-index:300;pointer-events:none;}
+.toast{
+  background:rgba(10,7,20,.95);border:1px solid rgba(212,175,55,.4);color:#f4e4bc;
+  padding:10px 18px;border-radius:30px;font-size:12.5px;opacity:0;transform:translateY(10px);
+  transition:.3s;box-shadow:0 6px 20px rgba(0,0,0,.5);text-align:center;max-width:90vw;
+}
+.toast.show{opacity:1;transform:translateY(0);}
 </style>
 </head>
 <body>
 
-<div class="particles" id="particles"></div>
-
-<div class="container">
-  <div class="system-header">
-    <div class="system-title">SYSTEM</div>
-    <div class="subtitle">Путь Монарха начинается здесь</div>
-    <div class="divider"></div>
-  </div>
-
-  <div class="player-card">
-    <div class="player-header">
-      <div class="player-name-section">
-        <div class="player-avatar" id="avatarDisplay" onclick="openSettings()">👤</div>
-        <div class="player-info">
-          <h2 id="playerName">Игрок</h2>
-          <span class="player-rank" id="playerRank">E-RANK</span>
-        </div>
-      </div>
-      <div class="level-display">
-        <div class="level-number" id="levelNumber">1</div>
-        <div class="level-label">LEVEL</div>
+<div class="top-fixed">
+  <header class="hud">
+    <div class="hud-left">
+      <div class="avatar-ring" id="hudAvatar">🗡️</div>
+      <div>
+        <div class="hud-name" id="hudName">Игрок</div>
+        <div class="hud-title" id="hudTitle"></div>
       </div>
     </div>
-
-    <div class="exp-container">
-      <div class="exp-labels">
-        <span>ОПЫТ</span>
-        <span id="expText">0 / 100</span>
-      </div>
-      <div class="exp-bar-bg">
-        <div class="exp-bar-fill" id="expBar" style="width: 0%"></div>
-      </div>
+    <div class="hud-right">
+      <div class="hud-stat">💎 <span id="hudCrystals">0</span></div>
+      <div class="hud-stat">🔥 <span id="hudStreak">0</span></div>
+      <div class="hud-level" id="hudLevel">Lv.1</div>
     </div>
-
-    <div class="free-points" id="freePointsDisplay" style="display:none;">
-      ⭐ ОЧКОВ ДОСТУПНО: <span id="freePointsCount">0</span>
-    </div>
-
-    <div class="stats-grid" id="statsGrid"></div>
+  </header>
+  <div class="exp-bar-wrap">
+    <div class="exp-bar"><div class="exp-fill" id="expFill" style="width:0%"></div></div>
+    <div class="exp-text" id="expText">0 / 100</div>
   </div>
-
-  <div class="nav-tabs">
-    <div class="nav-tab active" onclick="switchTab('quests', this)">📜 Квесты</div>
-    <div class="nav-tab" onclick="switchTab('skills', this)">⚡ Навыки</div>
-    <div class="nav-tab" onclick="switchTab('achievements', this)">🏆 Награды</div>
-    <div class="nav-tab" onclick="switchTab('log', this)">📋 История</div>
-  </div>
-
-  <div class="tab-content active" id="quests">
-    <div class="section-title">
-      <span>📜 Активные квесты</span>
-      <button class="library-btn" onclick="openLibrary()">📚 Библиотека квестов</button>
-    </div>
-    
-    <div class="add-quest-form">
-      <div class="form-row">
-        <div class="form-group">
-          <label>Название квеста</label>
-          <input type="text" id="questTitle" placeholder="Например: Отжаться 50 раз">
-        </div>
-        <div class="form-group">
-          <label>Тип квеста</label>
-          <select id="questType">
-            <option value="daily">Ежедневный</option>
-            <option value="main">Основной</option>
-            <option value="side">Побочный</option>
-            <option value="mind">Разум</option>
-          </select>
-        </div>
-      </div>
-      <div class="form-row">
-        <div class="form-group">
-          <label>Опыт (EXP)</label>
-          <input type="number" id="questExp" value="20" min="1">
-        </div>
-        <div class="form-group">
-          <label>Основной стат</label>
-          <select id="questStat">
-            <option value="str">💪 Сила</option>
-            <option value="agi">🏃 Ловкость</option>
-            <option value="int">🧠 Интеллект</option>
-            <option value="vit">❤️ Выносливость</option>
-            <option value="per">👁️ Восприятие</option>
-          </select>
-        </div>
-      </div>
-      <div class="form-group full">
-        <label>Описание</label>
-        <textarea id="questDesc" placeholder="Детали выполнения квеста..."></textarea>
-      </div>
-      <button class="btn btn-primary" onclick="addQuest()" style="width:100%; margin-top:10px;">
-        + Создать квест
-      </button>
-    </div>
-
-    <div id="questsList"></div>
-  </div>
-
-  <div class="tab-content" id="skills">
-    <div class="section-title">⚡ Твои навыки</div>
-    <div class="skills-grid" id="skillsGrid"></div>
-  </div>
-
-  <div class="tab-content" id="achievements">
-    <div class="section-title">🏆 Достижения</div>
-    <div class="achievements-grid" id="achievementsGrid"></div>
-  </div>
-
-  <div class="tab-content" id="log">
-    <div class="section-title">📋 Журнал действий</div>
-    <div class="log-container" id="logContainer"></div>
-  </div>
+  <nav class="tabs">
+    <button id="nav-profile" class="nav-btn active" onclick="switchTab('profile')"><span>👤</span><small>Профиль</small></button>
+    <button id="nav-quests" class="nav-btn" onclick="switchTab('quests')"><span>⚔️</span><small>Квесты</small></button>
+    <button id="nav-achievements" class="nav-btn" onclick="switchTab('achievements')"><span>🏆</span><small>Награды</small></button>
+    <button id="nav-skills" class="nav-btn" onclick="switchTab('skills')"><span>🌀</span><small>Навыки</small></button>
+    <button id="nav-shop" class="nav-btn" onclick="switchTab('shop')"><span>🛍️</span><small>Магазин</small></button>
+    <button id="nav-calendar" class="nav-btn" onclick="switchTab('calendar')"><span>📅</span><small>Календарь</small></button>
+  </nav>
 </div>
 
-<div class="level-up-modal" id="levelUpModal">
-  <div class="level-up-content">
-    <div class="level-up-text">LEVEL UP</div>
-    <div class="level-up-subtext" id="levelUpText">Ты достиг уровня 2!</div>
-    <button class="btn btn-primary" onclick="closeLevelUp()">Продолжить</button>
-  </div>
-</div>
+<main>
 
-<div class="modal-overlay" id="settingsModal">
+  <section id="tab-profile" class="tab-pane active">
+    <div class="card">
+      <div class="profile-top">
+        <div class="profile-avatar" id="profAvatar">🗡️</div>
+        <div>
+          <div class="profile-name" id="profName">Игрок</div>
+          <div class="profile-title" id="profTitle"></div>
+          <div class="profile-rank" id="profRank">E-RANK</div>
+        </div>
+      </div>
+      <div class="profile-level" id="profLevel">Уровень 1</div>
+      <div class="profile-currency">
+        <span>💎 <b id="profCrystals">0</b> кристаллов</span>
+        <span>✨ <b id="profPoints">0</b> очков прокачки</span>
+      </div>
+      <button class="btn-ghost" style="width:100%;margin-top:14px" onclick="openSettings()">⚙️ Настройки</button>
+    </div>
+
+    <div class="card">
+      <h3 class="card-title">Характеристики</h3>
+      <div id="statsGrid" class="stats-grid"></div>
+    </div>
+  </section>
+
+  <section id="tab-quests" class="tab-pane">
+    <div class="section-header"><h2>Квесты</h2></div>
+    <div id="streakBanner" class="streak-banner" style="display:none"></div>
+    <div class="quest-toolbar">
+      <button class="btn-gold" onclick="openLibrary()">📚 Библиотека квестов</button>
+      <button class="btn-ghost" onclick="toggleCustomForm()">+ Свой квест</button>
+    </div>
+    <div id="customForm" class="custom-form" style="display:none">
+      <input id="customTitle" type="text" placeholder="Название квеста" maxlength="60">
+      <input id="customDesc" type="text" placeholder="Описание (необязательно)" maxlength="100">
+      <div class="form-row">
+        <select id="customType">
+          <option value="daily">Ежедневный</option>
+          <option value="main">Основной</option>
+          <option value="side">Побочный</option>
+          <option value="mind">Разум</option>
+        </select>
+        <select id="customStat">
+          <option value="str">💪 Сила</option>
+          <option value="agi">🏃 Ловкость</option>
+          <option value="int">🧠 Интеллект</option>
+          <option value="vit">❤️ Выносливость</option>
+          <option value="per">👁️ Восприятие</option>
+        </select>
+        <input id="customExp" type="number" value="20" min="5" max="500">
+      </div>
+      <button class="btn-gold" style="width:100%" onclick="addCustomQuest()">Добавить квест</button>
+    </div>
+    <div id="questsList" class="quests-list"></div>
+  </section>
+
+  <section id="tab-achievements" class="tab-pane">
+    <div class="section-header"><h2>Достижения</h2><span id="achCount" class="count-badge">0/13</span></div>
+    <div id="achievementsList" class="ach-grid"></div>
+  </section>
+
+  <section id="tab-skills" class="tab-pane">
+    <div class="section-header"><h2>Навыки</h2></div>
+    <div id="skillsList" class="skills-list"></div>
+  </section>
+
+  <section id="tab-shop" class="tab-pane">
+    <div class="section-header"><h2>Магазин наград</h2><span class="count-badge">💎 <span id="shopCrystals">0</span></span></div>
+    <div id="lastPurchase" class="last-purchase"></div>
+    <div id="shopList" class="shop-list"></div>
+  </section>
+
+  <section id="tab-calendar" class="tab-pane">
+    <div class="section-header"><h2>Календарь активности</h2></div>
+    <div class="cal-stats">
+      <div class="cal-stat"><b id="calStreak">0</b><span>Серия</span></div>
+      <div class="cal-stat"><b id="calMaxStreak">0</b><span>Рекорд</span></div>
+      <div class="cal-stat"><b id="calActiveDays">0</b><span>Дней активности</span></div>
+    </div>
+    <div class="cal-scroll"><div id="calendarGrid" class="cal-grid"></div></div>
+    <div class="cal-legend">Меньше <span class="cal-cell cal-l0"></span><span class="cal-cell cal-l1"></span><span class="cal-cell cal-l2"></span><span class="cal-cell cal-l3"></span><span class="cal-cell cal-l4"></span> Больше</div>
+  </section>
+
+</main>
+
+<div id="settingsModal" class="modal-overlay">
   <div class="modal-box">
-    <h3>⚙️ Настройки игрока</h3>
-    <div class="form-group" style="margin-bottom:15px;">
-      <label>Имя игрока</label>
-      <input type="text" id="settingsName" placeholder="Введи своё имя">
+    <h3 class="modal-title">⚙️ Настройки</h3>
+    <label class="modal-label">Имя</label>
+    <input id="settingsName" type="text" maxlength="20">
+    <label class="modal-label">Аватар (эмодзи)</label>
+    <input id="settingsAvatar" type="text" maxlength="4">
+    <label class="modal-label">Титул</label>
+    <select id="settingsTitle"></select>
+    <div class="modal-actions">
+      <button class="btn-gold" onclick="saveSettings()">Сохранить</button>
+      <button class="btn-ghost" onclick="closeSettings()">Отмена</button>
     </div>
-    <div class="form-group" style="margin-bottom:20px;">
-      <label>Аватар (эмодзи)</label>
-      <input type="text" id="settingsAvatar" placeholder="👤" maxlength="2">
-    </div>
-    <div style="display:flex; gap:10px;">
-      <button class="btn btn-primary" onclick="saveSettings()" style="flex:1;">Сохранить</button>
-      <button class="btn btn-secondary" onclick="closeSettings()" style="flex:1;">Отмена</button>
-    </div>
-    <hr style="margin:20px 0; border-color:rgba(138,43,226,0.3);">
-    <button class="btn btn-danger" onclick="resetProgress()" style="width:100%;">
-      🗑️ Сбросить весь прогресс
-    </button>
+    <button class="btn-danger" onclick="resetProgress()">🗑️ Сбросить весь прогресс</button>
   </div>
 </div>
 
-<div class="modal-overlay" id="libraryModal">
-  <div class="modal-box" style="max-width:550px;">
-    <h3>📚 Библиотека квестов</h3>
-    <div id="libraryContent"></div>
-    <button class="btn btn-secondary" onclick="closeLibrary()" style="width:100%; margin-top:15px;">Закрыть</button>
+<div id="libraryModal" class="modal-overlay">
+  <div class="modal-box">
+    <div class="modal-header-row">
+      <h3 class="modal-title">📚 Библиотека квестов</h3>
+      <button class="modal-close" onclick="closeLibrary()">✕</button>
+    </div>
+    <div class="lib-tabs">
+      <button id="libtab-body" class="lib-tab active" onclick="switchLibCat('body')">💪 Тело</button>
+      <button id="libtab-mind" class="lib-tab" onclick="switchLibCat('mind')">🧠 Разум</button>
+      <button id="libtab-spirit" class="lib-tab" onclick="switchLibCat('spirit')">✨ Дух</button>
+    </div>
+    <div id="libraryList" class="lib-list"></div>
   </div>
 </div>
 
-<div class="quest-notification" id="questNotif"></div>
+<div id="levelUpModal" class="modal-overlay">
+  <div class="modal-box levelup-box">
+    <div class="levelup-icon">⬆️</div>
+    <div class="levelup-label">LEVEL UP</div>
+    <div class="levelup-level" id="levelUpText">Уровень 2</div>
+    <div class="levelup-rank" id="levelUpRank">E-RANK</div>
+    <div class="levelup-sub">+3 очка характеристик получено</div>
+    <button class="btn-gold" style="width:100%" onclick="closeLevelUp()">Продолжить</button>
+  </div>
+</div>
+
+<div id="toastContainer" class="toast-container"></div>
 
 <script>
 const STAT_INFO = {
-  str: { name: 'Сила', icon: '💪' },
-  agi: { name: 'Ловкость', icon: '🏃' },
-  int: { name: 'Интеллект', icon: '🧠' },
-  vit: { name: 'Выносливость', icon: '❤️' },
-  per: { name: 'Восприятие', icon: '👁️' }
+  str:{name:'Сила',icon:'💪'}, agi:{name:'Ловкость',icon:'🏃'}, int:{name:'Интеллект',icon:'🧠'},
+  vit:{name:'Выносливость',icon:'❤️'}, per:{name:'Восприятие',icon:'👁️'}
 };
-
 const RANKS = [
-  { min: 1, max: 9, name: 'E-RANK', color: '#8a7aae' },
-  { min: 10, max: 19, name: 'D-RANK', color: '#4bff6b' },
-  { min: 20, max: 29, name: 'C-RANK', color: '#4a9eff' },
-  { min: 30, max: 39, name: 'B-RANK', color: '#bb6bff' },
-  { min: 40, max: 49, name: 'A-RANK', color: '#ff9b6b' },
-  { min: 50, max: 999, name: 'S-RANK', color: '#d4af37' }
+  {min:50,name:'S-RANK',color:'#d4af37'}, {min:40,name:'A-RANK',color:'#ff9b6b'},
+  {min:30,name:'B-RANK',color:'#bb6bff'}, {min:20,name:'C-RANK',color:'#4a9eff'},
+  {min:10,name:'D-RANK',color:'#4bff6b'}, {min:1,name:'E-RANK',color:'#8a7aae'}
 ];
+function getRank(level){ return RANKS.find(r=>level>=r.min) || RANKS[RANKS.length-1]; }
+
+const QUEST_TYPES = {
+  daily:{name:'Ежедневный',color:'#d4af37'}, main:{name:'Основной',color:'#ff4b4b'},
+  side:{name:'Побочный',color:'#4a9eff'}, mind:{name:'Разум',color:'#8a2be2'}
+};
 
 const ACHIEVEMENTS_LIST = [
-  { id: 'first_quest', name: 'Первый шаг', desc: 'Выполни первый квест', icon: '🎯', check: (d) => d.questsCompleted >= 1 },
-  { id: 'quest_10', name: 'Начинающий', desc: 'Выполни 10 квестов', icon: '⚔️', check: (d) => d.questsCompleted >= 10 },
-  { id: 'quest_50', name: 'Опытный', desc: 'Выполни 50 квестов', icon: '🗡️', check: (d) => d.questsCompleted >= 50 },
-  { id: 'quest_100', name: 'Охотник', desc: 'Выполни 100 квестов', icon: '🏹', check: (d) => d.questsCompleted >= 100 },
-  { id: 'level_5', name: 'Растущая сила', desc: 'Достигни 5 уровня', icon: '🌟', check: (d) => d.level >= 5 },
-  { id: 'level_10', name: 'D-Rank Hunter', desc: 'Достигни 10 уровня', icon: '✨', check: (d) => d.level >= 10 },
-  { id: 'level_20', name: 'C-Rank Hunter', desc: 'Достигни 20 уровня', icon: '💫', check: (d) => d.level >= 20 },
-  { id: 'level_50', name: 'S-Rank Hunter', desc: 'Монарх теней!', icon: '👑', check: (d) => d.level >= 50 },
-  { id: 'streak_7', name: 'Недельная серия', desc: '7 дней подряд', icon: '🔥', check: (d) => d.streak >= 7 },
-  { id: 'streak_30', name: 'Железная воля', desc: '30 дней подряд', icon: '💎', check: (d) => d.streak >= 30 },
-  { id: 'strong', name: 'Силач', desc: 'Сила до 20', icon: '💪', check: (d) => d.stats.str >= 20 },
-  { id: 'genius', name: 'Гений', desc: 'Интеллект до 20', icon: '🧠', check: (d) => d.stats.int >= 20 },
-  { id: 'main_quest', name: 'Главный герой', desc: '5 основных квестов', icon: '📖', check: (d) => d.mainQuestsCompleted >= 5 },
+  {id:'first_quest',name:'Первый шаг',desc:'Выполните первый квест',icon:'🔰',cond:d=>d.totalCompleted>=1},
+  {id:'quest_10',name:'Исполнитель',desc:'Выполните 10 квестов',icon:'📜',cond:d=>d.totalCompleted>=10},
+  {id:'quest_50',name:'Ветеран',desc:'Выполните 50 квестов',icon:'🗡️',cond:d=>d.totalCompleted>=50},
+  {id:'quest_100',name:'Легенда',desc:'Выполните 100 квестов',icon:'🏆',cond:d=>d.totalCompleted>=100},
+  {id:'level_5',name:'Пробуждение',desc:'Достигните 5 уровня',icon:'⭐',cond:d=>d.level>=5},
+  {id:'level_10',name:'Охотник',desc:'Достигните 10 уровня',icon:'🌟',cond:d=>d.level>=10},
+  {id:'level_20',name:'Элита',desc:'Достигните 20 уровня',icon:'💫',cond:d=>d.level>=20},
+  {id:'level_50',name:'Монарх',desc:'Достигните 50 уровня',icon:'👑',cond:d=>d.level>=50},
+  {id:'streak_7',name:'Неделя дисциплины',desc:'Серия 7 дней подряд',icon:'🔥',cond:d=>d.maxStreak>=7},
+  {id:'streak_30',name:'Железная воля',desc:'Серия 30 дней подряд',icon:'⚡',cond:d=>d.maxStreak>=30},
+  {id:'strong',name:'Сила титана',desc:'Сила достигла 30',icon:'💪',cond:d=>d.stats.str>=30},
+  {id:'genius',name:'Гений',desc:'Интеллект достиг 30',icon:'🧠',cond:d=>d.stats.int>=30},
+  {id:'main_quest',name:'Герой истории',desc:'Выполните основной квест',icon:'📖',cond:d=>d.mainCompleted>=1}
 ];
 
-const DEFAULT_SKILLS = [
-  { id: 'focus', name: 'Концентрация', icon: '🎯', level: 1, desc: 'Улучшает фокус при выполнении задач' },
-  { id: 'discipline', name: 'Дисциплина', icon: '⚡', level: 1, desc: 'Сила воли для регулярных тренировок' },
-  { id: 'endurance', name: 'Выносливость духа', icon: '🔥', level: 1, desc: 'Способность не сдаваться' },
+const TITLES_LIST = [
+  {id:'none',name:'Пробуждённый',cond:()=>true},
+  {id:'novice',name:'Новичок-Охотник',cond:d=>d.level>=5},
+  {id:'disciplined',name:'Дисциплинированный',cond:d=>d.achievementsUnlocked>=5},
+  {id:'shadow_guard',name:'Страж Тени',cond:d=>d.maxStreak>=7},
+  {id:'elite_hunter',name:'Элитный Охотник',cond:d=>d.level>=20},
+  {id:'iron_will',name:'Железная Воля',cond:d=>d.maxStreak>=30},
+  {id:'national',name:'Охотник Нац. Уровня',cond:d=>d.level>=30},
+  {id:'shadow_monarch',name:'Тень Монарха',cond:d=>d.maxStreak>=60},
+  {id:'monarch',name:'Монарх Разрушения',cond:d=>d.level>=50}
 ];
 
-// БИБЛИОТЕКА ГОТОВЫХ КВЕСТОВ
+const SHOP_ITEMS = [
+  {id:'episode',icon:'📺',name:'Серия сериала',desc:'Полноценный отдых для разума',cost:40},
+  {id:'game',icon:'🎮',name:'Час видеоигр',desc:'Заслуженное развлечение',cost:50},
+  {id:'snack',icon:'🍫',name:'Любимое лакомство',desc:'Маленькая радость',cost:25},
+  {id:'sleepin',icon:'😴',name:'Поспать подольше',desc:'Дополнительный час сна',cost:35},
+  {id:'movie',icon:'🎬',name:'Поход в кино',desc:'Вечер для себя',cost:180},
+  {id:'shopping',icon:'🛍️',name:'Небольшая покупка себе',desc:'Что-то приятное',cost:150},
+  {id:'dayoff',icon:'🏖️',name:'День без квестов',desc:'Полный отдых без чувства вины',cost:220},
+  {id:'royal',icon:'👑',name:'Королевский день',desc:'Любое желание дня',cost:400}
+];
+
 const QUEST_LIBRARY = {
-  body: {
-    name: '💪 Тело',
-    color: '#ff6b6b',
-    quests: [
-      { title: 'Утренняя зарядка', desc: '20 отжиманий, 20 приседаний, планка 1 минута', type: 'daily', exp: 25, stat: 'str' },
-      { title: 'Пробежка 3 км', desc: 'Пробеги минимум 3 километра', type: 'daily', exp: 30, stat: 'agi' },
-      { title: '100 отжиманий за день', desc: 'Можно разбить на подходы', type: 'daily', exp: 35, stat: 'str' },
-      { title: 'Растяжка', desc: '15 минут растяжки всего тела', type: 'daily', exp: 15, stat: 'agi' },
-      { title: 'Силовая тренировка', desc: 'Полноценная тренировка в зале 45+ минут', type: 'main', exp: 50, stat: 'str' },
-      { title: 'Холодный душ', desc: 'Прими холодный душ для закалки воли', type: 'daily', exp: 20, stat: 'vit' },
-      { title: '10000 шагов', desc: 'Пройди 10000 шагов за день', type: 'daily', exp: 25, stat: 'vit' },
-      { title: 'Марафон отказа от сахара', desc: '7 дней без сахара и сладкого', type: 'main', exp: 80, stat: 'vit' },
-    ]
-  },
-  mind: {
-    name: '🧠 Разум',
-    color: '#4a9eff',
-    quests: [
-      { title: 'Чтение книги', desc: 'Прочитай минимум 20 страниц любой полезной книги', type: 'mind', exp: 20, stat: 'int' },
-      { title: 'Изучение языка', desc: '20 минут практики иностранного языка', type: 'mind', exp: 25, stat: 'int' },
-      { title: 'Решение головоломки', desc: 'Реши судоку, шахматную задачу или логическую головоломку', type: 'mind', exp: 15, stat: 'int' },
-      { title: 'Онлайн-курс', desc: 'Пройди один урок на Coursera/Udemy/YouTube', type: 'mind', exp: 30, stat: 'int' },
-      { title: 'Ведение дневника', desc: 'Напиши минимум 10 строк о прошедшем дне', type: 'mind', exp: 15, stat: 'per' },
-      { title: 'Цифровой детокс', desc: '2 часа без телефона и соцсетей', type: 'mind', exp: 25, stat: 'per' },
-      { title: 'Медитация', desc: '10 минут медитации или осознанного дыхания', type: 'mind', exp: 20, stat: 'per' },
-      { title: 'Новое слово', desc: 'Выучи и запомни новое сложное слово', type: 'mind', exp: 10, stat: 'int' },
-      { title: 'Шахматная партия', desc: 'Сыграй партию в шахматы (с человеком или ботом)', type: 'mind', exp: 20, stat: 'int' },
-      { title: 'Разбор своих ошибок', desc: 'Проанализируй неудачу за неделю и сделай выводы', type: 'mind', exp: 25, stat: 'per' },
-      { title: 'Подкаст/лекция', desc: 'Прослушай обучающий подкаст 30+ минут', type: 'mind', exp: 20, stat: 'int' },
-      { title: 'Мозговой штурм', desc: 'Запиши 10 идей по интересующей теме', type: 'mind', exp: 20, stat: 'int' },
-      { title: 'Финансовая грамотность', desc: 'Изучи 1 статью/видео про инвестиции или бюджет', type: 'mind', exp: 25, stat: 'int' },
-      { title: 'Скорочтение', desc: 'Практикуй технику скорочтения 15 минут', type: 'mind', exp: 15, stat: 'per' },
-    ]
-  },
-  spirit: {
-    name: '✨ Дух',
-    color: '#d4af37',
-    quests: [
-      { title: 'Благодарность', desc: 'Запиши 3 вещи, за которые ты благодарен сегодня', type: 'daily', exp: 15, stat: 'per' },
-      { title: 'Ранний подъём', desc: 'Встань до 7 утра', type: 'daily', exp: 20, stat: 'vit' },
-      { title: 'Помощь другому', desc: 'Сделай доброе дело для кого-то без ожидания награды', type: 'side', exp: 25, stat: 'per' },
-      { title: 'Заправленная постель', desc: 'Застели кровать сразу после пробуждения', type: 'daily', exp: 10, stat: 'vit' },
-      { title: 'План на день', desc: 'Составь чёткий план задач на завтра', type: 'daily', exp: 15, stat: 'int' },
-      { title: 'Неделя без жалоб', desc: '7 дней не жаловаться ни на что', type: 'main', exp: 70, stat: 'vit' },
-      { title: 'Уборка пространства', desc: 'Убери и наведи порядок в своей комнате', type: 'side', exp: 20, stat: 'vit' },
-      { title: 'Разговор с близким', desc: 'Позвони родителям или другу, с которым давно не общался', type: 'side', exp: 20, stat: 'per' },
-    ]
-  }
+  body:{name:'Тело',icon:'💪',color:'#ff6b6b',quests:[
+    {title:'Утренняя зарядка',desc:'10-15 минут разминки',type:'daily',exp:20,stat:'vit'},
+    {title:'Пробежка 3 км',desc:'Лёгкий бег для выносливости',type:'daily',exp:35,stat:'vit'},
+    {title:'100 отжиманий за день',desc:'Можно разбить на подходы',type:'daily',exp:40,stat:'str'},
+    {title:'Растяжка',desc:'15 минут стретчинга перед сном',type:'daily',exp:15,stat:'agi'},
+    {title:'Силовая тренировка',desc:'Полноценная тренировка с весом',type:'daily',exp:50,stat:'str'},
+    {title:'Холодный душ',desc:'Закалка тела и духа',type:'daily',exp:25,stat:'vit'},
+    {title:'10000 шагов',desc:'Активность в течение дня',type:'daily',exp:30,stat:'agi'},
+    {title:'Марафон отказа от сахара',desc:'Неделя без сладкого',type:'main',exp:120,stat:'vit'}
+  ]},
+  mind:{name:'Разум',icon:'🧠',color:'#4a9eff',quests:[
+    {title:'Чтение книги',desc:'30 минут осмысленного чтения',type:'mind',exp:25,stat:'int'},
+    {title:'Изучение языка',desc:'Урок иностранного языка',type:'mind',exp:30,stat:'int'},
+    {title:'Решение головоломки',desc:'Судоку, шахматная задача',type:'mind',exp:20,stat:'int'},
+    {title:'Онлайн-курс',desc:'Урок по новому навыку',type:'mind',exp:35,stat:'int'},
+    {title:'Ведение дневника',desc:'Запишите мысли и итоги дня',type:'mind',exp:15,stat:'per'},
+    {title:'Цифровой детокс',desc:'3 часа без соцсетей',type:'mind',exp:25,stat:'per'},
+    {title:'Медитация',desc:'10-15 минут осознанности',type:'mind',exp:20,stat:'per'},
+    {title:'Новое слово',desc:'Выучите и используйте новое слово',type:'mind',exp:10,stat:'int'},
+    {title:'Шахматная партия',desc:'Сыграйте и разберите партию',type:'mind',exp:25,stat:'int'},
+    {title:'Разбор своих ошибок',desc:'Честный анализ недавней неудачи',type:'mind',exp:30,stat:'per'},
+    {title:'Подкаст/лекция',desc:'Прослушайте образовательный контент',type:'mind',exp:20,stat:'int'},
+    {title:'Мозговой штурм',desc:'10 идей по любой теме',type:'mind',exp:20,stat:'int'},
+    {title:'Финансовая грамотность',desc:'Изучите тему бюджета/инвестиций',type:'mind',exp:30,stat:'int'},
+    {title:'Скорочтение',desc:'Практика техники быстрого чтения',type:'mind',exp:25,stat:'int'}
+  ]},
+  spirit:{name:'Дух',icon:'✨',color:'#d4af37',quests:[
+    {title:'Благодарность',desc:'Запишите 3 вещи, за которые благодарны',type:'daily',exp:15,stat:'per'},
+    {title:'Ранний подъём',desc:'Встаньте до 7:00',type:'daily',exp:25,stat:'vit'},
+    {title:'Помощь другому',desc:'Сделайте доброе дело',type:'daily',exp:30,stat:'per'},
+    {title:'Заправленная постель',desc:'Маленькая победа с утра',type:'daily',exp:10,stat:'per'},
+    {title:'План на день',desc:'Составьте чёткий план с утра',type:'daily',exp:15,stat:'per'},
+    {title:'Неделя без жалоб',desc:'7 дней без нытья и жалоб',type:'main',exp:100,stat:'per'},
+    {title:'Уборка пространства',desc:'Наведите порядок вокруг себя',type:'daily',exp:20,stat:'vit'},
+    {title:'Разговор с близким',desc:'Искренний разговор без телефона',type:'daily',exp:25,stat:'per'}
+  ]}
 };
 
-let gameData = {
-  name: 'Игрок',
-  avatar: '👤',
-  level: 1,
-  exp: 0,
-  expToNext: 100,
-  freePoints: 0,
-  stats: { str: 10, agi: 10, int: 10, vit: 10, per: 10 },
-  quests: [],
-  questsCompleted: 0,
-  mainQuestsCompleted: 0,
-  achievements: [],
-  skills: JSON.parse(JSON.stringify(DEFAULT_SKILLS)),
-  logs: [],
-  streak: 0,
-  lastActiveDate: null
-};
-
-function saveData() {
-  localStorage.setItem('soloLevelingData', JSON.stringify(gameData));
+function defaultData(){
+  return {
+    playerName:'Игрок', avatar:'🗡️', level:1, exp:0,
+    stats:{str:10,agi:10,int:10,vit:10,per:10}, statPoints:0,
+    quests:[
+      {id:1,title:'Утренняя зарядка',desc:'10 минут разминки',type:'daily',exp:20,stat:'vit',completed:false},
+      {id:2,title:'Прочитать 20 страниц',desc:'Любая полезная книга',type:'mind',exp:25,stat:'int',completed:false},
+      {id:3,title:'Начало пути',desc:'Создайте план развития на месяц',type:'main',exp:100,stat:'per',completed:false}
+    ],
+    achievements:[],
+    skills:[
+      {id:1,name:'Концентрация',icon:'🎯',level:1},
+      {id:2,name:'Дисциплина',icon:'⚡',level:1},
+      {id:3,name:'Выносливость духа',icon:'🔥',level:1}
+    ],
+    streak:0, maxStreak:0, lastActiveDate:null, lastDailyReset:null,
+    activityLog:{}, crystals:0, totalCompleted:0, mainCompleted:0,
+    titles:['none'], activeTitle:'none', lastPurchase:null
+  };
 }
 
-function loadData() {
+let gameData;
+
+function loadData(){
   const saved = localStorage.getItem('soloLevelingData');
-  if (saved) {
-    const parsed = JSON.parse(saved);
-    gameData = { ...gameData, ...parsed };
-  } else {
-    addDefaultQuests();
+  const def = defaultData();
+  if(saved){
+    try{
+      const parsed = JSON.parse(saved);
+      gameData = Object.assign(def, parsed);
+      gameData.stats = Object.assign(def.stats, parsed.stats||{});
+    }catch(e){ gameData = def; }
+  } else { gameData = def; }
+}
+function saveData(){ localStorage.setItem('soloLevelingData', JSON.stringify(gameData)); }
+
+function todayStr(){ return new Date().toISOString().slice(0,10); }
+function daysBetween(a,b){ return Math.round((new Date(b)-new Date(a))/86400000); }
+function expForLevel(level){ return Math.floor(100*Math.pow(1.15, level-1)); }
+function getStreakMultiplier(streak){
+  if(streak>=30) return 2; if(streak>=14) return 1.5; if(streak>=7) return 1.25; if(streak>=3) return 1.1; return 1;
+}
+function evalContext(){ return Object.assign({}, gameData, {achievementsUnlocked:gameData.achievements.length}); }
+
+function checkAchievements(){
+  const ctx = evalContext(); let newly=[];
+  ACHIEVEMENTS_LIST.forEach(a=>{
+    if(!gameData.achievements.includes(a.id) && a.cond(ctx)){ gameData.achievements.push(a.id); newly.push(a); }
+  });
+  newly.forEach(a=>showToast(`🏆 Достижение: ${a.name}`));
+}
+function checkTitles(){
+  const ctx = evalContext();
+  TITLES_LIST.forEach(t=>{
+    if(!gameData.titles.includes(t.id) && t.cond(ctx)){ gameData.titles.push(t.id); showToast(`🏷️ Новый титул: ${t.name}`); }
+  });
+}
+
+function updateStreakOnActivity(){
+  const today = todayStr();
+  if(gameData.lastActiveDate === today) return;
+  if(gameData.lastActiveDate){
+    const diff = daysBetween(gameData.lastActiveDate, today);
+    if(diff===1) gameData.streak++;
+    else if(diff>1) gameData.streak = 1;
+  } else { gameData.streak = 1; }
+  gameData.lastActiveDate = today;
+  if(gameData.streak > gameData.maxStreak) gameData.maxStreak = gameData.streak;
+}
+function logActivity(){
+  const today = todayStr();
+  gameData.activityLog[today] = (gameData.activityLog[today]||0)+1;
+}
+function checkDailyReset(){
+  const today = todayStr();
+  if(gameData.lastDailyReset !== today){
+    if(gameData.lastActiveDate){
+      const diff = daysBetween(gameData.lastActiveDate, today);
+      if(diff>1) gameData.streak = 0;
+    }
+    gameData.quests.forEach(q=>{ if(q.type==='daily'||q.type==='mind') q.completed=false; });
+    gameData.lastDailyReset = today;
+    saveData();
   }
-  checkStreak();
+}
+function checkLevelUp(){
+  let leveled=false;
+  while(gameData.exp >= expForLevel(gameData.level)){
+    gameData.exp -= expForLevel(gameData.level);
+    gameData.level++; gameData.statPoints += 3; leveled=true;
+  }
+  if(leveled) showLevelUpModal(gameData.level);
 }
 
-function addDefaultQuests() {
-  gameData.quests = [
-    { id: Date.now() + 1, title: 'Утренняя зарядка', desc: '20 отжиманий, 20 приседаний, планка 1 минута', type: 'daily', exp: 25, stat: 'str', completed: false },
-    { id: Date.now() + 2, title: 'Чтение книги', desc: 'Прочитай минимум 20 страниц', type: 'mind', exp: 20, stat: 'int', completed: false },
-    { id: Date.now() + 3, title: 'Пробежка', desc: 'Пробеги минимум 3 км', type: 'daily', exp: 30, stat: 'agi', completed: false },
-    { id: Date.now() + 4, title: 'Медитация', desc: '10 минут осознанного дыхания', type: 'mind', exp: 20, stat: 'per', completed: false },
-    { id: Date.now() + 5, title: 'Победи своего врага - Лень', desc: 'Заверши первую неделю без пропусков', type: 'main', exp: 100, stat: 'vit', completed: false }
-  ];
+function toggleQuest(id){
+  const q = gameData.quests.find(x=>x.id===id);
+  if(!q || q.completed) return;
+  q.completed = true;
+  const mult = getStreakMultiplier(gameData.streak);
+  const expGain = Math.round(q.exp * mult);
+  const crystalGain = Math.max(1, Math.round(expGain/10));
+  gameData.exp += expGain;
+  gameData.crystals += crystalGain;
+  gameData.totalCompleted++;
+  if(q.type==='main') gameData.mainCompleted++;
+  if(q.stat && gameData.stats[q.stat]!==undefined) gameData.stats[q.stat] += 1;
+  if(Math.random()<0.5 && gameData.skills.length){
+    const sk = gameData.skills[Math.floor(Math.random()*gameData.skills.length)];
+    if(sk.level<10) sk.level++;
+  }
+  updateStreakOnActivity();
+  logActivity();
+  checkLevelUp();
+  checkAchievements();
+  checkTitles();
+  saveData();
+  render();
+  showToast(`+${expGain} опыта${mult>1?` (x${mult} 🔥)`:''} · +${crystalGain} 💎`);
+}
+function deleteQuest(id){
+  gameData.quests = gameData.quests.filter(q=>q.id!==id);
+  saveData(); render();
+}
+function addFromLibrary(cat, idx){
+  const item = QUEST_LIBRARY[cat].quests[idx];
+  gameData.quests.push({id:Date.now(), title:item.title, desc:item.desc, type:item.type, exp:item.exp, stat:item.stat, completed:false});
+  saveData(); render(); closeLibrary(); showToast('Квест добавлен');
+}
+function addCustomQuest(){
+  const title = document.getElementById('customTitle').value.trim();
+  if(!title) return;
+  const desc = document.getElementById('customDesc').value.trim();
+  const type = document.getElementById('customType').value;
+  const stat = document.getElementById('customStat').value;
+  const exp = parseInt(document.getElementById('customExp').value) || 20;
+  gameData.quests.push({id:Date.now(), title, desc, type, stat, exp, completed:false});
+  document.getElementById('customTitle').value=''; document.getElementById('customDesc').value='';
+  saveData(); render();
+}
+function toggleCustomForm(){
+  const f = document.getElementById('customForm');
+  f.style.display = (f.style.display==='none'||!f.style.display) ? 'flex' : 'none';
+}
+function allocateStat(stat){
+  if(gameData.statPoints<=0) return;
+  gameData.stats[stat]++; gameData.statPoints--;
+  saveData(); render();
+}
+function buyItem(id){
+  const item = SHOP_ITEMS.find(i=>i.id===id);
+  if(!item) return;
+  if(gameData.crystals < item.cost){ showToast('Недостаточно кристаллов 💎'); return; }
+  gameData.crystals -= item.cost;
+  gameData.lastPurchase = {name:item.name, date:todayStr()};
+  saveData(); render();
+  showToast(`✅ Получено: ${item.name}`);
 }
 
-function checkStreak() {
-  const today = new Date().toDateString();
-  if (gameData.lastActiveDate) {
-    const last = new Date(gameData.lastActiveDate);
-    const diff = Math.floor((new Date(today) - new Date(last.toDateString())) / (1000*60*60*24));
-    if (diff > 1) gameData.streak = 0;
+function switchTab(tab){
+  document.querySelectorAll('.tab-pane').forEach(p=>p.classList.remove('active'));
+  document.querySelectorAll('.nav-btn').forEach(b=>b.classList.remove('active'));
+  document.getElementById('tab-'+tab).classList.add('active');
+  document.getElementById('nav-'+tab).classList.add('active');
+}
+
+let currentLibCat = 'body';
+function openLibrary(){ document.getElementById('libraryModal').classList.add('open'); renderLibrary(); }
+function closeLibrary(){ document.getElementById('libraryModal').classList.remove('open'); }
+function switchLibCat(cat){ currentLibCat = cat; renderLibrary(); }
+function renderLibrary(){
+  document.querySelectorAll('.lib-tab').forEach(t=>t.classList.remove('active'));
+  document.getElementById('libtab-'+currentLibCat).classList.add('active');
+  const cat = QUEST_LIBRARY[currentLibCat];
+  document.getElementById('libraryList').innerHTML = cat.quests.map((q,idx)=>`
+    <div class="lib-item" style="border-color:${cat.color}44">
+      <div class="lib-item-main">
+        <div class="lib-item-title">${q.title}</div>
+        <div class="lib-item-desc">${q.desc}</div>
+        <div class="lib-item-meta">+${q.exp} опыта</div>
+      </div>
+      <button class="lib-add-btn" onclick="addFromLibrary('${currentLibCat}', ${idx})">+ Добавить</button>
+    </div>`).join('');
+}
+
+function openSettings(){
+  document.getElementById('settingsName').value = gameData.playerName;
+  document.getElementById('settingsAvatar').value = gameData.avatar;
+  const sel = document.getElementById('settingsTitle');
+  sel.innerHTML = TITLES_LIST.filter(t=>gameData.titles.includes(t.id))
+    .map(t=>`<option value="${t.id}" ${t.id===gameData.activeTitle?'selected':''}>${t.name}</option>`).join('');
+  document.getElementById('settingsModal').classList.add('open');
+}
+function closeSettings(){ document.getElementById('settingsModal').classList.remove('open'); }
+function saveSettings(){
+  gameData.playerName = document.getElementById('settingsName').value.trim() || 'Игрок';
+  gameData.avatar = document.getElementById('settingsAvatar').value.trim() || '🗡️';
+  gameData.activeTitle = document.getElementById('settingsTitle').value;
+  saveData(); render(); closeSettings(); showToast('Сохранено');
+}
+function resetProgress(){
+  if(confirm('Сбросить весь прогресс? Это действие необратимо.')){
+    localStorage.removeItem('soloLevelingData'); location.reload();
   }
 }
+function showLevelUpModal(level){
+  document.getElementById('levelUpText').textContent = `Уровень ${level}`;
+  const rank = getRank(level);
+  const r = document.getElementById('levelUpRank');
+  r.textContent = rank.name; r.style.color = rank.color;
+  document.getElementById('levelUpModal').classList.add('open');
+}
+function closeLevelUp(){ document.getElementById('levelUpModal').classList.remove('open'); }
 
-function getCurrentRank(level) {
-  return RANKS.find(r => level >= r.min && level <= r.max) || RANKS[0];
+function showToast(msg){
+  const t = document.createElement('div');
+  t.className = 'toast'; t.textContent = msg;
+  document.getElementById('toastContainer').appendChild(t);
+  setTimeout(()=>t.classList.add('show'), 10);
+  setTimeout(()=>{ t.classList.remove('show'); setTimeout(()=>t.remove(),400); }, 3000);
 }
 
-function renderPlayer() {
-  document.getElementById('playerName').textContent = gameData.name;
-  document.getElementById('avatarDisplay').textContent = gameData.avatar;
-  document.getElementById('levelNumber').textContent = gameData.level;
-  
-  const rank = getCurrentRank(gameData.level);
-  const rankEl = document.getElementById('playerRank');
-  rankEl.textContent = rank.name;
-  rankEl.style.borderColor = rank.color;
-  rankEl.style.color = rank.color;
-  
-  document.getElementById('expText').textContent = `${gameData.exp} / ${gameData.expToNext}`;
-  const expPercent = (gameData.exp / gameData.expToNext) * 100;
-  document.getElementById('expBar').style.width = `${expPercent}%`;
-  
-  const freePointsDisplay = document.getElementById('freePointsDisplay');
-  if (gameData.freePoints > 0) {
-    freePointsDisplay.style.display = 'block';
-    document.getElementById('freePointsCount').textContent = gameData.freePoints;
-  } else {
-    freePointsDisplay.style.display = 'none';
-  }
-  
-  renderStats();
+function renderHUD(){
+  const rank = getRank(gameData.level);
+  const av = document.getElementById('hudAvatar');
+  av.textContent = gameData.avatar;
+  av.style.borderColor = rank.color;
+  av.style.boxShadow = `0 0 14px ${rank.color}88`;
+  document.getElementById('hudName').textContent = gameData.playerName;
+  const title = TITLES_LIST.find(t=>t.id===gameData.activeTitle);
+  document.getElementById('hudTitle').textContent = title ? title.name : '';
+  document.getElementById('hudCrystals').textContent = gameData.crystals;
+  document.getElementById('hudStreak').textContent = gameData.streak;
+  document.getElementById('hudLevel').textContent = `Lv.${gameData.level}`;
+  const need = expForLevel(gameData.level);
+  const pct = Math.min(100, (gameData.exp/need)*100);
+  document.getElementById('expFill').style.width = pct+'%';
+  document.getElementById('expText').textContent = `${gameData.exp} / ${need}`;
 }
-
-function renderStats() {
-  const grid = document.getElementById('statsGrid');
-  grid.innerHTML = '';
-  
-  for (const [key, info] of Object.entries(STAT_INFO)) {
-    const value = gameData.stats[key];
-    const box = document.createElement('div');
-    box.className = 'stat-box';
-    box.innerHTML = `
+function renderProfile(){
+  const rank = getRank(gameData.level);
+  document.getElementById('profAvatar').textContent = gameData.avatar;
+  document.getElementById('profName').textContent = gameData.playerName;
+  const title = TITLES_LIST.find(t=>t.id===gameData.activeTitle);
+  document.getElementById('profTitle').textContent = title ? title.name : '';
+  const r = document.getElementById('profRank');
+  r.textContent = rank.name; r.style.color = rank.color;
+  document.getElementById('profLevel').textContent = `Уровень ${gameData.level}`;
+  document.getElementById('profPoints').textContent = gameData.statPoints;
+  document.getElementById('profCrystals').textContent = gameData.crystals;
+  document.getElementById('statsGrid').innerHTML = Object.keys(STAT_INFO).map(key=>{
+    const info = STAT_INFO[key]; const val = gameData.stats[key];
+    return `<div class="stat-row">
       <div class="stat-icon">${info.icon}</div>
       <div class="stat-name">${info.name}</div>
-      <div class="stat-value">${value}</div>
-      ${gameData.freePoints > 0 ? `<button class="stat-points-btn" onclick="addStatPoint('${key}')">+</button>` : ''}
-    `;
-    grid.appendChild(box);
-  }
+      <div class="stat-value">${val}</div>
+      ${gameData.statPoints>0?`<button class="stat-add" onclick="allocateStat('${key}')">+</button>`:''}
+    </div>`;
+  }).join('');
 }
-
-function addStatPoint(statKey) {
-  if (gameData.freePoints > 0) {
-    gameData.stats[statKey]++;
-    gameData.freePoints--;
-    addLog(`Характеристика "${STAT_INFO[statKey].name}" увеличена до ${gameData.stats[statKey]}`);
-    saveData();
-    renderPlayer();
-    checkAchievements();
-  }
-}
-
-function renderQuests() {
-  const list = document.getElementById('questsList');
-  list.innerHTML = '';
-  
-  if (gameData.quests.length === 0) {
-    list.innerHTML = `<div class="empty-state"><div class="empty-state-icon">📭</div><div>Нет активных квестов. Открой библиотеку или создай свой!</div></div>`;
-    return;
-  }
-  
-  const sorted = [...gameData.quests].sort((a, b) => {
-    if (a.completed !== b.completed) return a.completed ? 1 : -1;
-    return 0;
-  });
-  
-  sorted.forEach(quest => {
-    const card = document.createElement('div');
-    card.className = `quest-card ${quest.type} ${quest.completed ? 'completed' : ''}`;
-    
-    const badgeMap = {
-      daily: { cls: 'badge-daily', text: 'Ежедневный' },
-      main: { cls: 'badge-main', text: 'Основной' },
-      side: { cls: 'badge-side', text: 'Побочный' },
-      mind: { cls: 'badge-mind', text: 'Разум' }
-    };
-    const badge = badgeMap[quest.type] || badgeMap.side;
-    
-    card.innerHTML = `
-      <div class="quest-header">
-        <div class="quest-title">${quest.completed ? '✅ ' : ''}${quest.title}</div>
-        <span class="quest-type-badge ${badge.cls}">${badge.text}</span>
-      </div>
-      <div class="quest-description">${quest.desc || 'Без описания'}</div>
-      <div class="quest-rewards">
-        <div class="reward-item">⭐ +${quest.exp} EXP</div>
-        <div class="reward-item">${STAT_INFO[quest.stat].icon} +1 ${STAT_INFO[quest.stat].name}</div>
-      </div>
-      <div class="quest-actions">
-        ${!quest.completed ? 
-          `<button class="btn btn-success" onclick="completeQuest(${quest.id})">✓ Выполнить</button>
-           <button class="btn btn-danger" onclick="deleteQuest(${quest.id})">✕ Удалить</button>` :
-          `<button class="btn btn-secondary" disabled>Выполнено</button>`
-        }
-      </div>
-    `;
-    list.appendChild(card);
-  });
-}
-
-function renderSkills() {
-  const grid = document.getElementById('skillsGrid');
-  grid.innerHTML = '';
-  
-  gameData.skills.forEach(skill => {
-    const card = document.createElement('div');
-    card.className = 'skill-card';
-    
-    let dots = '';
-    for (let i = 1; i <= 10; i++) {
-      dots += `<div class="skill-level-dot ${i <= skill.level ? 'filled' : ''}"></div>`;
-    }
-    
-    card.innerHTML = `
-      <div class="skill-header">
-        <div class="skill-icon">${skill.icon}</div>
-        <div>
-          <div style="font-weight:700; color:#fff;">${skill.name}</div>
-          <div style="font-size:0.8em; color:#8a7aae;">Уровень ${skill.level}/10</div>
+function renderQuests(){
+  checkDailyReset();
+  const el = document.getElementById('questsList');
+  if(gameData.quests.length===0){
+    el.innerHTML = `<div class="empty-state">Нет активных квестов.<br>Добавьте из библиотеки 👆</div>`;
+  } else {
+    el.innerHTML = gameData.quests.map(q=>{
+      const type = QUEST_TYPES[q.type] || QUEST_TYPES.side;
+      return `<div class="quest-card ${q.completed?'completed':''}" style="border-left-color:${type.color}">
+        <div class="quest-main">
+          <div class="quest-badge" style="background:${type.color}22;color:${type.color};border-color:${type.color}66">${type.name}</div>
+          <div class="quest-title">${q.title}</div>
+          ${q.desc?`<div class="quest-desc">${q.desc}</div>`:''}
+          <div class="quest-meta">+${q.exp} опыта ${q.stat?`· ${STAT_INFO[q.stat].icon} ${STAT_INFO[q.stat].name}`:''}</div>
         </div>
-      </div>
-      <div style="font-size:0.85em; color:#8a7aae; margin-bottom:10px;">${skill.desc}</div>
-      <div class="skill-level">${dots}</div>
-    `;
-    grid.appendChild(card);
-  });
-}
-
-function renderAchievements() {
-  const grid = document.getElementById('achievementsGrid');
-  grid.innerHTML = '';
-  
-  ACHIEVEMENTS_LIST.forEach(ach => {
-    const unlocked = gameData.achievements.includes(ach.id);
-    const card = document.createElement('div');
-    card.className = `achievement-card ${unlocked ? 'unlocked' : 'locked'}`;
-    card.innerHTML = `
-      <div class="achievement-icon">${ach.icon}</div>
-      <div class="achievement-name">${ach.name}</div>
-      <div class="achievement-desc">${ach.desc}</div>
-    `;
-    grid.appendChild(card);
-  });
-}
-
-function renderLog() {
-  const container = document.getElementById('logContainer');
-  container.innerHTML = '';
-  
-  if (gameData.logs.length === 0) {
-    container.innerHTML = `<div class="empty-state"><div class="empty-state-icon">📋</div><div>История пуста</div></div>`;
-    return;
-  }
-  
-  [...gameData.logs].reverse().forEach(log => {
-    const entry = document.createElement('div');
-    entry.className = 'log-entry';
-    entry.innerHTML = `<span>${log.text}</span><span class="log-time">${log.time}</span>`;
-    container.appendChild(entry);
-  });
-}
-
-function renderAll() {
-  renderPlayer();
-  renderQuests();
-  renderSkills();
-  renderAchievements();
-  renderLog();
-}
-
-function addLog(text) {
-  const now = new Date();
-  const timeStr = now.toLocaleTimeString('ru-RU', {hour: '2-digit', minute:'2-digit'}) + ' · ' + now.toLocaleDateString('ru-RU');
-  gameData.logs.push({ text, time: timeStr });
-  if (gameData.logs.length > 100) gameData.logs.shift();
-}
-
-function addQuest() {
-  const title = document.getElementById('questTitle').value.trim();
-  const desc = document.getElementById('questDesc').value.trim();
-  const type = document.getElementById('questType').value;
-  const exp = parseInt(document.getElementById('questExp').value) || 20;
-  const stat = document.getElementById('questStat').value;
-  
-  if (!title) {
-    showNotification('⚠️ Введи название квеста!');
-    return;
-  }
-  
-  gameData.quests.push({ id: Date.now(), title, desc, type, exp, stat, completed: false });
-  saveData();
-  renderQuests();
-  
-  document.getElementById('questTitle').value = '';
-  document.getElementById('questDesc').value = '';
-  document.getElementById('questExp').value = '20';
-  
-  showNotification('✨ Новый квест создан!');
-}
-
-function completeQuest(id) {
-  const quest = gameData.quests.find(q => q.id === id);
-  if (!quest || quest.completed) return;
-  
-  quest.completed = true;
-  gameData.questsCompleted++;
-  if (quest.type === 'main') gameData.mainQuestsCompleted++;
-  
-  gameData.stats[quest.stat]++;
-  
-  const today = new Date().toDateString();
-  if (gameData.lastActiveDate !== today) {
-    gameData.streak++;
-    gameData.lastActiveDate = today;
-  }
-  
-  addLog(`Квест выполнен: "${quest.title}" (+${quest.exp} EXP, +1 ${STAT_INFO[quest.stat].name})`);
-  
-  addExp(quest.exp);
-  
-  if (Math.random() > 0.5) {
-    const skill = gameData.skills[Math.floor(Math.random() * gameData.skills.length)];
-    if (skill.level < 10) {
-      skill.level++;
-      addLog(`Навык "${skill.name}" повышен до уровня ${skill.level}!`);
-    }
-  }
-  
-  saveData();
-  renderAll();
-  checkAchievements();
-  showNotification(`✅ Квест выполнен! +${quest.exp} EXP`);
-}
-
-function deleteQuest(id) {
-  gameData.quests = gameData.quests.filter(q => q.id !== id);
-  saveData();
-  renderQuests();
-}
-
-function addExp(amount) {
-  gameData.exp += amount;
-  
-  while (gameData.exp >= gameData.expToNext) {
-    gameData.exp -= gameData.expToNext;
-    gameData.level++;
-    gameData.expToNext = Math.floor(100 * Math.pow(1.15, gameData.level - 1));
-    gameData.freePoints += 3;
-    
-    showLevelUp();
-    addLog(`🎉 ДОСТИГНУТ УРОВЕНЬ ${gameData.level}!`);
-  }
-}
-
-function showLevelUp() {
-  document.getElementById('levelUpText').textContent = `Ты достиг уровня ${gameData.level}!`;
-  document.getElementById('levelUpModal').classList.add('show');
-}
-
-function closeLevelUp() {
-  document.getElementById('levelUpModal').classList.remove('show');
-}
-
-function checkAchievements() {
-  ACHIEVEMENTS_LIST.forEach(ach => {
-    if (!gameData.achievements.includes(ach.id) && ach.check(gameData)) {
-      gameData.achievements.push(ach.id);
-      addLog(`🏆 Достижение разблокировано: "${ach.name}"`);
-      showNotification(`🏆 Достижение: ${ach.name}`);
-    }
-  });
-  saveData();
-  renderAchievements();
-}
-
-function showNotification(text) {
-  const notif = document.getElementById('questNotif');
-  notif.textContent = text;
-  notif.classList.add('show');
-  setTimeout(() => notif.classList.remove('show'), 3000);
-}
-
-function switchTab(tabId, el) {
-  document.querySelectorAll('.tab-content').forEach(t => t.classList.remove('active'));
-  document.querySelectorAll('.nav-tab').forEach(t => t.classList.remove('active'));
-  document.getElementById(tabId).classList.add('active');
-  el.classList.add('active');
-}
-
-function openSettings() {
-  document.getElementById('settingsName').value = gameData.name;
-  document.getElementById('settingsAvatar').value = gameData.avatar;
-  document.getElementById('settingsModal').classList.add('show');
-}
-
-function closeSettings() {
-  document.getElementById('settingsModal').classList.remove('show');
-}
-
-function saveSettings() {
-  const name = document.getElementById('settingsName').value.trim();
-  const avatar = document.getElementById('settingsAvatar').value.trim();
-  
-  if (name) gameData.name = name;
-  if (avatar) gameData.avatar = avatar;
-  
-  saveData();
-  renderPlayer();
-  closeSettings();
-  showNotification('✅ Настройки сохранены!');
-}
-
-function resetProgress() {
-  if (confirm('Ты уверен? Весь прогресс будет удалён безвозвратно!')) {
-    localStorage.removeItem('soloLevelingData');
-    location.reload();
-  }
-}
-
-// БИБЛИОТЕКА КВЕСТОВ
-function openLibrary() {
-  const content = document.getElementById('libraryContent');
-  content.innerHTML = '';
-  
-  for (const [key, category] of Object.entries(QUEST_LIBRARY)) {
-    const catDiv = document.createElement('div');
-    catDiv.className = 'library-category';
-    
-    let questsHtml = '';
-    category.quests.forEach((q, idx) => {
-      questsHtml += `
-        <div class="library-quest-item">
-          <div class="library-quest-info">
-            <div class="library-quest-title">${q.title}</div>
-            <div class="library-quest-meta">+${q.exp} EXP · ${STAT_INFO[q.stat].icon} ${STAT_INFO[q.stat].name}</div>
-          </div>
-          <button class="library-add-btn" onclick="addFromLibrary('${key}', ${idx})">+ Добавить</button>
+        <div class="quest-actions">
+          <button class="quest-check" onclick="toggleQuest(${q.id})" ${q.completed?'disabled':''}>${q.completed?'✓':''}</button>
+          <button class="quest-del" onclick="deleteQuest(${q.id})">✕</button>
         </div>
-      `;
-    });
-    
-    catDiv.innerHTML = `
-      <div class="library-category-title" style="color:${category.color};">${category.name}</div>
-      ${questsHtml}
-    `;
-    content.appendChild(catDiv);
+      </div>`;
+    }).join('');
   }
-  
-  document.getElementById('libraryModal').classList.add('show');
+  const mult = getStreakMultiplier(gameData.streak);
+  const banner = document.getElementById('streakBanner');
+  if(mult>1){ banner.style.display='flex'; banner.innerHTML = `🔥 Серия ${gameData.streak} дней — бонус опыта x${mult}`; }
+  else { banner.style.display='none'; }
 }
-
-function closeLibrary() {
-  document.getElementById('libraryModal').classList.remove('show');
+function renderAchievements(){
+  document.getElementById('achievementsList').innerHTML = ACHIEVEMENTS_LIST.map(a=>{
+    const unlocked = gameData.achievements.includes(a.id);
+    return `<div class="ach-card ${unlocked?'unlocked':'locked'}">
+      <div class="ach-icon">${unlocked?a.icon:'🔒'}</div>
+      <div><div class="ach-name">${a.name}</div><div class="ach-desc">${a.desc}</div></div>
+    </div>`;
+  }).join('');
+  document.getElementById('achCount').textContent = `${gameData.achievements.length}/${ACHIEVEMENTS_LIST.length}`;
 }
-
-function addFromLibrary(categoryKey, questIdx) {
-  const q = QUEST_LIBRARY[categoryKey].quests[questIdx];
-  gameData.quests.push({
-    id: Date.now(),
-    title: q.title,
-    desc: q.desc,
-    type: q.type,
-    exp: q.exp,
-    stat: q.stat,
-    completed: false
-  });
-  saveData();
-  renderQuests();
-  showNotification(`✨ Квест "${q.title}" добавлен!`);
+function renderSkills(){
+  document.getElementById('skillsList').innerHTML = gameData.skills.map(s=>`
+    <div class="skill-card">
+      <div class="skill-icon">${s.icon}</div>
+      <div class="skill-info">
+        <div class="skill-name">${s.name}</div>
+        <div class="skill-bar"><div class="skill-fill" style="width:${s.level*10}%"></div></div>
+      </div>
+      <div class="skill-level">Lv.${s.level}</div>
+    </div>`).join('');
 }
-
-function createParticles() {
-  const container = document.getElementById('particles');
-  const count = 25;
-  
-  for (let i = 0; i < count; i++) {
-    const particle = document.createElement('div');
-    particle.className = 'particle';
-    particle.style.left = Math.random() * 100 + '%';
-    particle.style.animationDelay = Math.random() * 15 + 's';
-    particle.style.animationDuration = (12 + Math.random() * 10) + 's';
-    container.appendChild(particle);
+function renderShop(){
+  document.getElementById('shopList').innerHTML = SHOP_ITEMS.map(item=>{
+    const disabled = gameData.crystals < item.cost;
+    return `<div class="shop-item ${disabled?'disabled':''}">
+      <div class="shop-icon">${item.icon}</div>
+      <div class="shop-info"><div class="shop-name">${item.name}</div><div class="shop-desc">${item.desc}</div></div>
+      <button class="shop-buy" onclick="buyItem('${item.id}')" ${disabled?'disabled':''}>${item.cost} 💎</button>
+    </div>`;
+  }).join('');
+  document.getElementById('shopCrystals').textContent = gameData.crystals;
+  const lp = gameData.lastPurchase;
+  document.getElementById('lastPurchase').textContent = lp ? `Последняя награда: ${lp.name} (${lp.date})` : 'Пока нет покупок';
+}
+function renderCalendar(){
+  const days = 70; const today = new Date(); let cells=''; let activeDays=0;
+  for(let i=days-1;i>=0;i--){
+    const d = new Date(today); d.setDate(d.getDate()-i);
+    const key = d.toISOString().slice(0,10);
+    const count = gameData.activityLog[key] || 0;
+    if(count>0) activeDays++;
+    let level=0;
+    if(count>=1) level=1; if(count>=2) level=2; if(count>=4) level=3; if(count>=6) level=4;
+    const dateLabel = d.toLocaleDateString('ru-RU',{day:'2-digit',month:'2-digit'});
+    cells += `<div class="cal-cell cal-l${level}" title="${dateLabel}: ${count} квестов"></div>`;
   }
+  document.getElementById('calendarGrid').innerHTML = cells;
+  document.getElementById('calActiveDays').textContent = activeDays;
+  document.getElementById('calStreak').textContent = gameData.streak;
+  document.getElementById('calMaxStreak').textContent = gameData.maxStreak;
+}
+function render(){
+  renderHUD(); renderProfile(); renderQuests(); renderAchievements(); renderSkills(); renderShop(); renderCalendar();
 }
 
-function checkDailyReset() {
-  const today = new Date().toDateString();
-  const lastReset = localStorage.getItem('lastDailyReset');
-  
-  if (lastReset !== today) {
-    gameData.quests.forEach(q => {
-      if (q.type === 'daily' || q.type === 'mind') q.completed = false;
-    });
-    localStorage.setItem('lastDailyReset', today);
-    saveData();
-  }
-}
-
-window.onload = function() {
+window.addEventListener('DOMContentLoaded', ()=>{
   loadData();
   checkDailyReset();
-  createParticles();
-  renderAll();
-  
-  if (gameData.questsCompleted === 0 && gameData.level === 1) {
-    setTimeout(() => {
-      showNotification('⚔️ Добро пожаловать, Игрок! Начни свой путь к силе!');
-    }, 1000);
+  checkAchievements();
+  checkTitles();
+  render();
+  setInterval(saveData, 30000);
+  if('serviceWorker' in navigator){
+    navigator.serviceWorker.register('sw.js').catch(()=>{});
   }
-};
-
-setInterval(saveData, 30000);
-
-if ('serviceWorker' in navigator) {
-  window.addEventListener('load', () => {
-    navigator.serviceWorker.register('sw.js')
-      .then(reg => console.log('Service Worker зарегистрирован'))
-      .catch(err => console.log('Ошибка SW:', err));
-  });
-}
+});
 </script>
-
 </body>
 </html>
