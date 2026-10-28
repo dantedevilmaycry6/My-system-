@@ -15,7 +15,7 @@ window.onerror = function(msg, url, line, col, error){
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black">
 <meta name="apple-mobile-web-app-title" content="SYSTEM">
-<meta name="theme-color" content="#030308">
+<meta name="theme-color" content="#06050f">
 <link rel="apple-touch-icon" href="icon.png">
 <link rel="icon" href="icon.png">
 <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -23,30 +23,31 @@ window.onerror = function(msg, url, line, col, error){
 <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@500;700;900&family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 <style>
 :root{
-  --bg:#030308;
-  --bg-2:#07060f;
+  --bg:#06050f;
+  --bg-2:#0b0a1e;
   --c-amethyst:#9b5cff;
   --c-amethyst-2:#6c3ce0;
-  --c-sapphire:#3d8bff;
+  --c-sapphire:#3d6bff;
+  --c-sapphire-deep:#1f2f8f;
   --c-cyan:#2fd8d0;
   --c-platinum:#cfd4dc;
-  --c-gold:#ffd54f;
+  --c-gold:#ffc94f;
   --c-txt:#f1eefc;
-  --c-txt-dim:#8d8aa0;
-  --c-card:rgba(255,255,255,0.035);
-  --c-card-2:rgba(255,255,255,0.055);
-  --c-border:rgba(255,255,255,0.09);
+  --c-txt-dim:#8d8aa8;
+  --c-card:rgba(140,120,255,0.06);
+  --c-card-2:rgba(140,120,255,0.09);
+  --c-border:rgba(155,130,255,0.14);
   --c-accent:#9b5cff;
-  --c-accent-2:#6c3ce0;
-  --c-glow:rgba(155,92,255,0.45);
+  --c-accent-2:#3d6bff;
+  --c-glow:rgba(130,100,255,0.5);
   --c-danger:#ff5a7a;
   --c-ok:#38e2a2;
   --sp-xs:6px;
   --sp-sm:10px;
   --sp-md:16px;
   --sp-lg:24px;
-  --radius-lg:22px;
-  --radius-md:16px;
+  --radius-lg:24px;
+  --radius-md:18px;
   --radius-sm:12px;
   --tabbar-h:64px;
   --safe-top:env(safe-area-inset-top,0px);
@@ -76,10 +77,11 @@ input,textarea{color:var(--c-txt);}
 
 #bgLayer{
   position:fixed;inset:0;z-index:0;overflow:hidden;pointer-events:none;
-  background:radial-gradient(ellipse at 20% 0%, rgba(155,92,255,0.18), transparent 55%),
-             radial-gradient(ellipse at 90% 15%, rgba(61,139,255,0.13), transparent 50%),
-             radial-gradient(ellipse at 50% 100%, rgba(47,216,208,0.08), transparent 55%),
-             var(--bg);
+  background:
+    radial-gradient(ellipse at 10% -10%, rgba(123,58,237,0.38), transparent 55%),
+    radial-gradient(ellipse at 100% 5%, rgba(45,70,200,0.32), transparent 55%),
+    radial-gradient(ellipse at 50% 115%, rgba(60,20,140,0.28), transparent 60%),
+    linear-gradient(180deg, #050410 0%, #0a0822 45%, #07061a 100%);
 }
 #particlesCanvas{position:fixed;inset:0;z-index:1;pointer-events:none;}
 
@@ -94,7 +96,7 @@ input,textarea{color:var(--c-txt);}
 @keyframes hexSpin{from{transform:rotate(0deg);}to{transform:rotate(360deg);}}
 .splash-title{
   font-family:var(--font-head);font-weight:900;font-size:34px;letter-spacing:.12em;
-  background:linear-gradient(90deg,var(--c-amethyst),var(--c-cyan));
+  background:linear-gradient(90deg,var(--c-amethyst),var(--c-sapphire));
   -webkit-background-clip:text;background-clip:text;color:transparent;
 }
 .splash-sub{font-size:12px;letter-spacing:.3em;color:var(--c-txt-dim);margin-top:8px;text-transform:uppercase;}
@@ -103,7 +105,7 @@ input,textarea{color:var(--c-txt);}
 
 #app{
   position:fixed;left:0;right:0;top:var(--safe-top);bottom:0;z-index:2;
-  display:flex;flex-direction:column;
+  display:flex;flex-direction:column;overflow:hidden;
 }
 
 #topHud{
@@ -118,47 +120,48 @@ input,textarea{color:var(--c-txt);}
 .hud-info{flex:1;min-width:0;}
 .hud-name-row{display:flex;align-items:center;gap:6px;}
 .hud-name{font-size:14.5px;font-weight:700;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
-.hud-rank-badge{flex:none;font-size:10px;font-weight:800;padding:1px 7px;border-radius:20px;background:linear-gradient(135deg,var(--c-amethyst),var(--c-amethyst-2));color:#fff;letter-spacing:.05em;}
+.hud-rank-badge{flex:none;font-size:10px;font-weight:800;padding:1px 7px;border-radius:20px;background:linear-gradient(135deg,var(--c-amethyst),var(--c-sapphire-deep));color:#fff;letter-spacing:.05em;}
 .hud-exp-track{margin-top:5px;height:7px;border-radius:8px;background:rgba(255,255,255,0.08);overflow:hidden;}
-.hud-exp-fill{height:100%;background:linear-gradient(90deg,var(--c-amethyst),var(--c-cyan));border-radius:8px;transition:width .4s ease;}
+.hud-exp-fill{height:100%;background:linear-gradient(90deg,var(--c-amethyst),var(--c-sapphire));border-radius:8px;transition:width .4s ease;}
 .hud-exp-label{font-size:10px;color:var(--c-txt-dim);margin-top:3px;}
 .hud-crystal{flex:none;display:flex;align-items:center;gap:4px;font-size:13px;font-weight:700;color:var(--c-gold);}
 .hud-crystal svg{width:16px;height:16px;}
 
+.tab-page{display:none;flex:1;min-height:0;}
+.tab-page.active{display:flex;flex-direction:column;animation:fadeIn .25s ease;}
 .page-scroll{
-  flex:1;overflow-y:auto;-webkit-overflow-scrolling:touch;
+  flex:1;min-height:0;overflow-y:auto;-webkit-overflow-scrolling:touch;
   padding:0 var(--sp-md) calc(var(--tabbar-h) + var(--safe-bottom) + 20px);
 }
-.tab-page{display:none;}
-.tab-page.active{display:block;animation:fadeIn .25s ease;}
 @keyframes fadeIn{from{opacity:0;transform:translateY(6px);}to{opacity:1;transform:translateY(0);}}
 
 .card{
   background:var(--c-card);border:1px solid var(--c-border);border-radius:var(--radius-md);
   padding:var(--sp-md);margin-bottom:var(--sp-sm);
 }
-.card-title{font-size:13px;font-weight:800;letter-spacing:.04em;text-transform:uppercase;color:var(--c-txt-dim);margin-bottom:10px;display:flex;align-items:center;gap:7px;}
+.card-title{font-size:13px;font-weight:800;letter-spacing:.04em;text-transform:uppercase;color:var(--c-txt-dim);margin-bottom:10px;display:flex;align-items:center;gap:7px;justify-content:space-between;}
+.card-title-left{display:flex;align-items:center;gap:7px;}
 .card-title svg{width:15px;height:15px;color:var(--c-amethyst);}
+.card-title-count{font-size:11px;font-weight:700;color:var(--c-amethyst);text-transform:none;letter-spacing:0;}
 
-.sysmsg-card{
-  background:linear-gradient(135deg,rgba(155,92,255,0.14),rgba(61,139,255,0.08));
-  border:1px solid rgba(155,92,255,0.25);border-radius:var(--radius-md);
-  padding:14px;margin-bottom:var(--sp-sm);font-size:13px;line-height:1.5;font-style:italic;color:#e7e2ff;
-  position:relative;overflow:hidden;
+.hero-card{
+  position:relative;overflow:hidden;border-radius:var(--radius-lg);
+  background:linear-gradient(145deg, rgba(123,58,237,0.22), rgba(45,70,200,0.14));
+  border:1px solid rgba(155,130,255,0.28);
+  padding:18px;margin-bottom:var(--sp-sm);
+  box-shadow:0 14px 34px -14px rgba(90,50,220,0.45), inset 0 1px 0 rgba(255,255,255,0.06);
 }
-.sysmsg-card::before{content:'';position:absolute;top:-30%;left:-10%;width:60%;height:160%;
-  background:linear-gradient(120deg,transparent,rgba(255,255,255,0.08),transparent);
-  transform:rotate(20deg);animation:sysShine 5s ease-in-out infinite;}
-@keyframes sysShine{0%,100%{transform:translateX(-100%) rotate(20deg);}50%{transform:translateX(220%) rotate(20deg);}}
-
-.daybanner{display:flex;align-items:center;gap:12px;}
-.daybanner-icon{width:34px;height:34px;flex:none;color:var(--c-cyan);}
-.daybanner-icon svg{width:100%;height:100%;}
-.daybanner-text{flex:1;}
-.daybanner-title{font-size:13px;font-weight:700;}
-.daybanner-sub{font-size:11px;color:var(--c-txt-dim);margin-top:2px;}
-.daybanner-streak{flex:none;display:flex;align-items:center;gap:4px;font-weight:800;color:var(--c-gold);font-size:15px;}
-.daybanner-streak svg{width:16px;height:16px;}
+.hero-card::before{content:'';position:absolute;top:-40%;left:-15%;width:65%;height:180%;
+  background:linear-gradient(120deg,transparent,rgba(255,255,255,0.07),transparent);
+  transform:rotate(18deg);animation:sysShine 6s ease-in-out infinite;}
+@keyframes sysShine{0%,100%{transform:translateX(-120%) rotate(18deg);}50%{transform:translateX(220%) rotate(18deg);}}
+.hero-top{display:flex;align-items:center;justify-content:space-between;position:relative;z-index:1;}
+.hero-greet{font-size:14.5px;font-weight:800;}
+.hero-streak{display:flex;align-items:center;gap:5px;font-weight:800;color:var(--c-gold);font-size:15px;}
+.hero-streak svg{width:17px;height:17px;}
+.hero-msg{position:relative;z-index:1;margin-top:10px;font-size:12.5px;line-height:1.5;font-style:italic;color:#e7e2ff;opacity:.92;}
+.hero-bottom{position:relative;z-index:1;margin-top:12px;font-size:11.5px;color:var(--c-txt-dim);display:flex;align-items:center;gap:6px;}
+.hero-bottom svg{width:14px;height:14px;color:var(--c-cyan);}
 
 .accordion{border:1px solid var(--c-border);border-radius:var(--radius-md);margin-bottom:var(--sp-sm);overflow:hidden;background:var(--c-card);}
 .accordion-head{display:flex;align-items:center;justify-content:space-between;padding:13px 14px;cursor:pointer;}
@@ -194,19 +197,20 @@ input,textarea{color:var(--c-txt);}
 .quest-text{flex:1;min-width:0;}
 .quest-name{font-size:13.5px;font-weight:600;}
 .quest-item.done .quest-name{text-decoration:line-through;}
-.quest-meta{font-size:10.5px;color:var(--c-txt-dim);margin-top:2px;display:flex;gap:8px;}
+.quest-meta{font-size:10.5px;color:var(--c-txt-dim);margin-top:2px;display:flex;gap:8px;align-items:center;}
 .quest-cat-icon{width:11px;height:11px;vertical-align:-1px;}
+.quest-daily-tag{font-size:9px;font-weight:800;padding:1px 6px;border-radius:10px;background:rgba(61,107,255,0.25);color:var(--c-sapphire);text-transform:uppercase;}
 .quest-del{flex:none;width:22px;height:22px;color:var(--c-txt-dim);}
 .quest-del svg{width:100%;height:100%;}
 
 .fab{position:fixed;right:var(--sp-md);bottom:calc(var(--tabbar-h) + var(--safe-bottom) + 14px);z-index:40;
-  width:54px;height:54px;border-radius:50%;background:linear-gradient(135deg,var(--c-amethyst),var(--c-amethyst-2));
+  width:54px;height:54px;border-radius:50%;background:linear-gradient(135deg,var(--c-amethyst),var(--c-sapphire-deep));
   display:flex;align-items:center;justify-content:center;box-shadow:0 8px 24px -4px var(--c-glow);}
 .fab svg{width:24px;height:24px;color:#fff;}
 
 #tabbar{
   position:fixed;left:0;right:0;bottom:0;height:calc(var(--tabbar-h) + var(--safe-bottom));
-  background:rgba(8,7,16,0.92);backdrop-filter:blur(18px);border-top:1px solid var(--c-border);
+  background:rgba(8,7,20,0.92);backdrop-filter:blur(18px);border-top:1px solid var(--c-border);
   display:flex;z-index:30;padding-bottom:var(--safe-bottom);
 }
 .tabbar-btn{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;color:var(--c-txt-dim);}
@@ -220,7 +224,7 @@ input,textarea{color:var(--c-txt);}
 .menu-title{font-family:var(--font-head);font-size:18px;font-weight:700;letter-spacing:.05em;}
 .menu-close{width:36px;height:36px;border-radius:50%;background:var(--c-card);display:flex;align-items:center;justify-content:center;}
 .menu-close svg{width:16px;height:16px;}
-.menu-scroll{flex:1;overflow-y:auto;padding:0 var(--sp-md) calc(var(--sp-lg)+var(--safe-bottom));}
+.menu-scroll{flex:1;overflow-y:auto;-webkit-overflow-scrolling:touch;padding:0 var(--sp-md) calc(var(--sp-lg)+var(--safe-bottom));}
 .folder-group{border:1px solid var(--c-border);border-radius:var(--radius-md);margin-bottom:10px;overflow:hidden;background:var(--c-card);}
 .folder-head{display:flex;align-items:center;gap:10px;padding:14px;cursor:pointer;}
 .folder-head svg{width:20px;height:20px;color:var(--c-amethyst);}
@@ -237,7 +241,7 @@ input,textarea{color:var(--c-txt);}
 .overlay-sheet{position:fixed;inset:0;z-index:60;display:none;align-items:flex-end;}
 .overlay-sheet.show{display:flex;}
 .overlay-sheet-bg{position:absolute;inset:0;background:rgba(0,0,0,0.6);}
-.sheet-panel{position:relative;width:100%;max-height:85vh;overflow-y:auto;background:var(--bg-2);border-radius:26px 26px 0 0;
+.sheet-panel{position:relative;width:100%;max-height:85vh;overflow-y:auto;-webkit-overflow-scrolling:touch;background:var(--bg-2);border-radius:26px 26px 0 0;
   border:1px solid var(--c-border);border-bottom:none;padding:var(--sp-md) var(--sp-md) calc(var(--sp-lg)+var(--safe-bottom));
   animation:sheetUp .28s ease;}
 @keyframes sheetUp{from{transform:translateY(100%);}to{transform:translateY(0);}}
@@ -249,8 +253,8 @@ input,textarea{color:var(--c-txt);}
 .field-row>*{flex:1;}
 .seg-row{display:flex;gap:6px;margin-bottom:14px;flex-wrap:wrap;}
 .seg-btn{flex:1;min-width:70px;padding:9px 6px;border-radius:12px;background:rgba(255,255,255,0.05);border:1px solid var(--c-border);font-size:12px;font-weight:700;text-align:center;}
-.seg-btn.active{background:linear-gradient(135deg,var(--c-amethyst),var(--c-amethyst-2));border-color:transparent;color:#fff;}
-.btn-primary{width:100%;padding:14px;border-radius:14px;background:linear-gradient(135deg,var(--c-amethyst),var(--c-amethyst-2));color:#fff;font-weight:800;font-size:14.5px;box-shadow:0 8px 20px -6px var(--c-glow);}
+.seg-btn.active{background:linear-gradient(135deg,var(--c-amethyst),var(--c-sapphire-deep));border-color:transparent;color:#fff;}
+.btn-primary{width:100%;padding:14px;border-radius:14px;background:linear-gradient(135deg,var(--c-amethyst),var(--c-sapphire-deep));color:#fff;font-weight:800;font-size:14.5px;box-shadow:0 8px 20px -6px var(--c-glow);}
 .btn-secondary{width:100%;padding:13px;border-radius:14px;background:rgba(255,255,255,0.06);color:var(--c-txt);font-weight:700;font-size:13.5px;margin-top:8px;}
 
 .overlay-center{position:fixed;inset:0;z-index:70;display:none;align-items:center;justify-content:center;padding:24px;}
@@ -267,22 +271,22 @@ input,textarea{color:var(--c-txt);}
 .btn-ghost{padding:12px;border-radius:12px;background:rgba(255,255,255,0.06);font-weight:700;font-size:13.5px;}
 
 #toastBox{position:fixed;top:calc(var(--safe-top)+10px);left:50%;transform:translateX(-50%);z-index:9000;display:flex;flex-direction:column;gap:8px;align-items:center;pointer-events:none;}
-.toast{display:flex;align-items:center;gap:8px;background:rgba(15,12,24,0.95);border:1px solid var(--c-border);padding:10px 16px;border-radius:30px;font-size:12.5px;font-weight:700;box-shadow:0 8px 20px -6px rgba(0,0,0,0.5);animation:toastIn .3s ease;}
+.toast{display:flex;align-items:center;gap:8px;background:rgba(15,12,30,0.95);border:1px solid var(--c-border);padding:10px 16px;border-radius:30px;font-size:12.5px;font-weight:700;box-shadow:0 8px 20px -6px rgba(0,0,0,0.5);animation:toastIn .3s ease;}
 .toast svg{width:16px;height:16px;color:var(--c-amethyst);}
 @keyframes toastIn{from{opacity:0;transform:translateY(-10px);}to{opacity:1;transform:translateY(0);}}
 #flashOverlay{position:fixed;inset:0;z-index:8000;background:#fff;opacity:0;pointer-events:none;}
 #flashOverlay.flash{animation:flashAnim .4s ease;}
 @keyframes flashAnim{0%{opacity:0;}20%{opacity:.5;}100%{opacity:0;}}
 
-.gate-card{background:linear-gradient(135deg,rgba(155,92,255,0.16),rgba(10,8,20,0.4));border:1px solid rgba(155,92,255,0.3);border-radius:20px;padding:18px;text-align:center;}
+.gate-card{background:linear-gradient(135deg,rgba(123,58,237,0.2),rgba(10,8,25,0.4));border:1px solid rgba(155,130,255,0.3);border-radius:20px;padding:18px;text-align:center;}
 .gate-portal{width:72px;height:72px;margin:0 auto 14px;color:var(--c-amethyst);filter:drop-shadow(0 0 20px var(--c-glow));}
 .gate-portal svg{width:100%;height:100%;}
 .gate-list{margin-top:14px;text-align:left;}
 .trial-bar-track{height:12px;border-radius:10px;background:rgba(255,255,255,0.08);overflow:hidden;margin:10px 0;}
 .trial-bar-fill{height:100%;border-radius:10px;background:linear-gradient(90deg,var(--c-sapphire),var(--c-cyan));transition:width .4s ease;}
 
-.profile-passport{background:linear-gradient(160deg,rgba(155,92,255,0.14),rgba(10,9,18,0.5));border:1px solid rgba(155,92,255,0.25);border-radius:24px;padding:22px;text-align:center;}
-.passport-avatar{width:74px;height:74px;border-radius:50%;margin:0 auto 12px;background:linear-gradient(135deg,var(--c-amethyst),var(--c-sapphire));display:flex;align-items:center;justify-content:center;font-family:var(--font-head);font-size:26px;font-weight:900;color:#fff;}
+.profile-passport{background:linear-gradient(160deg,rgba(123,58,237,0.2),rgba(10,9,25,0.5));border:1px solid rgba(155,130,255,0.26);border-radius:24px;padding:22px;text-align:center;}
+.passport-avatar{width:74px;height:74px;border-radius:50%;margin:0 auto 12px;background:linear-gradient(135deg,var(--c-amethyst),var(--c-sapphire-deep));display:flex;align-items:center;justify-content:center;font-family:var(--font-head);font-size:26px;font-weight:900;color:#fff;}
 .passport-name{font-size:18px;font-weight:800;}
 .passport-rank{font-size:11.5px;color:var(--c-amethyst);font-weight:700;margin-top:3px;}
 .passport-meta-row{display:flex;justify-content:center;gap:18px;margin-top:14px;}
@@ -295,10 +299,10 @@ input,textarea{color:var(--c-txt);}
 .skill-name{font-size:13.5px;font-weight:700;}
 .skill-lvl{font-size:11px;color:var(--c-amethyst);font-weight:700;}
 .skill-bar-track{height:6px;border-radius:6px;background:rgba(255,255,255,0.08);overflow:hidden;}
-.skill-bar-fill{height:100%;border-radius:6px;background:linear-gradient(90deg,var(--c-amethyst),var(--c-cyan));}
+.skill-bar-fill{height:100%;border-radius:6px;background:linear-gradient(90deg,var(--c-amethyst),var(--c-sapphire));}
 .filter-row{display:flex;gap:6px;margin-bottom:12px;overflow-x:auto;}
 .filter-btn{flex:none;padding:7px 13px;border-radius:20px;background:var(--c-card);border:1px solid var(--c-border);font-size:11.5px;font-weight:700;}
-.filter-btn.active{background:linear-gradient(135deg,var(--c-amethyst),var(--c-amethyst-2));color:#fff;border-color:transparent;}
+.filter-btn.active{background:linear-gradient(135deg,var(--c-amethyst),var(--c-sapphire-deep));color:#fff;border-color:transparent;}
 
 .empty-hint{padding:var(--sp-md);text-align:center;color:var(--c-txt-dim);font-size:13px;opacity:.8;}
 
@@ -313,7 +317,7 @@ input,textarea{color:var(--c-txt);}
 
 .ach-row{display:flex;gap:12px;align-items:flex-start;padding:12px 10px;border-radius:14px;background:var(--c-card);border:1px solid var(--c-border);margin-bottom:8px;}
 .ach-row.locked{opacity:.45;}
-.ach-row.unlocked{border-color:rgba(155,92,255,0.4);}
+.ach-row.unlocked{border-color:rgba(155,130,255,0.4);}
 .ach-icon{width:28px;height:28px;flex:none;color:var(--c-gold);}
 .ach-icon svg{width:100%;height:100%;}
 .ach-title{font-size:13px;font-weight:700;}
@@ -327,7 +331,7 @@ input,textarea{color:var(--c-txt);}
 .shop-text{flex:1;min-width:0;}
 .shop-name{font-size:13px;font-weight:700;}
 .shop-desc{font-size:11px;color:var(--c-txt-dim);margin-top:2px;}
-.shop-buy-btn{flex:none;display:flex;align-items:center;gap:5px;padding:8px 12px;border-radius:20px;background:linear-gradient(135deg,var(--c-amethyst),var(--c-amethyst-2));color:#fff;font-weight:700;font-size:12.5px;}
+.shop-buy-btn{flex:none;display:flex;align-items:center;gap:5px;padding:8px 12px;border-radius:20px;background:linear-gradient(135deg,var(--c-amethyst),var(--c-sapphire-deep));color:#fff;font-weight:700;font-size:12.5px;}
 .shop-buy-btn svg{width:13px;height:13px;}
 .shop-buy-btn:disabled{background:rgba(255,255,255,0.08);color:var(--c-txt-dim);}
 
@@ -340,7 +344,7 @@ input,textarea{color:var(--c-txt);}
 .cal-days-grid{display:grid;grid-template-columns:repeat(7,1fr);gap:4px;}
 .cal-day{aspect-ratio:1;border-radius:8px;background:rgba(255,255,255,0.04);display:flex;align-items:center;justify-content:center;font-size:11px;position:relative;}
 .cal-day.today{box-shadow:0 0 0 1.5px var(--c-amethyst) inset;}
-.cal-day.done{background:rgba(155,92,255,0.22);color:#fff;}
+.cal-day.done{background:rgba(123,58,237,0.26);color:#fff;}
 .cal-day.frozen::after{content:'';position:absolute;bottom:2px;left:50%;transform:translateX(-50%);width:4px;height:4px;border-radius:50%;background:var(--c-sapphire);}
 .cal-day.empty{opacity:0;pointer-events:none;}
 
@@ -375,8 +379,7 @@ input,textarea{color:var(--c-txt);}
 .switch input{opacity:0;width:100%;height:100%;position:absolute;margin:0;cursor:pointer;}
 .switch-knob{position:absolute;top:2px;left:2px;width:21px;height:21px;border-radius:50%;background:#fff;transition:transform .2s ease;}
 .switch input:checked ~ .switch-knob{transform:translateX(19px);background:var(--c-amethyst);}
-.switch input:checked{}
-.switch:has(input:checked){background:rgba(155,92,255,0.3);}
+.switch:has(input:checked){background:rgba(123,58,237,0.3);}
 .danger-btn{width:100%;padding:13px;border-radius:14px;background:rgba(255,90,122,0.12);border:1px solid rgba(255,90,122,0.3);color:var(--c-danger);font-weight:700;font-size:13.5px;margin-top:10px;}
 
 .section-title{font-size:16px;font-weight:800;margin:4px 0 14px;padding-top:calc(var(--sp-sm));}
@@ -407,7 +410,7 @@ input,textarea{color:var(--c-txt);}
         <defs>
           <linearGradient id="hudGrad" x1="0" y1="0" x2="1" y2="1">
             <stop offset="0%" stop-color="#9b5cff"/>
-            <stop offset="100%" stop-color="#2fd8d0"/>
+            <stop offset="100%" stop-color="#3d6bff"/>
           </linearGradient>
         </defs>
         <circle class="hud-ring-bg" cx="26" cy="26" r="22"/>
@@ -432,32 +435,19 @@ input,textarea{color:var(--c-txt);}
   <!-- ===== ВКЛАДКА: СИСТЕМА ===== -->
   <div class="tab-page active" id="tab-system">
     <div class="page-scroll">
-      <div class="sysmsg-card" id="systemMessageBox">Система активна. Начни свой путь.</div>
 
-      <div class="card daybanner">
-        <div class="daybanner-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M13 2L4 14h6l-1 8 9-12h-6l1-8z"/></svg></div>
-        <div class="daybanner-text">
-          <div class="daybanner-title" id="energyTodayLabel">Опыт за сегодня: 0</div>
-          <div class="daybanner-sub">Выполняй квесты, чтобы расти</div>
-        </div>
-        <div class="daybanner-streak">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M12 2c2 4-2 5-2 9a4 4 0 0 0 8 0c0-2-1-3-1-3s2 1 2 5a7 7 0 0 1-14 0c0-6 5-7 7-11z"/></svg>
-          <span id="streakValue">0</span>
-        </div>
-      </div>
-
-      <div class="accordion" id="statsAccordion">
-        <div class="accordion-head" id="statsAccordionHead">
-          <div class="accordion-head-left">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M4 19h16M7 19V9M12 19V5M17 19v12"/></svg>
-            Статы
+      <div class="hero-card">
+        <div class="hero-top">
+          <div class="hero-greet" id="heroGreeting">Система активна</div>
+          <div class="hero-streak">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M12 2c2 4-2 5-2 9a4 4 0 0 0 8 0c0-2-1-3-1-3s2 1 2 5a7 7 0 0 1-14 0c0-6 5-7 7-11z"/></svg>
+            <span id="streakValue">0</span>
           </div>
-          <svg class="accordion-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9l6 6 6-6"/></svg>
         </div>
-        <div class="accordion-body">
-          <div class="accordion-body-inner">
-            <div class="stats-grid" id="statsGrid"></div>
-          </div>
+        <div class="hero-msg" id="systemMessageBox">Начни свой путь.</div>
+        <div class="hero-bottom">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M13 2L4 14h6l-1 8 9-12h-6l1-8z"/></svg>
+          <span id="energyTodayLabel">Опыт за сегодня: 0</span>
         </div>
       </div>
 
@@ -476,9 +466,27 @@ input,textarea{color:var(--c-txt);}
         </div>
       </div>
 
+      <div class="accordion" id="statsAccordion">
+        <div class="accordion-head" id="statsAccordionHead">
+          <div class="accordion-head-left">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M4 19h16M7 19V9M12 19V5M17 19v12"/></svg>
+            Статы
+          </div>
+          <svg class="accordion-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9l6 6 6-6"/></svg>
+        </div>
+        <div class="accordion-body">
+          <div class="accordion-body-inner">
+            <div class="stats-grid" id="statsGrid"></div>
+          </div>
+        </div>
+      </div>
+
       <div class="card-title" style="margin-top:4px;">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg>
-        Квесты на сегодня
+        <div class="card-title-left">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg>
+          Квесты на сегодня
+        </div>
+        <div class="card-title-count" id="questsHeaderCount">0/0</div>
       </div>
       <div id="questsList"></div>
     </div>
@@ -501,8 +509,10 @@ input,textarea{color:var(--c-txt);}
       </div>
 
       <div class="card-title" style="margin-top:16px;">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M4 19h16M7 19V9M12 19V5M17 19v12"/></svg>
-        Статы
+        <div class="card-title-left">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M4 19h16M7 19V9M12 19V5M17 19v12"/></svg>
+          Статы
+        </div>
       </div>
       <div class="stats-grid" id="statsGridProfile"></div>
     </div>
@@ -575,12 +585,12 @@ input,textarea{color:var(--c-txt);}
         <div class="an-stat-box"><div class="an-stat-val" id="anTotalQuests">0</div><div class="an-stat-label">Всего квестов</div></div>
       </div>
       <div class="card" style="margin-top:12px;">
-        <div class="card-title">Среднее</div>
+        <div class="card-title"><div class="card-title-left">Среднее</div></div>
         <div style="font-size:13px;">В среднем <b id="anAvgPerDay">0</b> квестов в день</div>
         <div id="anForecastText" style="font-size:12px;color:var(--c-txt-dim);margin-top:6px;"></div>
       </div>
       <div class="card">
-        <div class="card-title">Сравнение недель</div>
+        <div class="card-title"><div class="card-title-left">Сравнение недель</div></div>
         <div style="font-size:12.5px;">Опыт: <b id="cmpExp">0 / 0</b></div>
         <div style="font-size:12.5px;margin-top:4px;">Квесты (эта/прошлая): <b id="cmpQuests">0 / 0</b></div>
         <div id="cmpCategories" style="margin-top:8px;"></div>
@@ -603,7 +613,7 @@ input,textarea{color:var(--c-txt);}
         <div style="font-size:11px;color:var(--c-txt-dim);margin-top:10px;">Заморозок доступно: <b id="freezeCountValue">0</b></div>
       </div>
       <div class="card">
-        <div class="card-title">Неделя</div>
+        <div class="card-title"><div class="card-title-left">Неделя</div></div>
         <div class="week-chart-row" id="weekChart"></div>
       </div>
     </div>
@@ -662,7 +672,7 @@ input,textarea{color:var(--c-txt);}
       <div class="section-title">Темы оформления</div>
       <div class="theme-row">
         <div class="theme-swatch" data-theme="amethyst" style="background:#9b5cff;"></div>
-        <div class="theme-swatch" data-theme="sapphire" style="background:#3d8bff;"></div>
+        <div class="theme-swatch" data-theme="sapphire" style="background:#3d6bff;"></div>
         <div class="theme-swatch" data-theme="cyan" style="background:#2fd8d0;"></div>
         <div class="theme-swatch" data-theme="platinum" style="background:#cfd4dc;"></div>
       </div>
@@ -968,17 +978,18 @@ const ICONS = {
   equip: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M20 6L9 17l-5-5"/></svg>`,
   coin: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><circle cx="12" cy="12" r="8"/><path d="M12 8v8M9 10h4.5a1.5 1.5 0 0 1 0 3H9"/></svg>`,
   path: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M4 20c4-8 12-8 16-16"/></svg>`,
-  palette: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><circle cx="12" cy="12" r="9"/></svg>`
+  palette: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><circle cx="12" cy="12" r="9"/></svg>`,
+  daily: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 3"/></svg>`
 };
 
 // ===================================================================
 // ===== СТАТЫ, УРОВНИ, РАНГИ, ПУТЬ ====================================
 // ===================================================================
 const STAT_DEFS = {
-  body:       { label:'Тело',        color:'#3d8bff' },
+  body:       { label:'Тело',        color:'#3d6bff' },
   mind:       { label:'Разум',       color:'#2fd8d0' },
   discipline: { label:'Дисциплина',  color:'#9b5cff' },
-  will:       { label:'Воля',        color:'#ffd54f' },
+  will:       { label:'Воля',        color:'#ffc94f' },
   social:     { label:'Социум',      color:'#ff7ab8' }
 };
 function statRank(value){
@@ -990,12 +1001,8 @@ function statRank(value){
   if(value>=20) return 'E';
   return 'F';
 }
-function statRankMax(rank){
-  return { F:20, E:40, D:60, C:80, B:100, A:120, S:140 }[rank] || 140;
-}
-function statRankMin(rank){
-  return { F:0, E:20, D:40, C:60, B:80, A:100, S:120 }[rank] || 0;
-}
+function statRankMax(rank){ return { F:20, E:40, D:60, C:80, B:100, A:120, S:140 }[rank] || 140; }
+function statRankMin(rank){ return { F:0, E:20, D:40, C:60, B:80, A:100, S:120 }[rank] || 0; }
 
 function expForLevel(level){ return 80 + (level-1)*28; }
 const RANK_TABLE = [
@@ -1003,10 +1010,7 @@ const RANK_TABLE = [
   { max:19, rank:'C' }, { max:24, rank:'B' }, { max:29, rank:'A' },
   { max:Infinity, rank:'S' }
 ];
-function rankForLevel(level){
-  for(const row of RANK_TABLE){ if(level<=row.max) return row.rank; }
-  return 'S';
-}
+function rankForLevel(level){ for(const row of RANK_TABLE){ if(level<=row.max) return row.rank; } return 'S'; }
 
 const PATH_DEFS = {
   body:   { label:'Тело',  boost:['body','discipline'] },
@@ -1018,9 +1022,7 @@ function pathBonusMultiplier(category){
   if(p && p.boost.includes(category)) return 1.15;
   return 1;
 }
-function categoryToStat(cat){
-  return { body:'body', mind:'mind', spirit:'will', main:'discipline' }[cat] || 'discipline';
-}
+function categoryToStat(cat){ return { body:'body', mind:'mind', spirit:'will', main:'discipline' }[cat] || 'discipline'; }
 
 const SYSTEM_MESSAGES = [
   'Каждый выполненный квест — это кирпич в фундаменте новой версии тебя.',
@@ -1043,6 +1045,58 @@ function renderSystemMessage(){
   box.style.display='';
   const idx = hashStr(todayStr()) % SYSTEM_MESSAGES.length;
   box.textContent = SYSTEM_MESSAGES[idx];
+  const greetEl = $('#heroGreeting');
+  if(greetEl){
+    const hour = new Date().getHours();
+    let g = 'Добрый день';
+    if(hour<6) g='Доброй ночи'; else if(hour<12) g='Доброе утро'; else if(hour<18) g='Добрый день'; else g='Добрый вечер';
+    greetEl.textContent = g + (state.name ? ', ' + state.name : '');
+  }
+}
+
+// ===================================================================
+// ===== ЕЖЕДНЕВНЫЕ КВЕСТЫ (АВТОГЕНЕРАЦИЯ) ============================
+// ===================================================================
+const DAILY_QUEST_POOL = [
+  { name:'15 минут физической активности', category:'body', difficulty:'easy' },
+  { name:'Выпить достаточно воды за день', category:'body', difficulty:'easy' },
+  { name:'20 минут чтения или обучения', category:'mind', difficulty:'easy' },
+  { name:'Без соцсетей первые 30 минут утра', category:'discipline', difficulty:'medium' },
+  { name:'Выполнить главную задачу дня', category:'main', difficulty:'medium' },
+  { name:'Написать план на завтра', category:'main', difficulty:'easy' },
+  { name:'Короткая тренировка или растяжка', category:'body', difficulty:'medium' },
+  { name:'Сделать что-то для другого человека', category:'spirit', difficulty:'easy' },
+  { name:'10 минут тишины / размышлений', category:'mind', difficulty:'easy' },
+  { name:'Лечь спать до полуночи', category:'discipline', difficulty:'medium' },
+  { name:'Отказаться от одной вредной привычки сегодня', category:'discipline', difficulty:'hard' },
+  { name:'Сделать шаг к долгосрочной цели', category:'main', difficulty:'hard' }
+];
+function pickDailyQuests(dateStr){
+  const seed = hashStr(dateStr);
+  const pool = DAILY_QUEST_POOL.slice();
+  for(let i=pool.length-1;i>0;i--){
+    const j = (seed + i*37) % (i+1);
+    const tmp = pool[i]; pool[i]=pool[j]; pool[j]=tmp;
+  }
+  return pool.slice(0,4);
+}
+function refreshDailyQuests(){
+  const today = todayStr();
+  if(state.dailyQuestsDate === today) return;
+  const isFirstTime = !state.dailyQuestsDate;
+  state.quests = (state.quests||[]).filter(q=>!q.isDaily);
+  const picks = pickDailyQuests(today);
+  picks.forEach(p=>{
+    const q = newQuest(p.name, p.category, p.difficulty);
+    q.isDaily = true;
+    state.quests.push(q);
+  });
+  state.dailyQuestsDate = today;
+  saveState();
+  if(!isFirstTime){
+    showToast('Новые ежедневные квесты', 'daily');
+    pushLog('Сгенерированы новые ежедневные квесты');
+  }
 }
 
 // ===================================================================
@@ -1056,7 +1110,7 @@ function defaultState(){
     level:1, exp:0, expToNext: expForLevel(1), rank:'F', crystal:0, energyToday:0,
     path:'body', theme:'amethyst', soundOn:true, messagesOn:true,
     stats:{ body:0, mind:0, discipline:0, will:0, social:0 },
-    quests:[], skills:[],
+    quests:[], skills:[], dailyQuestsDate:null,
     streak:0, bestStreak:0, freezeCount:1, freezeMonth: new Date().getMonth(), lastCompletionDate:null,
     calendarDone:{}, freezeLog:{},
     gate:{ date:null, quests:[], entered:false, claimed:false },
@@ -1284,21 +1338,11 @@ $$('.folder-head').forEach(head=>{
 // ===== КВЕСТЫ ========================================================
 // ===================================================================
 function newQuest(name, category, difficulty){
-  return { id: uid(), name, category, difficulty, done:false, createdAt: todayStr(), timesCompleted:0 };
+  return { id: uid(), name, category, difficulty, done:false, createdAt: todayStr(), timesCompleted:0, isDaily:false };
 }
 function questExpValue(difficulty){ return { easy:10, medium:20, hard:35 }[difficulty] || 10; }
 function questStatValue(difficulty){ return { easy:2, medium:4, hard:7 }[difficulty] || 2; }
-function categoryLabel(cat){ return { body:'Тело', mind:'Разум', spirit:'Воля', main:'Главное' }[cat] || cat; }
-
-function seedStarterQuests(){
-  if(state.quests.length) return;
-  state.quests.push(
-    newQuest('10 минут растяжки', 'body', 'easy'),
-    newQuest('Прочитать 10 страниц', 'mind', 'easy'),
-    newQuest('Выполнить главную задачу дня', 'main', 'medium')
-  );
-  saveState();
-}
+function categoryLabel(cat){ return { body:'Тело', mind:'Разум', spirit:'Воля', main:'Главное', discipline:'Дисциплина' }[cat] || cat; }
 
 function completeQuest(id, evt){
   const q = state.quests.find(x=>x.id===id);
@@ -1326,6 +1370,8 @@ function completeQuest(id, evt){
 }
 
 function deleteQuest(id){
+  const q = state.quests.find(x=>x.id===id);
+  if(q && q.isDaily){ showToast('Ежедневный квест нельзя удалить', 'daily'); return; }
   state.quests = state.quests.filter(q=>q.id!==id);
   saveState();
   renderQuests();
@@ -1335,23 +1381,27 @@ function renderQuests(){
   const list = $('#questsList');
   if(!list) return;
   list.innerHTML = '';
+  const doneCount = state.quests.filter(q=>q.done).length;
+  const countEl = $('#questsHeaderCount');
+  if(countEl) countEl.textContent = doneCount + '/' + state.quests.length;
   if(!state.quests.length){
     list.innerHTML = '<div class="empty-hint">Квестов нет. Добавь первый кнопкой +</div>';
     return;
   }
-  state.quests.forEach(q=>{
+  state.quests.slice().sort((a,b)=>(a.done===b.done)?0:(a.done?1:-1)).forEach(q=>{
     const item = document.createElement('div');
     item.className = 'quest-item' + (q.done ? ' done' : '');
     item.innerHTML = `
       <div class="quest-check">${ICONS.check}</div>
       <div class="quest-text">
         <div class="quest-name">${q.name}</div>
-        <div class="quest-meta"><span class="quest-cat-icon">${ICONS[q.category]||''}</span>${categoryLabel(q.category)} · +${questExpValue(q.difficulty)} опыта</div>
+        <div class="quest-meta"><span class="quest-cat-icon">${ICONS[q.category]||''}</span>${categoryLabel(q.category)} · +${questExpValue(q.difficulty)} опыта ${q.isDaily?'<span class="quest-daily-tag">День</span>':''}</div>
       </div>
-      <div class="quest-del">${ICONS.log}</div>
+      ${q.isDaily ? '' : '<div class="quest-del">'+ICONS.log+'</div>'}
     `;
     item.querySelector('.quest-check').addEventListener('click', (e)=> completeQuest(q.id, e));
-    item.querySelector('.quest-del').addEventListener('click', ()=> deleteQuest(q.id));
+    const delBtn = item.querySelector('.quest-del');
+    if(delBtn) delBtn.addEventListener('click', ()=> deleteQuest(q.id));
     list.appendChild(item);
   });
 }
@@ -1394,6 +1444,7 @@ $('#saveProfileBtn').addEventListener('click', ()=>{
   if(name) state.name = name;
   saveState();
   renderHud();
+  renderSystemMessage();
   $('#editProfileOverlay').classList.remove('show');
   showToast('Профиль обновлён', 'check');
 });
@@ -1484,10 +1535,6 @@ function markDayDone(){
 function checkNewDay(){
   const today = todayStr();
   if(state.currentDay === today) return;
-  const missedDays = diffDays(today, state.currentDay) - 1;
-  if(missedDays > 0 && state.lastCompletionDate !== state.currentDay){
-    // пропущенный день — проверим заморозку
-  }
   if(state.lastCompletionDate && state.lastCompletionDate !== yesterdayStr() && state.lastCompletionDate !== today){
     if(state.freezeCount > 0){
       state.freezeCount -= 1;
@@ -1506,6 +1553,7 @@ function checkNewDay(){
   state.quests.forEach(q=> q.done = false);
   state.energyToday = 0;
   state.currentDay = today;
+  refreshDailyQuests();
   saveState();
 }
 
@@ -1524,9 +1572,7 @@ const GATE_POOL = [
 function generateGate(){
   const seed = hashStr(todayStr());
   const picks = [];
-  for(let i=0;i<3;i++){
-    picks.push(GATE_POOL[(seed+i*7) % GATE_POOL.length]);
-  }
+  for(let i=0;i<3;i++){ picks.push(GATE_POOL[(seed+i*7) % GATE_POOL.length]); }
   return picks.map(p=>({ id:uid(), name:p.name, category:p.category, done:false }));
 }
 function ensureGateForToday(){
@@ -1534,12 +1580,6 @@ function ensureGateForToday(){
     state.gate = { date: todayStr(), quests: generateGate(), entered:false, claimed:false };
     saveState();
   }
-}
-function enterGate(){
-  state.gate.entered = true;
-  saveState();
-  renderGate();
-  showToast('Вы вошли во врата дня', 'gate');
 }
 function toggleGateQuestItem(id){
   const q = state.gate.quests.find(x=>x.id===id);
@@ -1583,14 +1623,17 @@ function renderGate(){
   state.gate.quests.forEach(q=>{
     const item = document.createElement('div');
     item.className = 'quest-item' + (q.done ? ' done' : '');
-    item.innerHTML = `
-      <div class="quest-check">${ICONS.check}</div>
-      <div class="quest-text"><div class="quest-name">${q.name}</div></div>
-    `;
+    item.innerHTML = `<div class="quest-check">${ICONS.check}</div><div class="quest-text"><div class="quest-name">${q.name}</div></div>`;
     item.querySelector('.quest-check').addEventListener('click', ()=> toggleGateQuestItem(q.id));
     list.appendChild(item);
   });
 }
+$('#enterGateBtn').addEventListener('click', ()=>{
+  state.gate.entered = true;
+  saveState();
+  renderGate();
+  showToast('Вы вошли во врата дня', 'gate');
+});
 
 // ===================================================================
 // ===== ИСПЫТАНИЕ НЕДЕЛИ ==============================================
@@ -1620,9 +1663,6 @@ function renderTrial(){
   $('#trialSub').textContent = (t.current||0) + ' / ' + (t.target||0) + ' ' + (t.unit||'');
   const pct = t.target>0 ? Math.min(100, Math.round((t.current/t.target)*100)) : 0;
   $('#trialBarFill').style.width = pct + '%';
-  if(pct>=100 && t.target>0){
-    showToast('Испытание недели завершено!', 'trial');
-  }
 }
 $('#editTrialBtn').addEventListener('click', ()=>{
   $('#trialNameInput').value = state.trial.name || '';
@@ -1667,9 +1707,9 @@ $('#saveTrialLogBtn').addEventListener('click', ()=>{
 // ===================================================================
 const RARITY_DEFS = {
   common:{ label:'Обычный', color:'#9aa1ad', bonus:2 },
-  rare:{ label:'Редкий', color:'#3d8bff', bonus:4 },
+  rare:{ label:'Редкий', color:'#3d6bff', bonus:4 },
   epic:{ label:'Эпический', color:'#9b5cff', bonus:7 },
-  legendary:{ label:'Легендарный', color:'#ffd54f', bonus:12 }
+  legendary:{ label:'Легендарный', color:'#ffc94f', bonus:12 }
 };
 const RARITY_ORDER = ['common','rare','epic','legendary'];
 const RARITY_WEIGHTS = { common:55, rare:28, epic:13, legendary:4 };
@@ -2001,7 +2041,7 @@ function renderPathSelection(){
 // ===================================================================
 const THEME_PRESETS = {
   amethyst:{ accent:'#9b5cff', accent2:'#6c3ce0', glow:'rgba(155,92,255,0.45)' },
-  sapphire:{ accent:'#3d8bff', accent2:'#2456c9', glow:'rgba(61,139,255,0.45)' },
+  sapphire:{ accent:'#3d6bff', accent2:'#1f2f8f', glow:'rgba(61,107,255,0.45)' },
   cyan:{ accent:'#2fd8d0', accent2:'#1a9c96', glow:'rgba(47,216,208,0.45)' },
   platinum:{ accent:'#cfd4dc', accent2:'#9aa1ad', glow:'rgba(207,212,220,0.4)' }
 };
@@ -2093,7 +2133,7 @@ function initParticles(){
   resize();
   window.addEventListener('resize', resize);
   const particles=[];
-  const colors=['rgba(155,92,255,','rgba(61,139,255,','rgba(47,216,208,'];
+  const colors=['rgba(155,92,255,','rgba(61,107,255,','rgba(47,216,208,'];
   for(let i=0;i<34;i++){
     particles.push({ x:Math.random()*w, y:Math.random()*h, r:Math.random()*1.8+0.4, vy:-(Math.random()*0.25+0.05), vx:(Math.random()-0.5)*0.15, alpha:Math.random()*0.5+0.15, color:colors[Math.floor(Math.random()*colors.length)] });
   }
@@ -2128,13 +2168,28 @@ function runSplashSequence(){
 }
 
 // ===================================================================
+// ===== АВТОПРОВЕРКА ПОЛУНОЧИ (пока приложение открыто) ===============
+// ===================================================================
+function watchForMidnight(){
+  setInterval(()=>{
+    const today = todayStr();
+    if(state.currentDay !== today){
+      checkNewDay();
+      ensureGateForToday();
+      ensureTrialWeek();
+      renderAllScreens();
+    }
+  }, 60000);
+}
+
+// ===================================================================
 // ===== ИНИЦИАЛИЗАЦИЯ ====================================================
 // ===================================================================
 function init(){
   state = loadState();
   ensureShopSeed();
-  seedStarterQuests();
   checkNewDay();
+  refreshDailyQuests();
   ensureGateForToday();
   ensureTrialWeek();
   applyTheme(state.theme || 'amethyst');
@@ -2143,6 +2198,7 @@ function init(){
   checkAchievements();
   initParticles();
   runSplashSequence();
+  watchForMidnight();
 }
 
 document.addEventListener('DOMContentLoaded', ()=>{
