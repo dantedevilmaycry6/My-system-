@@ -1132,135 +1132,147 @@ input,select,textarea{
 <!-- ===================== TOAST / ЭФФЕКТЫ ===================== -->
 <div id="toastBox"></div>
 <div id="flashOverlay"></div>
-
-</body>
 <script>
-/* ========================================================
-   ДАННЫЕ / КОНСТАНТЫ
-======================================================== */
-const STORAGE_KEY = 'soloLevelingData';
+/* ===================== ДАННЫЕ ИГРЫ ===================== */
 
 const RANKS = [
-  {name:'E-RANK', min:1},
-  {name:'D-RANK', min:10},
-  {name:'C-RANK', min:20},
-  {name:'B-RANK', min:30},
+  {name:'S-RANK', min:50},
   {name:'A-RANK', min:40},
-  {name:'S-RANK', min:50}
+  {name:'B-RANK', min:30},
+  {name:'C-RANK', min:20},
+  {name:'D-RANK', min:10},
+  {name:'E-RANK', min:1}
 ];
 
-const STAT_INFO = {
-  str:{label:'Сила', color:'#ff6b4b'},
-  agi:{label:'Ловкость', color:'#4bff9b'},
-  int:{label:'Интеллект', color:'#4a9eff'},
-  vit:{label:'Выносливость', color:'#ff4b6b'},
-  per:{label:'Восприятие', color:'#d4af37'}
-};
-
 const TITLES_LIST = [
-  {name:'Пробудившийся', reqLevel:1},
-  {name:'Новичок-Охотник', reqLevel:5},
-  {name:'Уверенный Боец', reqLevel:10},
-  {name:'Элитный Охотник', reqLevel:15},
-  {name:'Мастер Клинка', reqLevel:20},
-  {name:'Повелитель Теней', reqLevel:30},
-  {name:'Легендарный Охотник', reqLevel:40},
-  {name:'Монарх', reqLevel:50},
-  {name:'Правитель Системы', reqLevel:60}
+  {name:'Пробудившийся', min:1},
+  {name:'Начинающий Охотник', min:5},
+  {name:'Опытный Охотник', min:10},
+  {name:'Элитный Охотник', min:15},
+  {name:'Мастер Подземелий', min:20},
+  {name:'Повелитель Теней', min:30},
+  {name:'Монарх', min:40},
+  {name:'Правитель Разрушения', min:50},
+  {name:'Легенда', min:60}
 ];
 
 const ACHIEVEMENTS_LIST = [
-  {id:'first_quest', name:'Первый шаг', desc:'Выполните первый квест', check:s=>s.totalCompleted>=1},
-  {id:'streak_3', name:'Разгон', desc:'Стрик 3 дня подряд', check:s=>s.streak>=3},
-  {id:'streak_7', name:'Неделя силы', desc:'Стрик 7 дней подряд', check:s=>s.streak>=7},
-  {id:'streak_30', name:'Железная воля', desc:'Стрик 30 дней подряд', check:s=>s.streak>=30},
-  {id:'level_5', name:'Пятый уровень', desc:'Достигните 5 уровня', check:s=>s.level>=5},
-  {id:'level_10', name:'Десятый уровень', desc:'Достигните 10 уровня', check:s=>s.level>=10},
-  {id:'level_20', name:'Двадцатый уровень', desc:'Достигните 20 уровня', check:s=>s.level>=20},
-  {id:'level_30', name:'Тридцатый уровень', desc:'Достигните 30 уровня', check:s=>s.level>=30},
-  {id:'rank_d', name:'Выход из E-ранга', desc:'Достигните D-RANK', check:s=>s.level>=10},
-  {id:'rank_c', name:'Поднимаясь выше', desc:'Достигните C-RANK', check:s=>s.level>=20},
-  {id:'rank_b', name:'Элита', desc:'Достигните B-RANK', check:s=>s.level>=30},
-  {id:'stat_50', name:'Пробитый потолок', desc:'Любой стат достиг 50', check:s=>Object.values(s.stats).some(v=>v>=50)},
-  {id:'quests_100', name:'Сотня побед', desc:'Выполните 100 квестов', check:s=>s.totalCompleted>=100}
+  {id:'a1', name:'Первый шаг', desc:'Выполните первый квест', cond:s=>s.totalDone>=1},
+  {id:'a2', name:'Разгон', desc:'Выполните 10 квестов', cond:s=>s.totalDone>=10},
+  {id:'a3', name:'Трудяга', desc:'Выполните 50 квестов', cond:s=>s.totalDone>=50},
+  {id:'a4', name:'Непобедимый', desc:'Выполните 100 квестов', cond:s=>s.totalDone>=100},
+  {id:'a5', name:'Стрик 3 дня', desc:'Серия активности 3 дня подряд', cond:s=>s.streak>=3},
+  {id:'a6', name:'Стрик 7 дней', desc:'Серия активности 7 дней подряд', cond:s=>s.streak>=7},
+  {id:'a7', name:'Стрик 30 дней', desc:'Серия активности 30 дней подряд', cond:s=>s.streak>=30},
+  {id:'a8', name:'Второй уровень', desc:'Достигните 5 уровня', cond:s=>s.level>=5},
+  {id:'a9', name:'Десятка', desc:'Достигните 10 уровня', cond:s=>s.level>=10},
+  {id:'a10', name:'Элита', desc:'Достигните 20 уровня', cond:s=>s.level>=20},
+  {id:'a11', name:'Собиратель', desc:'Накопите 500 кристаллов', cond:s=>s.crystals>=500},
+  {id:'a12', name:'Гармония', desc:'Все статы по 30+', cond:s=>Object.values(s.stats).every(v=>v>=30)},
+  {id:'a13', name:'Монарх статов', desc:'Любой стат достиг 70', cond:s=>Object.values(s.stats).some(v=>v>=70)}
 ];
 
 const SHOP_ITEMS = [
-  {id:'rest_day', name:'День отдыха (без потери стрика)', price:50, type:'consumable'},
-  {id:'exp_boost', name:'Бустер опыта x2 (24ч)', price:80, type:'consumable'},
-  {id:'title_shadow', name:'Титул: Тень Монарха', price:150, type:'single'},
-  {id:'title_flame', name:'Титул: Пламенный Клинок', price:150, type:'single'},
-  {id:'stat_reset', name:'Сброс распределения статов', price:100, type:'consumable'},
-  {id:'avatar_frame_gold', name:'Золотая рамка аватара', price:120, type:'single'},
-  {id:'bonus_points', name:'+3 очка статов', price:60, type:'consumable'},
-  {id:'crystal_x15', name:'Множитель кристаллов x1.5 (24ч)', price:100, type:'consumable'}
+  {id:'sh1', name:'Час отдыха без чувства вины', price:30},
+  {id:'sh2', name:'Любимая еда', price:50},
+  {id:'sh3', name:'Эпизод сериала', price:40},
+  {id:'sh4', name:'Новая музыка/плейлист', price:25},
+  {id:'sh5', name:'Поход в кино', price:120},
+  {id:'sh6', name:'Небольшая покупка себе', price:200},
+  {id:'sh7', name:'Выходной день от целей', price:150},
+  {id:'sh8', name:'Крупная награда мечты', price:500}
 ];
 
 const QUEST_LIBRARY = {
   body:[
-    {name:'20 отжиманий', exp:30, stat:'str', type:'daily'},
-    {name:'Пробежка 2 км', exp:50, stat:'vit', type:'daily'},
-    {name:'Растяжка 10 минут', exp:20, stat:'agi', type:'daily'},
-    {name:'100 приседаний', exp:60, stat:'str', type:'side'},
-    {name:'Холодный душ', exp:40, stat:'vit', type:'daily'}
+    {name:'Зарядка 15 минут', exp:40, stat:'str', type:'daily'},
+    {name:'Пробежка 3 км', exp:70, stat:'agi', type:'daily'},
+    {name:'100 отжиманий (за подходы)', exp:90, stat:'str', type:'main'},
+    {name:'Растяжка 10 минут', exp:30, stat:'agi', type:'daily'},
+    {name:'8000 шагов', exp:50, stat:'vit', type:'daily'}
   ],
   mind:[
-    {name:'Прочитать 20 страниц книги', exp:40, stat:'int', type:'mind'},
-    {name:'Решить 5 логических задач', exp:50, stat:'int', type:'mind'},
-    {name:'Выучить 10 новых слов', exp:30, stat:'int', type:'mind'},
-    {name:'Медитация 15 минут', exp:35, stat:'per', type:'mind'},
-    {name:'Написать план на день', exp:20, stat:'per', type:'daily'}
+    {name:'Прочитать 20 страниц книги', exp:50, stat:'int', type:'mind'},
+    {name:'Выучить 10 новых слов', exp:40, stat:'int', type:'mind'},
+    {name:'Решить логическую задачу', exp:60, stat:'int', type:'mind'},
+    {name:'30 минут обучающего курса', exp:70, stat:'int', type:'mind'},
+    {name:'Написать план на день', exp:25, stat:'per', type:'daily'}
   ],
   spirit:[
-    {name:'Сделать доброе дело', exp:40, stat:'per', type:'side'},
-    {name:'День без соцсетей', exp:70, stat:'vit', type:'side'},
-    {name:'Благодарность: 3 пункта', exp:25, stat:'per', type:'daily'},
-    {name:'Ранний подъём (до 7:00)', exp:50, stat:'vit', type:'daily'},
-    {name:'Не есть сладкое весь день', exp:45, stat:'vit', type:'daily'}
+    {name:'10 минут медитации', exp:35, stat:'per', type:'daily'},
+    {name:'Вести дневник благодарности', exp:30, stat:'per', type:'daily'},
+    {name:'Убрать пространство вокруг себя', exp:40, stat:'vit', type:'side'},
+    {name:'Позвонить близкому человеку', exp:35, stat:'per', type:'side'},
+    {name:'День без соцсетей', exp:100, stat:'vit', type:'main'}
   ]
 };
 
-/* ========================================================
-   СОСТОЯНИЕ
-======================================================== */
-let state = {
-  name:'Охотник',
-  level:1,
-  exp:0,
-  crystals:0,
-  streak:0,
-  lastActiveDate:null,
-  lastResetDate:null,
-  freePoints:0,
-  selectedTitle:'Пробудившийся',
-  extraTitles:[],
-  stats:{str:10, agi:10, int:10, vit:10, per:10},
-  quests:[],
-  completedDates:{},
-  unlockedAchievements:[],
-  totalCompleted:0,
-  expBoostUntil:0,
-  crystalBoostUntil:0
+const STAT_INFO = {
+  str:{color:'#ff6b4b', light:'#ffb199'},
+  agi:{color:'#4bff9b', light:'#b3ffe0'},
+  int:{color:'#4a9eff', light:'#a8d4ff'},
+  vit:{color:'#ff4b6b', light:'#ffb3c2'},
+  per:{color:'#d4af37', light:'#f3dd8a'}
 };
 
+/* ===================== СОСТОЯНИЕ ===================== */
+
+let state = null;
 let calendarDate = new Date();
 let currentLibCat = 'body';
 
-/* ========================================================
-   УТИЛИТЫ
-======================================================== */
-function todayStr(d){
-  const dt = d || new Date();
-  return dt.getFullYear()+'-'+String(dt.getMonth()+1).padStart(2,'0')+'-'+String(dt.getDate()).padStart(2,'0');
+function defaultState(){
+  return {
+    name:'Охотник',
+    title:'Пробудившийся',
+    level:1,
+    exp:0,
+    crystals:0,
+    streak:0,
+    lastActiveDate:null,
+    freePoints:0,
+    stats:{str:10, agi:10, int:10, vit:10, per:10},
+    quests:[],
+    totalDone:0,
+    completedDates:{},
+    unlockedAchievements:[],
+    purchasedShop:[]
+  };
 }
-function expNeeded(level){
+
+function loadData(){
+  const raw = localStorage.getItem('soloLevelingData');
+  if(raw){
+    try{ state = JSON.parse(raw); }
+    catch(e){ state = defaultState(); }
+  } else {
+    state = defaultState();
+  }
+}
+
+function saveData(){
+  localStorage.setItem('soloLevelingData', JSON.stringify(state));
+}
+
+/* ===================== ФОРМУЛЫ ===================== */
+
+function expForLevel(level){
   return Math.floor(100 * Math.pow(1.15, level-1));
 }
+
 function getRank(level){
-  let r = RANKS[0];
-  for(const x of RANKS){ if(level>=x.min) r=x; }
-  return r.name;
+  for(const r of RANKS){ if(level >= r.min) return r.name; }
+  return 'E-RANK';
 }
+
+function getStreakMultiplier(streak){
+  if(streak>=30) return 2;
+  if(streak>=14) return 1.5;
+  if(streak>=7) return 1.25;
+  if(streak>=3) return 1.1;
+  return 1;
+}
+
 function statRank(v){
   if(v>=70) return 'S';
   if(v>=50) return 'A';
@@ -1270,91 +1282,88 @@ function statRank(v){
   if(v>=10) return 'E';
   return 'F';
 }
-function statProgress(v){
-  const rank = statRank(v);
-  if(rank==='S') return 100;
-  return Math.min(100,(v%10)*10);
-}
-function getStreakMultiplier(streak){
-  if(streak>=30) return 2;
-  if(streak>=14) return 1.5;
-  if(streak>=7) return 1.25;
-  if(streak>=3) return 1.1;
-  return 1;
-}
-function hexToRgba(hex, alpha){
-  const h = hex.replace('#','');
-  const r = parseInt(h.substring(0,2),16);
-  const g = parseInt(h.substring(2,4),16);
-  const b = parseInt(h.substring(4,6),16);
-  return `rgba(${r},${g},${b},${alpha})`;
-}
-function uid(){ return Date.now().toString(36)+Math.random().toString(36).substr(2,5); }
 
-/* ========================================================
-   СОХРАНЕНИЕ / ЗАГРУЗКА
-======================================================== */
-function saveData(){
-  localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
+function todayKey(d){
+  const dt = d || new Date();
+  return dt.getFullYear()+'-'+String(dt.getMonth()+1).padStart(2,'0')+'-'+String(dt.getDate()).padStart(2,'0');
 }
-function loadData(){
-  const raw = localStorage.getItem(STORAGE_KEY);
-  if(raw){
-    try{
-      const parsed = JSON.parse(raw);
-      state = Object.assign(state, parsed);
-    }catch(e){ console.warn('Ошибка загрузки данных', e); }
+
+/* ===================== СТРИК ===================== */
+
+function updateStreakOnComplete(){
+  const today = todayKey();
+  if(state.lastActiveDate === today) return;
+  const yest = new Date();
+  yest.setDate(yest.getDate()-1);
+  if(state.lastActiveDate === todayKey(yest)){
+    state.streak++;
+  } else {
+    state.streak = 1;
   }
-}
-setInterval(saveData, 30000);
-
-/* ========================================================
-   ЕЖЕДНЕВНЫЙ СБРОС / СТРИК
-======================================================== */
-function checkDailyReset(){
-  const today = todayStr();
-  if(state.lastResetDate !== today){
-    state.quests.forEach(q=>{ if(q.type==='daily') q.done=false; });
-    if(state.lastActiveDate){
-      const last = new Date(state.lastActiveDate);
-      const diffDays = Math.round((new Date(today) - new Date(todayStr(last))) / 86400000);
-      if(diffDays > 1){ state.streak = 0; }
-    }
-    state.lastResetDate = today;
-    saveData();
-  }
+  state.lastActiveDate = today;
 }
 
-/* ========================================================
-   РЕНДЕР: HUD
-======================================================== */
+/* ===================== РЕНДЕР: HUD ===================== */
+
 function renderHUD(){
   document.getElementById('hudName').textContent = state.name;
+  document.getElementById('hudTitle').textContent = state.title;
   document.getElementById('hudRank').textContent = getRank(state.level);
-  document.getElementById('hudTitle').textContent = state.selectedTitle;
   document.getElementById('hudLevel').textContent = 'Lv.'+state.level;
   document.getElementById('hudStreak').textContent = state.streak;
   document.getElementById('hudCrystals').textContent = state.crystals;
-  const need = expNeeded(state.level);
+  const need = expForLevel(state.level);
   const pct = Math.min(100, Math.round((state.exp/need)*100));
   document.getElementById('hudExpFill').style.width = pct+'%';
   document.getElementById('hudExpText').textContent = state.exp+'/'+need;
 }
 
-/* ========================================================
-   РЕНДЕР: СТАТЫ
-======================================================== */
+/* ===================== РЕНДЕР: КВЕСТЫ ===================== */
+
+function renderQuests(){
+  const list = document.getElementById('questsList');
+  if(state.quests.length===0){
+    list.innerHTML = '<div style="text-align:center;color:var(--c-text-dim);padding:30px 0;font-size:13px;">Нет активных квестов.<br>Добавьте новый или откройте библиотеку.</div>';
+    return;
+  }
+  list.innerHTML = state.quests.map(q=>`
+    <div class="quest-card ${q.done?'done':''}">
+      <div class="quest-check" onclick="toggleQuest(${q.id})">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>
+      </div>
+      <div class="quest-main">
+        <div class="quest-name">${q.name}</div>
+        <div class="quest-meta">
+          <span class="quest-type-tag ${q.type}">${typeLabel(q.type)}</span>
+          <span>+${q.exp} опыта</span>
+        </div>
+      </div>
+      <div class="quest-del" onclick="deleteQuest(${q.id})">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
+      </div>
+    </div>
+  `).join('');
+}
+
+function typeLabel(t){
+  return {daily:'Ежедневный', main:'Основной', side:'Побочный', mind:'Умственный'}[t] || t;
+}
+
+/* ===================== РЕНДЕР: СТАТЫ ===================== */
+
 function renderStats(){
   document.getElementById('freePointsVal').textContent = state.freePoints;
-  Object.keys(STAT_INFO).forEach(key=>{
+  for(const key of Object.keys(state.stats)){
     const v = state.stats[key];
     document.getElementById('statVal-'+key).textContent = v;
     document.getElementById('statRank-'+key).textContent = statRank(v);
-    document.getElementById('statBar-'+key).style.width = statProgress(v)+'%';
-  });
+    const pct = (v % 10) * 10;
+    document.getElementById('statBar-'+key).style.width = pct+'%';
+  }
 }
+
 function addStatPoint(stat){
-  if(state.freePoints <= 0){
+  if(state.freePoints<=0){
     showToast('Нет свободных очков');
     return;
   }
@@ -1362,137 +1371,101 @@ function addStatPoint(stat){
   state.stats[stat]++;
   saveData();
   renderStats();
-  renderHUD();
-  const btn = event.target.getBoundingClientRect();
-  spawnFloatText(btn.left, btn.top, '+1', STAT_INFO[stat].color);
-  spawnBurst(btn.left, btn.top, STAT_INFO[stat].color);
-}
-
-/* ========================================================
-   РЕНДЕР: КВЕСТЫ
-======================================================== */
-function renderQuests(){
-  const box = document.getElementById('questsList');
-  if(state.quests.length===0){
-    box.innerHTML = '<div style="text-align:center;color:var(--c-text-dim);padding:30px 10px;font-size:13px;">Нет активных квестов.<br>Добавьте новый или откройте библиотеку.</div>';
-    return;
+  const info = STAT_INFO[stat];
+  const el = document.querySelector('.stat-card[data-stat="'+stat+'"]');
+  if(el){
+    const r = el.getBoundingClientRect();
+    spawnFloatText(r.left+40, r.top+20, '+1', info.color);
   }
-  box.innerHTML = state.quests.map(q=>`
-    <div class="quest-card ${q.done?'done':''}">
-      <div class="quest-check" onclick="toggleQuest('${q.id}')">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>
-      </div>
-      <div class="quest-main" onclick="toggleQuest('${q.id}')">
-        <div class="quest-name">${escapeHtml(q.name)}</div>
-        <div class="quest-meta">
-          <span class="quest-type-tag ${q.type}">${typeLabel(q.type)}</span>
-          <span>+${q.exp} опыта</span>
-          <span>${STAT_INFO[q.stat].label}</span>
-        </div>
-      </div>
-      <div class="quest-del" onclick="deleteQuest('${q.id}')">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
-      </div>
-    </div>
-  `).join('');
-}
-function typeLabel(t){
-  return {daily:'Дейли', main:'Основной', side:'Побочный', mind:'Разум'}[t] || t;
-}
-function escapeHtml(str){
-  const div = document.createElement('div');
-  div.textContent = str;
-  return div.innerHTML;
 }
 
-/* ========================================================
-   ДЕЙСТВИЯ: КВЕСТЫ
-======================================================== */
+/* ===================== КВЕСТЫ: ДЕЙСТВИЯ ===================== */
+
 function openAddQuest(){ openOverlay('addQuestOverlay'); }
+
 function saveNewQuest(){
   const name = document.getElementById('newQuestName').value.trim();
   const type = document.getElementById('newQuestType').value;
   const exp = parseInt(document.getElementById('newQuestExp').value) || 50;
   const stat = document.getElementById('newQuestStat').value;
   if(!name){ showToast('Введите название квеста'); return; }
-  state.quests.push({id:uid(), name, type, exp, stat, done:false});
+  state.quests.push({id:Date.now(), name, type, exp, stat, done:false});
   saveData();
   renderQuests();
   closeOverlay('addQuestOverlay');
   document.getElementById('newQuestName').value='';
   showToast('Квест добавлен');
 }
+
 function deleteQuest(id){
   state.quests = state.quests.filter(q=>q.id!==id);
   saveData();
   renderQuests();
 }
+
 function toggleQuest(id){
-  const q = state.quests.find(x=>x.id===id);
-  if(!q) return;
+  const q = state.quests.find(q=>q.id===id);
+  if(!q || q.done) return;
+  q.done = true;
 
-  if(!q.done){
-    q.done = true;
-    const mult = getStreakMultiplier(state.streak);
-    let boostMult = (Date.now() < state.expBoostUntil) ? 2 : 1;
-    const expGain = Math.round(q.exp * mult * boostMult);
-    let crystalBoost = (Date.now() < state.crystalBoostUntil) ? 1.5 : 1;
-    const crystalGain = Math.max(1, Math.round((expGain/10) * crystalBoost));
+  const mult = getStreakMultiplier(state.streak);
+  const gain = Math.round(q.exp * mult);
+  const crystalsGain = Math.max(1, Math.round(gain/10));
 
-    state.exp += expGain;
-    state.crystals += crystalGain;
-    state.stats[q.stat] += 1;
-    state.totalCompleted += 1;
+  state.exp += gain;
+  state.crystals += crystalsGain;
+  state.stats[q.stat]++;
+  state.totalDone++;
 
-    const today = todayStr();
-    if(state.lastActiveDate !== today){
-      const last = state.lastActiveDate ? new Date(state.lastActiveDate) : null;
-      if(last){
-        const diffDays = Math.round((new Date(today) - new Date(todayStr(last))) / 86400000);
-        state.streak = (diffDays===1) ? state.streak+1 : 1;
-      } else {
-        state.streak = 1;
-      }
-      state.lastActiveDate = today;
-    }
-    state.completedDates[today] = (state.completedDates[today]||0) + 1;
+  updateStreakOnComplete();
 
-    checkLevelUp();
-    checkAchievements();
-    saveData();
-    renderHUD();
-    renderStats();
-    renderQuests();
-    renderCalendar();
+  const dk = todayKey();
+  state.completedDates[dk] = (state.completedDates[dk]||0) + 1;
 
-    showToast('+'+expGain+' опыта · +'+crystalGain+' кристаллов');
-  } else {
-    q.done = false;
-    saveData();
-    renderQuests();
-  }
+  checkLevelUp();
+  checkAchievements();
+  saveData();
+  renderQuests();
+  renderStats();
+  renderHUD();
+
+  showToast('+'+gain+' опыта  •  +'+crystalsGain+' кристаллов');
+  spawnBurst(window.innerWidth/2, window.innerHeight/2, '#4bff9b');
 }
+
 function checkLevelUp(){
   let leveled = false;
-  while(state.exp >= expNeeded(state.level)){
-    state.exp -= expNeeded(state.level);
-    state.level += 1;
+  while(state.exp >= expForLevel(state.level)){
+    state.exp -= expForLevel(state.level);
+    state.level++;
     state.freePoints += 3;
     leveled = true;
   }
   if(leveled){
     flashOverlay();
     showToast('◆ УРОВЕНЬ ПОВЫШЕН: '+state.level+' ◆');
+    spawnBurst(window.innerWidth/2, window.innerHeight/2, '#d4af37');
   }
 }
 
-/* ========================================================
-   БИБЛИОТЕКА КВЕСТОВ
-======================================================== */
+function checkAchievements(){
+  for(const a of ACHIEVEMENTS_LIST){
+    if(state.unlockedAchievements.includes(a.id)) continue;
+    if(a.cond(state)){
+      state.unlockedAchievements.push(a.id);
+      showToast('◆ ДОСТИЖЕНИЕ: '+a.name+' ◆');
+    }
+  }
+  renderAchievements();
+}
+
+/* ===================== БИБЛИОТЕКА КВЕСТОВ ===================== */
+
 function openLibrary(){
   openOverlay('libraryOverlay');
-  showLibraryCat(currentLibCat);
+  showLibraryCat('body');
 }
+
 function showLibraryCat(cat){
   currentLibCat = cat;
   const list = QUEST_LIBRARY[cat];
@@ -1500,309 +1473,275 @@ function showLibraryCat(cat){
   box.innerHTML = list.map((item,i)=>`
     <div class="quest-card" style="margin-bottom:8px">
       <div class="quest-main">
-        <div class="quest-name">${escapeHtml(item.name)}</div>
+        <div class="quest-name">${item.name}</div>
         <div class="quest-meta">
           <span class="quest-type-tag ${item.type}">${typeLabel(item.type)}</span>
           <span>+${item.exp} опыта</span>
-          <span>${STAT_INFO[item.stat].label}</span>
         </div>
       </div>
-      <div class="shop-buy" style="padding:7px 12px" onclick="addFromLibrary('${cat}', ${i})">+</div>
+      <div class="shop-buy" style="padding:8px 12px" onclick="addFromLibrary('${cat}', ${i})">Добавить</div>
     </div>
   `).join('');
 }
-function addFromLibrary(cat, index){
-  const item = QUEST_LIBRARY[cat][index];
-  state.quests.push({id:uid(), name:item.name, type:item.type, exp:item.exp, stat:item.stat, done:false});
+
+function addFromLibrary(cat, idx){
+  const t = QUEST_LIBRARY[cat][idx];
+  state.quests.push({id:Date.now()+idx, name:t.name, type:t.type, exp:t.exp, stat:t.stat, done:false});
   saveData();
   renderQuests();
   showToast('Квест добавлен из библиотеки');
 }
 
-/* ========================================================
-   КАЛЕНДАРЬ
-======================================================== */
-function changeMonth(delta){
-  calendarDate.setMonth(calendarDate.getMonth()+delta);
-  renderCalendar();
-}
+/* ===================== КАЛЕНДАРЬ ===================== */
+
 function renderCalendar(){
-  const months = ['Январь','Февраль','Март','Апрель','Май','Июнь','Июль','Август','Сентябрь','Октябрь','Ноябрь','Декабрь'];
   const y = calendarDate.getFullYear();
   const m = calendarDate.getMonth();
-  document.getElementById('calMonthLabel').textContent = months[m]+' '+y;
+  const monthNames = ['Январь','Февраль','Март','Апрель','Май','Июнь','Июль','Август','Сентябрь','Октябрь','Ноябрь','Декабрь'];
+  document.getElementById('calMonthLabel').textContent = monthNames[m]+' '+y;
 
   const firstDay = new Date(y, m, 1);
   let startOffset = firstDay.getDay() - 1;
-  if(startOffset < 0) startOffset = 6;
+  if(startOffset<0) startOffset = 6;
   const daysInMonth = new Date(y, m+1, 0).getDate();
-  const todayStrVal = todayStr();
 
+  const grid = document.getElementById('calDaysGrid');
   let html = '';
   for(let i=0;i<startOffset;i++){
     html += '<div class="cal-day empty"></div>';
   }
+  const now = new Date();
   for(let d=1; d<=daysInMonth; d++){
-    const dateStr = y+'-'+String(m+1).padStart(2,'0')+'-'+String(d).padStart(2,'0');
-    const count = state.completedDates[dateStr] || 0;
-    let levelClass = '';
-    if(count>=4) levelClass='cal-l4';
-    else if(count>=3) levelClass='cal-l3';
-    else if(count>=2) levelClass='cal-l2';
-    else if(count>=1) levelClass='cal-l1';
-    const isToday = dateStr===todayStrVal ? 'today' : '';
-    html += `<div class="cal-day ${levelClass} ${isToday}">${d}</div>`;
+    const key = y+'-'+String(m+1).padStart(2,'0')+'-'+String(d).padStart(2,'0');
+    const count = state.completedDates[key] || 0;
+    let cls = '';
+    if(count>=6) cls='cal-l4';
+    else if(count>=4) cls='cal-l3';
+    else if(count>=2) cls='cal-l2';
+    else if(count>=1) cls='cal-l1';
+    const isToday = (now.getFullYear()===y && now.getMonth()===m && now.getDate()===d);
+    html += `<div class="cal-day ${cls} ${isToday?'today':''}">${d}</div>`;
   }
-  document.getElementById('calDaysGrid').innerHTML = html;
+  grid.innerHTML = html;
 }
 
-/* ========================================================
-   ДОСТИЖЕНИЯ
-======================================================== */
-function checkAchievements(){
-  ACHIEVEMENTS_LIST.forEach(a=>{
-    if(!state.unlockedAchievements.includes(a.id) && a.check(state)){
-      state.unlockedAchievements.push(a.id);
-      showToast('◆ ДОСТИЖЕНИЕ: '+a.name+' ◆');
-    }
-  });
-  saveData();
-  renderAchievements();
+function changeMonth(delta){
+  calendarDate.setMonth(calendarDate.getMonth()+delta);
+  renderCalendar();
 }
+
+/* ===================== ДОСТИЖЕНИЯ ===================== */
+
 function renderAchievements(){
-  const box = document.getElementById('achievementsList');
-  box.innerHTML = ACHIEVEMENTS_LIST.map(a=>{
+  const list = document.getElementById('achievementsList');
+  list.innerHTML = ACHIEVEMENTS_LIST.map(a=>{
     const unlocked = state.unlockedAchievements.includes(a.id);
     return `
-    <div class="ach-card ${unlocked?'unlocked':''}">
-      <div class="ach-icon">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="8" r="6"></circle><path d="M9 14l-2 7 5-3 5 3-2-7"/></svg>
-      </div>
-      <div>
-        <div class="ach-name">${a.name}</div>
-        <div class="ach-desc">${a.desc}</div>
-      </div>
-    </div>`;
-  }).join('');
-}
-
-/* ========================================================
-   МАГАЗИН
-======================================================== */
-function renderShop(){
-  const box = document.getElementById('shopList');
-  box.innerHTML = SHOP_ITEMS.map(item=>{
-    const owned = state.extraTitles.includes(item.id);
-    const disabled = (item.type==='single' && owned) || state.crystals < item.price;
-    return `
-    <div class="shop-card">
-      <div class="shop-icon">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="9" cy="21" r="1"></circle><circle cx="20" cy="21" r="1"></circle><path d="M1 1h4l2.7 13.4a2 2 0 0 0 2 1.6h9.7a2 2 0 0 0 2-1.6L23 6H6"/></svg>
-      </div>
-      <div style="flex:1">
-        <div class="shop-name">${item.name}</div>
-        <div class="shop-price">
-          <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2 2 9l10 13L22 9z"/></svg>
-          ${item.price}
+      <div class="ach-card ${unlocked?'unlocked':''}">
+        <div class="ach-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="8" r="6"></circle><path d="M9 14l-2 7 5-3 5 3-2-7"/></svg>
+        </div>
+        <div>
+          <div class="ach-name">${a.name}</div>
+          <div class="ach-desc">${a.desc}</div>
         </div>
       </div>
-      <button class="shop-buy" ${disabled?'disabled':''} onclick="buyItem('${item.id}')">
-        ${item.type==='single' && owned ? 'Куплено' : 'Купить'}
-      </button>
-    </div>`;
+    `;
   }).join('');
 }
-function buyItem(id){
-  const item = SHOP_ITEMS.find(x=>x.id===id);
-  if(!item) return;
-  if(state.crystals < item.price){ showToast('Недостаточно кристаллов'); return; }
 
-  state.crystals -= item.price;
+/* ===================== МАГАЗИН ===================== */
 
-  switch(id){
-    case 'bonus_points':
-      state.freePoints += 3;
-      showToast('+3 очка статов получено');
-      break;
-    case 'exp_boost':
-      state.expBoostUntil = Date.now() + 24*3600*1000;
-      showToast('Бустер опыта x2 активирован на 24ч');
-      break;
-    case 'crystal_x15':
-      state.crystalBoostUntil = Date.now() + 24*3600*1000;
-      showToast('Множитель кристаллов активирован на 24ч');
-      break;
-    case 'stat_reset':
-      const total = Object.values(state.stats).reduce((a,b)=>a+b,0) - 50;
-      state.stats = {str:10, agi:10, int:10, vit:10, per:10};
-      state.freePoints += Math.max(0,total);
-      showToast('Статы сброшены, очки возвращены');
-      break;
-    case 'rest_day':
-      state.lastActiveDate = todayStr();
-      showToast('День отдыха использован');
-      break;
-    case 'title_shadow':
-      state.extraTitles.push('title_shadow');
-      TITLES_LIST.push({name:'Тень Монарха', reqLevel:0});
-      showToast('Титул "Тень Монарха" открыт');
-      break;
-    case 'title_flame':
-      state.extraTitles.push('title_flame');
-      TITLES_LIST.push({name:'Пламенный Клинок', reqLevel:0});
-      showToast('Титул "Пламенный Клинок" открыт');
-      break;
-    case 'avatar_frame_gold':
-      state.extraTitles.push('avatar_frame_gold');
-      showToast('Золотая рамка аватара активирована');
-      break;
-  }
-
-  saveData();
-  renderHUD();
-  renderStats();
-  renderShop();
+function renderShop(){
+  const list = document.getElementById('shopList');
+  list.innerHTML = SHOP_ITEMS.map(item=>{
+    const bought = state.purchasedShop.includes(item.id);
+    const canBuy = state.crystals >= item.price;
+    return `
+      <div class="shop-card">
+        <div class="shop-icon">
+          <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2 2 9l10 13L22 9z"/></svg>
+        </div>
+        <div style="flex:1">
+          <div class="shop-name">${item.name}</div>
+          <div class="shop-price">
+            <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2 2 9l10 13L22 9z"/></svg>
+            ${item.price}
+          </div>
+        </div>
+        <button class="shop-buy" ${!canBuy?'disabled':''} onclick="buyShopItem('${item.id}')">${bought?'Ещё раз':'Купить'}</button>
+      </div>
+    `;
+  }).join('');
 }
 
-/* ========================================================
-   НАСТРОЙКИ
-======================================================== */
+function buyShopItem(id){
+  const item = SHOP_ITEMS.find(i=>i.id===id);
+  if(!item) return;
+  if(state.crystals < item.price){
+    showToast('Недостаточно кристаллов');
+    return;
+  }
+  state.crystals -= item.price;
+  if(!state.purchasedShop.includes(id)) state.purchasedShop.push(id);
+  saveData();
+  renderHUD();
+  renderShop();
+  showToast('Куплено: '+item.name);
+  spawnBurst(window.innerWidth/2, window.innerHeight/2, '#4a9eff');
+}
+
+/* ===================== НАСТРОЙКИ ===================== */
+
 function openSettings(){
   document.getElementById('settingsName').value = state.name;
-  const select = document.getElementById('settingsTitle');
-  select.innerHTML = TITLES_LIST
-    .filter(t=>t.reqLevel<=state.level)
-    .map(t=>`<option value="${t.name}" ${t.name===state.selectedTitle?'selected':''}>${t.name}</option>`)
+  const sel = document.getElementById('settingsTitle');
+  sel.innerHTML = TITLES_LIST
+    .filter(t=>state.level >= t.min)
+    .map(t=>`<option value="${t.name}" ${t.name===state.title?'selected':''}>${t.name}</option>`)
     .join('');
   openOverlay('settingsOverlay');
 }
+
 function saveSettings(){
   const name = document.getElementById('settingsName').value.trim();
   const title = document.getElementById('settingsTitle').value;
   if(name) state.name = name;
-  if(title) state.selectedTitle = title;
+  if(title) state.title = title;
   saveData();
   renderHUD();
   closeOverlay('settingsOverlay');
   showToast('Настройки сохранены');
 }
+
 function confirmReset(){
-  if(confirm('Точно сбросить весь прогресс? Это необратимо.')){
-    localStorage.removeItem(STORAGE_KEY);
-    location.reload();
+  if(confirm('Вы точно хотите сбросить весь прогресс? Это действие необратимо.')){
+    state = defaultState();
+    saveData();
+    renderAll();
+    showToast('Прогресс сброшен');
   }
 }
 
-/* ========================================================
-   НАВИГАЦИЯ / ОВЕРЛЕИ
-======================================================== */
+/* ===================== ОВЕРЛЕИ / НАВИГАЦИЯ ===================== */
+
+function openOverlay(id){
+  document.getElementById(id).classList.add('open');
+}
+function closeOverlay(id){
+  document.getElementById(id).classList.remove('open');
+}
+
 function switchTab(tabId, el){
   document.querySelectorAll('.tab-page').forEach(p=>p.classList.remove('active'));
-  document.getElementById(tabId).classList.add('active');
   document.querySelectorAll('.nav-btn').forEach(b=>b.classList.remove('active'));
+  document.getElementById(tabId).classList.add('active');
   el.classList.add('active');
-  document.getElementById('fabAddQuest').style.display = (tabId==='tab-home') ? 'flex' : 'none';
 }
-function openOverlay(id){ document.getElementById(id).classList.add('open'); }
-function closeOverlay(id){ document.getElementById(id).classList.remove('open'); }
 
-/* ========================================================
-   ЭФФЕКТЫ
-======================================================== */
+/* ===================== ЭФФЕКТЫ ===================== */
+
 function showToast(msg){
   const box = document.getElementById('toastBox');
   const el = document.createElement('div');
   el.className = 'sys-toast';
-  el.textContent = '◆ '+msg+' ◆';
+  el.textContent = '◆ ' + msg + ' ◆';
   box.appendChild(el);
   setTimeout(()=>el.remove(), 3100);
 }
-function spawnFloatText(x,y,text,color){
+
+function spawnFloatText(x, y, text, color){
   const el = document.createElement('div');
   el.className = 'float-text';
   el.textContent = text;
   el.style.left = x+'px';
   el.style.top = y+'px';
-  el.style.color = color || '#fff';
+  el.style.color = color;
   document.body.appendChild(el);
   setTimeout(()=>el.remove(), 1200);
 }
-function spawnBurst(x,y,color){
-  for(let i=0;i<10;i++){
+
+function flashOverlay(){
+  const f = document.getElementById('flashOverlay');
+  f.style.transition = 'none';
+  f.style.opacity = '0.5';
+  requestAnimationFrame(()=>{
+    f.style.transition = 'opacity 0.6s ease';
+    f.style.opacity = '0';
+  });
+}
+
+function spawnBurst(x, y, color){
+  for(let i=0;i<16;i++){
     const p = document.createElement('div');
     p.className = 'burst-particle';
     p.style.left = x+'px';
     p.style.top = y+'px';
-    p.style.background = color || '#fff';
+    p.style.background = color;
     document.body.appendChild(p);
-    const angle = Math.random()*Math.PI*2;
-    const dist = 30+Math.random()*40;
+    const angle = (Math.PI*2*i)/16;
+    const dist = 60 + Math.random()*60;
     const dx = Math.cos(angle)*dist;
     const dy = Math.sin(angle)*dist;
     p.animate([
       {transform:'translate(0,0)', opacity:1},
-      {transform:`translate(${dx}px,${dy}px)`, opacity:0}
-    ], {duration:600+Math.random()*300, easing:'ease-out'});
-    setTimeout(()=>p.remove(), 950);
+      {transform:`translate(${dx}px, ${dy}px)`, opacity:0}
+    ], {duration:700, easing:'ease-out'});
+    setTimeout(()=>p.remove(), 720);
   }
 }
-function flashOverlay(){
-  const el = document.getElementById('flashOverlay');
-  el.animate([{opacity:0.6},{opacity:0}], {duration:500, easing:'ease-out'});
-}
 
-/* ========================================================
-   ЧАСТИЦЫ ФОНА
-======================================================== */
-function initParticles(canvasId, count){
+/* ===================== ФОНОВЫЕ ЧАСТИЦЫ (CANVAS) ===================== */
+
+function initParticles(canvasId, density){
   const canvas = document.getElementById(canvasId);
   if(!canvas) return;
   const ctx = canvas.getContext('2d');
-  let w, h, particles=[];
+  let w, h, particles;
+
   function resize(){
     w = canvas.width = canvas.offsetWidth || window.innerWidth;
     h = canvas.height = canvas.offsetHeight || window.innerHeight;
   }
   resize();
   window.addEventListener('resize', resize);
-  for(let i=0;i<count;i++){
-    particles.push({
-      x:Math.random()*w, y:Math.random()*h,
-      r:1+Math.random()*2,
-      vy:0.2+Math.random()*0.4,
-      alpha:0.2+Math.random()*0.5
-    });
-  }
-  function loop(){
+
+  particles = Array.from({length:density}, ()=>({
+    x: Math.random()*w,
+    y: Math.random()*h,
+    r: Math.random()*1.8+0.4,
+    vy: Math.random()*0.3+0.1,
+    alpha: Math.random()*0.5+0.1
+  }));
+
+  function tick(){
     ctx.clearRect(0,0,w,h);
-    particles.forEach(p=>{
+    for(const p of particles){
       p.y -= p.vy;
-      if(p.y < -5){ p.y = h+5; p.x = Math.random()*w; }
+      if(p.y < -5) p.y = h+5;
       ctx.beginPath();
-      ctx.arc(p.x,p.y,p.r,0,Math.PI*2);
+      ctx.arc(p.x, p.y, p.r, 0, Math.PI*2);
       ctx.fillStyle = `rgba(212,175,55,${p.alpha})`;
       ctx.fill();
-    });
-    requestAnimationFrame(loop);
+    }
+    requestAnimationFrame(tick);
   }
-  loop();
+  tick();
 }
 
-/* ========================================================
-   ИНИЦИАЛИЗАЦИЯ
-======================================================== */
+/* ===================== ИНИЦИАЛИЗАЦИЯ ===================== */
+
 function renderAll(){
   renderHUD();
-  renderStats();
   renderQuests();
+  renderStats();
   renderCalendar();
   renderAchievements();
   renderShop();
 }
 
-window.addEventListener('load', ()=>{
+window.addEventListener('DOMContentLoaded', ()=>{
   loadData();
-  checkDailyReset();
   renderAll();
 
   initParticles('splashCanvas', 40);
@@ -1812,10 +1751,14 @@ window.addEventListener('load', ()=>{
     document.getElementById('splash').classList.add('hidden');
   }, 1800);
 
+  setInterval(saveData, 30000);
+
   if('serviceWorker' in navigator){
-    navigator.serviceWorker.register('sw.js').catch(e=>console.warn('SW error', e));
+    navigator.serviceWorker.register('sw.js').catch(()=>{});
   }
 });
+
+window.addEventListener('beforeunload', saveData);
 </script>
 </body>
 </html>
