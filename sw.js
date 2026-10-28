@@ -1,5 +1,5 @@
-// При каждом обновлении index.html — обязательно меняй номер версии ниже (v2 -> v3 -> v4...)
-const CACHE_NAME = 'system-cache-v2';
+// При каждом обновлении index.html — обязательно меняй номер версии ниже (v3 -> v4 -> v5...)
+const CACHE_NAME = 'system-cache-v3';
 const ASSETS = ['./', './index.html', './manifest.json', './icon.svg'];
 
 self.addEventListener('install', (e) => {
