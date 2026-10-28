@@ -3,31 +3,25 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-<title>SYSTEM - Solo Leveling</title>
+<title>SYSTEM - Monarch Path</title>
 
-<!-- iOS PWA настройки -->
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <meta name="apple-mobile-web-app-title" content="SYSTEM">
 <meta name="mobile-web-app-capable" content="yes">
-<meta name="theme-color" content="#0a0a14">
+<meta name="theme-color" content="#000000">
 
-<!-- Иконки -->
-<link rel="apple-touch-icon" href="icon-180.png">
-<link rel="apple-touch-icon" sizes="152x152" href="icon-152.png">
-<link rel="apple-touch-icon" sizes="167x167" href="icon-167.png">
-<link rel="apple-touch-icon" sizes="180x180" href="icon-180.png">
-<link rel="icon" type="image/png" sizes="192x192" href="icon-192.png">
-
-<!-- Манифест -->
 <link rel="manifest" href="manifest.json">
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700;900&family=Rajdhani:wght@400;500;600;700&display=swap" rel="stylesheet">
 
 <style>
   * {
     margin: 0;
     padding: 0;
     box-sizing: border-box;
-    font-family: 'Segoe UI', Arial, sans-serif;
+    font-family: 'Rajdhani', sans-serif;
     -webkit-tap-highlight-color: transparent;
   }
 
@@ -36,43 +30,41 @@
   }
 
   body {
-    background: #0a0a14;
-    color: #e0e0ff;
+    background: #000000;
+    color: #d4d4e8;
     overflow-x: hidden;
     min-height: 100vh;
-    min-height: -webkit-fill-available;
     background-image: 
-      radial-gradient(circle at 20% 20%, rgba(100, 50, 255, 0.1) 0%, transparent 50%),
-      radial-gradient(circle at 80% 80%, rgba(50, 100, 255, 0.1) 0%, transparent 50%);
+      radial-gradient(circle at 15% 10%, rgba(138, 43, 226, 0.12) 0%, transparent 45%),
+      radial-gradient(circle at 85% 90%, rgba(212, 175, 55, 0.08) 0%, transparent 45%),
+      radial-gradient(circle at 50% 50%, rgba(75, 0, 130, 0.06) 0%, transparent 60%);
     padding-top: env(safe-area-inset-top);
     padding-bottom: env(safe-area-inset-bottom);
   }
 
   .particles {
     position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
+    top: 0; left: 0;
+    width: 100%; height: 100%;
     z-index: 0;
     pointer-events: none;
   }
 
   .particle {
     position: absolute;
-    width: 2px;
-    height: 2px;
-    background: #6b5bff;
+    width: 2px; height: 2px;
+    background: #d4af37;
     border-radius: 50%;
-    animation: float 15s infinite linear;
-    opacity: 0.6;
+    animation: float 18s infinite linear;
+    opacity: 0.5;
+    box-shadow: 0 0 4px #d4af37;
   }
 
   @keyframes float {
     0% { transform: translateY(100vh) translateX(0); opacity: 0; }
-    10% { opacity: 0.8; }
-    90% { opacity: 0.8; }
-    100% { transform: translateY(-10vh) translateX(100px); opacity: 0; }
+    10% { opacity: 0.7; }
+    90% { opacity: 0.7; }
+    100% { transform: translateY(-10vh) translateX(80px); opacity: 0; }
   }
 
   .container {
@@ -85,20 +77,20 @@
 
   .system-header {
     text-align: center;
-    padding: 30px 0;
-    position: relative;
+    padding: 40px 0 20px;
   }
 
   .system-title {
-    font-size: 3em;
+    font-family: 'Cinzel', serif;
+    font-size: 2.6em;
     font-weight: 900;
-    background: linear-gradient(45deg, #6b5bff, #9b7bff, #6b5bff);
+    background: linear-gradient(135deg, #d4af37 0%, #fff6d9 50%, #d4af37 100%);
     background-size: 200% 200%;
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
-    animation: shine 3s linear infinite;
-    text-shadow: 0 0 30px rgba(107, 91, 255, 0.5);
-    letter-spacing: 3px;
+    animation: shine 4s linear infinite;
+    text-shadow: 0 0 40px rgba(212, 175, 55, 0.4);
+    letter-spacing: 4px;
   }
 
   @keyframes shine {
@@ -108,28 +100,46 @@
   }
 
   .subtitle {
-    color: #8888cc;
-    font-size: 0.9em;
-    margin-top: 10px;
-    letter-spacing: 2px;
+    color: #7a6a9e;
+    font-size: 0.85em;
+    margin-top: 12px;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    font-weight: 600;
+  }
+
+  .divider {
+    width: 80px;
+    height: 2px;
+    background: linear-gradient(90deg, transparent, #d4af37, transparent);
+    margin: 20px auto;
   }
 
   .player-card {
-    background: linear-gradient(135deg, rgba(20, 20, 40, 0.9), rgba(30, 20, 60, 0.9));
-    border: 2px solid #6b5bff;
-    border-radius: 15px;
-    padding: 25px;
+    background: linear-gradient(145deg, rgba(15, 10, 25, 0.95), rgba(25, 15, 40, 0.95));
+    border: 1px solid rgba(212, 175, 55, 0.3);
+    border-radius: 4px;
+    padding: 30px;
     margin: 20px 0;
-    box-shadow: 0 0 40px rgba(107, 91, 255, 0.3);
+    box-shadow: 
+      0 0 50px rgba(138, 43, 226, 0.15),
+      inset 0 0 30px rgba(0,0,0,0.5);
     position: relative;
-    overflow: hidden;
+  }
+
+  .player-card::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 1px;
+    background: linear-gradient(90deg, transparent, #d4af37, transparent);
   }
 
   .player-header {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    margin-bottom: 20px;
+    margin-bottom: 25px;
     flex-wrap: wrap;
     gap: 15px;
   }
@@ -137,89 +147,85 @@
   .player-name-section {
     display: flex;
     align-items: center;
-    gap: 15px;
+    gap: 18px;
   }
 
   .player-avatar {
-    width: 70px;
-    height: 70px;
-    border-radius: 50%;
-    background: linear-gradient(135deg, #6b5bff, #9b7bff);
+    width: 65px; height: 65px;
+    border-radius: 4px;
+    background: linear-gradient(145deg, #1a1030, #2d1a4e);
+    border: 1px solid #d4af37;
     display: flex;
     align-items: center;
     justify-content: center;
-    font-size: 2em;
-    font-weight: bold;
-    box-shadow: 0 0 20px rgba(107, 91, 255, 0.6);
+    font-size: 1.8em;
+    box-shadow: 0 0 25px rgba(212, 175, 55, 0.25);
     cursor: pointer;
-    transition: transform 0.3s;
   }
 
-  .player-avatar:active {
-    transform: scale(0.95);
-  }
+  .player-avatar:active { transform: scale(0.95); }
 
   .player-info h2 {
-    font-size: 1.5em;
+    font-family: 'Cinzel', serif;
+    font-size: 1.3em;
     color: #fff;
-    margin-bottom: 5px;
+    margin-bottom: 6px;
+    letter-spacing: 1px;
   }
 
   .player-rank {
     display: inline-block;
-    padding: 4px 15px;
-    background: linear-gradient(45deg, #ff6b6b, #ff9b6b);
-    border-radius: 20px;
-    font-weight: bold;
-    font-size: 0.8em;
-    box-shadow: 0 0 15px rgba(255, 107, 107, 0.5);
-  }
-
-  .level-display {
-    text-align: right;
-  }
-
-  .level-number {
-    font-size: 2.5em;
-    font-weight: 900;
-    color: #6b5bff;
-    text-shadow: 0 0 20px rgba(107, 91, 255, 0.8);
-  }
-
-  .level-label {
-    color: #8888cc;
-    font-size: 0.8em;
+    padding: 4px 16px;
+    background: transparent;
+    border: 1px solid;
+    border-radius: 2px;
+    font-weight: 700;
+    font-size: 0.75em;
     letter-spacing: 2px;
   }
 
-  .exp-container {
-    margin: 15px 0;
+  .level-display { text-align: right; }
+
+  .level-number {
+    font-family: 'Cinzel', serif;
+    font-size: 2.2em;
+    font-weight: 900;
+    color: #d4af37;
+    text-shadow: 0 0 25px rgba(212, 175, 55, 0.6);
   }
+
+  .level-label {
+    color: #7a6a9e;
+    font-size: 0.75em;
+    letter-spacing: 3px;
+    font-weight: 600;
+  }
+
+  .exp-container { margin: 18px 0; }
 
   .exp-labels {
     display: flex;
     justify-content: space-between;
-    margin-bottom: 5px;
-    font-size: 0.85em;
-    color: #aaa;
+    margin-bottom: 6px;
+    font-size: 0.8em;
+    color: #8a7aae;
+    letter-spacing: 1px;
   }
 
   .exp-bar-bg {
     width: 100%;
-    height: 20px;
-    background: rgba(0,0,0,0.5);
-    border-radius: 10px;
+    height: 14px;
+    background: rgba(0,0,0,0.6);
+    border-radius: 2px;
     overflow: hidden;
-    border: 1px solid rgba(107, 91, 255, 0.3);
-    position: relative;
+    border: 1px solid rgba(212, 175, 55, 0.2);
   }
 
   .exp-bar-fill {
     height: 100%;
-    background: linear-gradient(90deg, #6b5bff, #9b7bff);
-    border-radius: 10px;
+    background: linear-gradient(90deg, #6b2fbf, #d4af37);
     transition: width 0.5s ease;
-    box-shadow: 0 0 10px rgba(107, 91, 255, 0.8);
+    box-shadow: 0 0 15px rgba(212, 175, 55, 0.6);
     position: relative;
     overflow: hidden;
   }
@@ -227,12 +233,9 @@
   .exp-bar-fill::after {
     content: '';
     position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    background: linear-gradient(90deg, transparent, rgba(255,255,255,0.3), transparent);
-    animation: shimmer 2s infinite;
+    top: 0; left: 0; right: 0; bottom: 0;
+    background: linear-gradient(90deg, transparent, rgba(255,255,255,0.4), transparent);
+    animation: shimmer 2.5s infinite;
   }
 
   @keyframes shimmer {
@@ -242,134 +245,199 @@
 
   .stats-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
-    gap: 15px;
-    margin-top: 20px;
+    grid-template-columns: repeat(auto-fit, minmax(130px, 1fr));
+    gap: 12px;
+    margin-top: 22px;
   }
 
   .stat-box {
-    background: rgba(0,0,0,0.3);
-    border: 1px solid rgba(107, 91, 255, 0.3);
-    border-radius: 10px;
-    padding: 15px;
+    background: rgba(0,0,0,0.4);
+    border: 1px solid rgba(138, 43, 226, 0.25);
+    border-radius: 4px;
+    padding: 14px;
     text-align: center;
     transition: all 0.3s;
   }
 
-  .stat-icon {
-    font-size: 1.8em;
-    margin-bottom: 5px;
+  .stat-box:active {
+    border-color: #d4af37;
   }
 
+  .stat-icon { font-size: 1.6em; margin-bottom: 6px; }
+
   .stat-name {
-    font-size: 0.75em;
-    color: #8888cc;
+    font-size: 0.68em;
+    color: #8a7aae;
     text-transform: uppercase;
-    letter-spacing: 1px;
+    letter-spacing: 1.5px;
+    font-weight: 600;
   }
 
   .stat-value {
-    font-size: 1.8em;
-    font-weight: bold;
+    font-family: 'Cinzel', serif;
+    font-size: 1.6em;
+    font-weight: 700;
     color: #fff;
-    margin: 5px 0;
+    margin: 6px 0;
   }
 
   .stat-points-btn {
-    background: #6b5bff;
-    color: white;
+    background: linear-gradient(145deg, #d4af37, #a8841f);
+    color: #000;
     border: none;
-    border-radius: 5px;
-    width: 30px;
-    height: 30px;
+    border-radius: 3px;
+    width: 28px; height: 28px;
     cursor: pointer;
-    font-weight: bold;
-    transition: all 0.2s;
+    font-weight: 900;
     font-size: 1.1em;
   }
 
-  .stat-points-btn:active {
-    background: #9b7bff;
-    transform: scale(0.95);
-  }
+  .stat-points-btn:active { transform: scale(0.9); }
 
   .free-points {
     text-align: center;
-    margin-top: 10px;
-    color: #ffd700;
-    font-weight: bold;
+    margin-top: 12px;
+    color: #d4af37;
+    font-weight: 700;
+    letter-spacing: 1px;
+    font-size: 0.9em;
   }
 
   .nav-tabs {
     display: flex;
-    gap: 10px;
-    margin: 20px 0;
+    gap: 8px;
+    margin: 25px 0;
     flex-wrap: wrap;
   }
 
   .nav-tab {
-    padding: 12px 25px;
-    background: rgba(20, 20, 40, 0.7);
-    border: 1px solid rgba(107, 91, 255, 0.3);
-    border-radius: 10px;
-    color: #aaa;
+    padding: 13px 20px;
+    background: rgba(15, 10, 25, 0.8);
+    border: 1px solid rgba(138, 43, 226, 0.25);
+    border-radius: 4px;
+    color: #8a7aae;
     cursor: pointer;
-    transition: all 0.3s;
     font-weight: 600;
     flex: 1;
-    min-width: 120px;
+    min-width: 100px;
     text-align: center;
     user-select: none;
+    font-size: 0.9em;
+    letter-spacing: 0.5px;
   }
 
   .nav-tab.active {
-    background: linear-gradient(135deg, #6b5bff, #4b3bdd);
-    border-color: #9b7bff;
-    color: #fff;
-    box-shadow: 0 0 20px rgba(107, 91, 255, 0.5);
+    background: linear-gradient(145deg, #2d1a4e, #1a1030);
+    border-color: #d4af37;
+    color: #d4af37;
+    box-shadow: 0 0 20px rgba(212, 175, 55, 0.2);
   }
 
-  .tab-content {
-    display: none;
-    animation: fadeIn 0.5s;
-  }
-
-  .tab-content.active {
-    display: block;
-  }
+  .tab-content { display: none; animation: fadeIn 0.4s; }
+  .tab-content.active { display: block; }
 
   @keyframes fadeIn {
-    from { opacity: 0; transform: translateY(10px); }
+    from { opacity: 0; transform: translateY(8px); }
     to { opacity: 1; transform: translateY(0); }
   }
 
   .section-title {
-    font-size: 1.5em;
-    color: #9b7bff;
+    font-family: 'Cinzel', serif;
+    font-size: 1.3em;
+    color: #d4af37;
     margin-bottom: 20px;
+    letter-spacing: 1px;
     display: flex;
     align-items: center;
+    justify-content: space-between;
+    flex-wrap: wrap;
     gap: 10px;
   }
 
+  /* Библиотека квестов */
+  .library-btn {
+    background: linear-gradient(145deg, #2d1a4e, #1a1030);
+    border: 1px solid #d4af37;
+    color: #d4af37;
+    padding: 10px 18px;
+    border-radius: 4px;
+    font-size: 0.75em;
+    font-weight: 700;
+    cursor: pointer;
+    letter-spacing: 1px;
+  }
+
+  .library-category {
+    margin-bottom: 25px;
+  }
+
+  .library-category-title {
+    font-size: 1em;
+    font-weight: 700;
+    margin-bottom: 12px;
+    padding-bottom: 8px;
+    border-bottom: 1px solid rgba(138, 43, 226, 0.3);
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .library-quest-item {
+    background: rgba(0,0,0,0.4);
+    border: 1px solid rgba(138, 43, 226, 0.2);
+    border-radius: 4px;
+    padding: 14px;
+    margin-bottom: 10px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 10px;
+    flex-wrap: wrap;
+  }
+
+  .library-quest-info {
+    flex: 1;
+    min-width: 150px;
+  }
+
+  .library-quest-title {
+    font-weight: 600;
+    color: #fff;
+    font-size: 0.95em;
+    margin-bottom: 4px;
+  }
+
+  .library-quest-meta {
+    font-size: 0.78em;
+    color: #8a7aae;
+  }
+
+  .library-add-btn {
+    background: linear-gradient(145deg, #d4af37, #a8841f);
+    color: #000;
+    border: none;
+    padding: 8px 16px;
+    border-radius: 3px;
+    font-weight: 700;
+    cursor: pointer;
+    font-size: 0.8em;
+    white-space: nowrap;
+  }
+
+  .library-add-btn:active { transform: scale(0.95); }
+
   .quest-card {
-    background: rgba(20, 20, 40, 0.7);
-    border: 1px solid rgba(107, 91, 255, 0.3);
-    border-left: 4px solid #6b5bff;
-    border-radius: 10px;
+    background: linear-gradient(145deg, rgba(15, 10, 25, 0.8), rgba(20, 12, 35, 0.8));
+    border: 1px solid rgba(138, 43, 226, 0.25);
+    border-left: 3px solid #8a2be2;
+    border-radius: 4px;
     padding: 20px;
-    margin-bottom: 15px;
-    transition: all 0.3s;
+    margin-bottom: 14px;
   }
 
-  .quest-card.completed {
-    opacity: 0.6;
-    border-left-color: #4bff6b;
-  }
-
-  .quest-card.daily {
-    border-left-color: #ffd700;
-  }
+  .quest-card.completed { opacity: 0.5; border-left-color: #4bff6b; }
+  .quest-card.daily { border-left-color: #d4af37; }
+  .quest-card.mind { border-left-color: #4a9eff; }
 
   .quest-header {
     display: flex;
@@ -379,30 +447,24 @@
     gap: 10px;
   }
 
-  .quest-title {
-    font-size: 1.1em;
-    font-weight: bold;
-    color: #fff;
-  }
+  .quest-title { font-size: 1.05em; font-weight: 700; color: #fff; }
 
   .quest-type-badge {
-    padding: 3px 10px;
-    border-radius: 15px;
-    font-size: 0.7em;
-    font-weight: bold;
+    padding: 3px 12px;
+    border-radius: 2px;
+    font-size: 0.65em;
+    font-weight: 700;
     text-transform: uppercase;
     white-space: nowrap;
+    letter-spacing: 1px;
   }
 
-  .badge-daily { background: #ffd700; color: #333; }
-  .badge-main { background: #ff6b6b; color: white; }
-  .badge-side { background: #6b9bff; color: white; }
+  .badge-daily { background: rgba(212,175,55,0.2); color: #d4af37; border: 1px solid #d4af37; }
+  .badge-main { background: rgba(255,107,107,0.2); color: #ff6b6b; border: 1px solid #ff6b6b; }
+  .badge-side { background: rgba(107,155,255,0.2); color: #6b9bff; border: 1px solid #6b9bff; }
+  .badge-mind { background: rgba(74,158,255,0.2); color: #4a9eff; border: 1px solid #4a9eff; }
 
-  .quest-description {
-    color: #aaa;
-    font-size: 0.9em;
-    margin-bottom: 15px;
-  }
+  .quest-description { color: #8a7aae; font-size: 0.88em; margin-bottom: 15px; }
 
   .quest-rewards {
     display: flex;
@@ -415,61 +477,36 @@
     display: flex;
     align-items: center;
     gap: 5px;
-    font-size: 0.85em;
-    color: #ffd700;
+    font-size: 0.82em;
+    color: #d4af37;
+    font-weight: 600;
   }
 
-  .quest-actions {
-    display: flex;
-    gap: 10px;
-    flex-wrap: wrap;
-  }
+  .quest-actions { display: flex; gap: 10px; flex-wrap: wrap; }
 
   .btn {
     padding: 12px 20px;
     border: none;
-    border-radius: 8px;
+    border-radius: 4px;
     cursor: pointer;
-    font-weight: 600;
-    transition: all 0.3s;
-    font-size: 0.9em;
+    font-weight: 700;
+    font-size: 0.85em;
     -webkit-appearance: none;
+    letter-spacing: 0.5px;
   }
 
-  .btn:active {
-    transform: scale(0.97);
-  }
+  .btn:active { transform: scale(0.96); }
 
-  .btn-primary {
-    background: linear-gradient(135deg, #6b5bff, #4b3bdd);
-    color: white;
-  }
-
-  .btn-success {
-    background: linear-gradient(135deg, #4bff6b, #2bdd4b);
-    color: white;
-  }
-
-  .btn-danger {
-    background: linear-gradient(135deg, #ff6b6b, #dd4b4b);
-    color: white;
-  }
-
-  .btn-secondary {
-    background: rgba(255,255,255,0.1);
-    color: #ccc;
-    border: 1px solid rgba(255,255,255,0.2);
-  }
-
-  .btn:disabled {
-    opacity: 0.5;
-    cursor: not-allowed;
-  }
+  .btn-primary { background: linear-gradient(145deg, #8a2be2, #5a1b9e); color: white; }
+  .btn-success { background: linear-gradient(145deg, #d4af37, #a8841f); color: #000; }
+  .btn-danger { background: linear-gradient(145deg, #ff4757, #c0392b); color: white; }
+  .btn-secondary { background: rgba(255,255,255,0.08); color: #8a7aae; border: 1px solid rgba(255,255,255,0.15); }
+  .btn:disabled { opacity: 0.4; cursor: not-allowed; }
 
   .add-quest-form {
-    background: rgba(20, 20, 40, 0.7);
-    border: 2px dashed rgba(107, 91, 255, 0.4);
-    border-radius: 10px;
+    background: rgba(10, 6, 18, 0.7);
+    border: 1px dashed rgba(212, 175, 55, 0.3);
+    border-radius: 4px;
     padding: 20px;
     margin-bottom: 20px;
   }
@@ -481,173 +518,110 @@
     margin-bottom: 15px;
   }
 
-  .form-group {
-    display: flex;
-    flex-direction: column;
-    gap: 5px;
-  }
-
-  .form-group.full {
-    grid-column: 1 / -1;
-  }
-
-  .form-group label {
-    font-size: 0.85em;
-    color: #8888cc;
-  }
+  .form-group { display: flex; flex-direction: column; gap: 6px; }
+  .form-group.full { grid-column: 1 / -1; }
+  .form-group label { font-size: 0.8em; color: #8a7aae; letter-spacing: 0.5px; }
 
   input, select, textarea {
-    background: rgba(0,0,0,0.4);
-    border: 1px solid rgba(107, 91, 255, 0.3);
-    border-radius: 8px;
+    background: rgba(0,0,0,0.5);
+    border: 1px solid rgba(138, 43, 226, 0.3);
+    border-radius: 4px;
     padding: 12px;
     color: #fff;
-    font-size: 16px; /* важно для iOS - предотвращает зум при фокусе */
+    font-size: 16px;
     -webkit-appearance: none;
+    font-family: 'Rajdhani', sans-serif;
   }
 
   input:focus, select:focus, textarea:focus {
     outline: none;
-    border-color: #6b5bff;
-    box-shadow: 0 0 10px rgba(107, 91, 255, 0.3);
+    border-color: #d4af37;
+    box-shadow: 0 0 10px rgba(212, 175, 55, 0.2);
   }
 
-  textarea {
-    resize: vertical;
-    min-height: 60px;
-  }
+  textarea { resize: vertical; min-height: 60px; }
 
   .achievements-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
-    gap: 15px;
+    grid-template-columns: repeat(auto-fill, minmax(145px, 1fr));
+    gap: 12px;
   }
 
   .achievement-card {
-    background: rgba(20, 20, 40, 0.7);
-    border: 2px solid rgba(107, 91, 255, 0.2);
-    border-radius: 12px;
-    padding: 20px;
+    background: rgba(10, 6, 18, 0.7);
+    border: 1px solid rgba(138, 43, 226, 0.2);
+    border-radius: 4px;
+    padding: 18px;
     text-align: center;
-    transition: all 0.3s;
   }
 
-  .achievement-card.unlocked {
-    border-color: #ffd700;
-    box-shadow: 0 0 20px rgba(255, 215, 0, 0.3);
-  }
+  .achievement-card.unlocked { border-color: #d4af37; box-shadow: 0 0 20px rgba(212, 175, 55, 0.2); }
+  .achievement-card.locked { opacity: 0.35; filter: grayscale(1); }
 
-  .achievement-card.locked {
-    opacity: 0.4;
-    filter: grayscale(1);
-  }
-
-  .achievement-icon {
-    font-size: 3em;
-    margin-bottom: 10px;
-  }
-
-  .achievement-name {
-    font-weight: bold;
-    color: #fff;
-    margin-bottom: 5px;
-    font-size: 0.9em;
-  }
-
-  .achievement-desc {
-    font-size: 0.75em;
-    color: #aaa;
-  }
+  .achievement-icon { font-size: 2.6em; margin-bottom: 8px; }
+  .achievement-name { font-weight: 700; color: #fff; margin-bottom: 4px; font-size: 0.85em; }
+  .achievement-desc { font-size: 0.7em; color: #8a7aae; }
 
   .skills-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
-    gap: 15px;
+    grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+    gap: 14px;
   }
 
   .skill-card {
-    background: rgba(20, 20, 40, 0.7);
-    border: 1px solid rgba(107, 91, 255, 0.3);
-    border-radius: 12px;
+    background: rgba(10, 6, 18, 0.7);
+    border: 1px solid rgba(138, 43, 226, 0.25);
+    border-radius: 4px;
     padding: 20px;
   }
 
-  .skill-header {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    margin-bottom: 10px;
-  }
+  .skill-header { display: flex; align-items: center; gap: 10px; margin-bottom: 10px; }
+  .skill-icon { font-size: 1.8em; }
 
-  .skill-icon {
-    font-size: 2em;
-  }
-
-  .skill-level {
-    display: flex;
-    gap: 3px;
-    margin-top: 10px;
-    flex-wrap: wrap;
-  }
+  .skill-level { display: flex; gap: 3px; margin-top: 10px; flex-wrap: wrap; }
 
   .skill-level-dot {
-    width: 20px;
-    height: 8px;
-    background: rgba(255,255,255,0.1);
-    border-radius: 4px;
+    width: 18px; height: 7px;
+    background: rgba(255,255,255,0.08);
+    border-radius: 2px;
   }
 
-  .skill-level-dot.filled {
-    background: linear-gradient(90deg, #6b5bff, #9b7bff);
-  }
+  .skill-level-dot.filled { background: linear-gradient(90deg, #8a2be2, #d4af37); }
 
   .log-container {
-    background: rgba(0,0,0,0.3);
-    border-radius: 10px;
+    background: rgba(0,0,0,0.4);
+    border-radius: 4px;
     padding: 15px;
     max-height: 400px;
     overflow-y: auto;
-    -webkit-overflow-scrolling: touch;
   }
 
   .log-entry {
     padding: 10px;
-    border-bottom: 1px solid rgba(107, 91, 255, 0.1);
+    border-bottom: 1px solid rgba(138, 43, 226, 0.1);
     display: flex;
     justify-content: space-between;
-    font-size: 0.85em;
+    font-size: 0.82em;
     gap: 10px;
     flex-wrap: wrap;
   }
 
-  .log-time {
-    color: #8888cc;
-    font-size: 0.8em;
-    white-space: nowrap;
-  }
+  .log-time { color: #8a7aae; font-size: 0.8em; white-space: nowrap; }
 
   .level-up-modal {
     position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background: rgba(0,0,0,0.85);
+    top: 0; left: 0;
+    width: 100%; height: 100%;
+    background: rgba(0,0,0,0.9);
     display: none;
     align-items: center;
     justify-content: center;
     z-index: 1000;
   }
 
-  .level-up-modal.show {
-    display: flex;
-  }
+  .level-up-modal.show { display: flex; }
 
-  .level-up-content {
-    text-align: center;
-    animation: levelUpAppear 0.6s ease;
-    padding: 20px;
-  }
+  .level-up-content { text-align: center; animation: levelUpAppear 0.6s ease; padding: 20px; }
 
   @keyframes levelUpAppear {
     0% { transform: scale(0.5); opacity: 0; }
@@ -656,78 +630,57 @@
   }
 
   .level-up-text {
-    font-size: 3em;
+    font-family: 'Cinzel', serif;
+    font-size: 2.6em;
     font-weight: 900;
-    background: linear-gradient(45deg, #ffd700, #fff, #ffd700);
+    background: linear-gradient(135deg, #d4af37, #fff6d9, #d4af37);
     background-size: 200% 200%;
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
     animation: shine 1.5s linear infinite;
-    text-shadow: 0 0 50px rgba(255, 215, 0, 0.8);
     margin-bottom: 20px;
+    letter-spacing: 3px;
   }
 
-  .level-up-subtext {
-    font-size: 1.3em;
-    color: #fff;
-    margin-bottom: 30px;
-  }
+  .level-up-subtext { font-size: 1.2em; color: #fff; margin-bottom: 30px; }
 
   .quest-notification {
     position: fixed;
     top: calc(20px + env(safe-area-inset-top));
-    right: 20px;
-    left: 20px;
-    background: linear-gradient(135deg, rgba(20, 20, 40, 0.95), rgba(30, 20, 60, 0.95));
-    border: 2px solid #6b5bff;
-    border-radius: 10px;
+    right: 20px; left: 20px;
+    background: linear-gradient(145deg, rgba(15, 10, 25, 0.97), rgba(25, 15, 40, 0.97));
+    border: 1px solid #d4af37;
+    border-radius: 4px;
     padding: 15px 20px;
-    box-shadow: 0 0 30px rgba(107, 91, 255, 0.6);
+    box-shadow: 0 0 30px rgba(212, 175, 55, 0.3);
     transform: translateY(-150px);
     transition: transform 0.4s ease;
     z-index: 999;
     text-align: center;
+    font-weight: 600;
   }
 
-  .quest-notification.show {
-    transform: translateY(0);
-  }
+  .quest-notification.show { transform: translateY(0); }
 
-  .empty-state {
-    text-align: center;
-    padding: 40px;
-    color: #666;
-  }
-
-  .empty-state-icon {
-    font-size: 3em;
-    margin-bottom: 15px;
-    opacity: 0.5;
-  }
+  .empty-state { text-align: center; padding: 40px; color: #5a4a7e; }
+  .empty-state-icon { font-size: 3em; margin-bottom: 15px; opacity: 0.4; }
 
   @media (max-width: 600px) {
-    .system-title { font-size: 2em; }
+    .system-title { font-size: 1.8em; }
     .form-row { grid-template-columns: 1fr; }
     .player-header { flex-direction: column; align-items: flex-start; }
     .level-display { text-align: left; }
     .quest-notification { right: 10px; left: 10px; }
   }
 
-  ::-webkit-scrollbar {
-    width: 8px;
-  }
-  ::-webkit-scrollbar-track {
-    background: rgba(0,0,0,0.2);
-  }
-  ::-webkit-scrollbar-thumb {
-    background: #6b5bff;
-    border-radius: 4px;
-  }
+  ::-webkit-scrollbar { width: 6px; }
+  ::-webkit-scrollbar-track { background: rgba(0,0,0,0.3); }
+  ::-webkit-scrollbar-thumb { background: #d4af37; border-radius: 3px; }
 
   .modal-overlay {
     position: fixed;
     top: 0; left: 0; right: 0; bottom: 0;
-    background: rgba(0,0,0,0.7);
+    background: rgba(0,0,0,0.8);
     display: none;
     align-items: center;
     justify-content: center;
@@ -736,17 +689,20 @@
   }
   .modal-overlay.show { display: flex; }
   .modal-box {
-    background: #15152a;
-    border: 2px solid #6b5bff;
-    border-radius: 15px;
+    background: linear-gradient(145deg, #0d0815, #150a22);
+    border: 1px solid #d4af37;
+    border-radius: 4px;
     padding: 30px;
-    max-width: 400px;
+    max-width: 450px;
     width: 100%;
-    box-shadow: 0 0 50px rgba(107, 91, 255, 0.5);
+    max-height: 85vh;
+    overflow-y: auto;
   }
-  .modal-box h3 {
-    margin-bottom: 20px;
-    color: #9b7bff;
+  .modal-box h3 { 
+    font-family: 'Cinzel', serif;
+    margin-bottom: 20px; 
+    color: #d4af37; 
+    letter-spacing: 1px;
   }
 </style>
 </head>
@@ -756,8 +712,9 @@
 
 <div class="container">
   <div class="system-header">
-    <div class="system-title">⚔️ SYSTEM ⚔️</div>
-    <div class="subtitle">ТЫ ПОЛУЧИЛ ВОЗМОЖНОСТЬ СТАТЬ ИГРОКОМ</div>
+    <div class="system-title">SYSTEM</div>
+    <div class="subtitle">Путь Монарха начинается здесь</div>
+    <div class="divider"></div>
   </div>
 
   <div class="player-card">
@@ -777,7 +734,7 @@
 
     <div class="exp-container">
       <div class="exp-labels">
-        <span>EXP</span>
+        <span>ОПЫТ</span>
         <span id="expText">0 / 100</span>
       </div>
       <div class="exp-bar-bg">
@@ -786,7 +743,7 @@
     </div>
 
     <div class="free-points" id="freePointsDisplay" style="display:none;">
-      ⭐ Доступно очков характеристик: <span id="freePointsCount">0</span>
+      ⭐ ОЧКОВ ДОСТУПНО: <span id="freePointsCount">0</span>
     </div>
 
     <div class="stats-grid" id="statsGrid"></div>
@@ -800,7 +757,10 @@
   </div>
 
   <div class="tab-content active" id="quests">
-    <div class="section-title">📜 Активные квесты</div>
+    <div class="section-title">
+      <span>📜 Активные квесты</span>
+      <button class="library-btn" onclick="openLibrary()">📚 Библиотека квестов</button>
+    </div>
     
     <div class="add-quest-form">
       <div class="form-row">
@@ -814,6 +774,7 @@
             <option value="daily">Ежедневный</option>
             <option value="main">Основной</option>
             <option value="side">Побочный</option>
+            <option value="mind">Разум</option>
           </select>
         </div>
       </div>
@@ -863,7 +824,7 @@
 
 <div class="level-up-modal" id="levelUpModal">
   <div class="level-up-content">
-    <div class="level-up-text">LEVEL UP!</div>
+    <div class="level-up-text">LEVEL UP</div>
     <div class="level-up-subtext" id="levelUpText">Ты достиг уровня 2!</div>
     <button class="btn btn-primary" onclick="closeLevelUp()">Продолжить</button>
   </div>
@@ -884,10 +845,18 @@
       <button class="btn btn-primary" onclick="saveSettings()" style="flex:1;">Сохранить</button>
       <button class="btn btn-secondary" onclick="closeSettings()" style="flex:1;">Отмена</button>
     </div>
-    <hr style="margin:20px 0; border-color:rgba(107,91,255,0.3);">
+    <hr style="margin:20px 0; border-color:rgba(138,43,226,0.3);">
     <button class="btn btn-danger" onclick="resetProgress()" style="width:100%;">
       🗑️ Сбросить весь прогресс
     </button>
+  </div>
+</div>
+
+<div class="modal-overlay" id="libraryModal">
+  <div class="modal-box" style="max-width:550px;">
+    <h3>📚 Библиотека квестов</h3>
+    <div id="libraryContent"></div>
+    <button class="btn btn-secondary" onclick="closeLibrary()" style="width:100%; margin-top:15px;">Закрыть</button>
   </div>
 </div>
 
@@ -903,12 +872,12 @@ const STAT_INFO = {
 };
 
 const RANKS = [
-  { min: 1, max: 9, name: 'E-RANK', color: '#8888cc' },
-  { min: 10, max: 19, name: 'D-RANK', color: '#6bff6b' },
-  { min: 20, max: 29, name: 'C-RANK', color: '#6b9bff' },
+  { min: 1, max: 9, name: 'E-RANK', color: '#8a7aae' },
+  { min: 10, max: 19, name: 'D-RANK', color: '#4bff6b' },
+  { min: 20, max: 29, name: 'C-RANK', color: '#4a9eff' },
   { min: 30, max: 39, name: 'B-RANK', color: '#bb6bff' },
   { min: 40, max: 49, name: 'A-RANK', color: '#ff9b6b' },
-  { min: 50, max: 999, name: 'S-RANK', color: '#ffd700' }
+  { min: 50, max: 999, name: 'S-RANK', color: '#d4af37' }
 ];
 
 const ACHIEVEMENTS_LIST = [
@@ -932,6 +901,58 @@ const DEFAULT_SKILLS = [
   { id: 'discipline', name: 'Дисциплина', icon: '⚡', level: 1, desc: 'Сила воли для регулярных тренировок' },
   { id: 'endurance', name: 'Выносливость духа', icon: '🔥', level: 1, desc: 'Способность не сдаваться' },
 ];
+
+// БИБЛИОТЕКА ГОТОВЫХ КВЕСТОВ
+const QUEST_LIBRARY = {
+  body: {
+    name: '💪 Тело',
+    color: '#ff6b6b',
+    quests: [
+      { title: 'Утренняя зарядка', desc: '20 отжиманий, 20 приседаний, планка 1 минута', type: 'daily', exp: 25, stat: 'str' },
+      { title: 'Пробежка 3 км', desc: 'Пробеги минимум 3 километра', type: 'daily', exp: 30, stat: 'agi' },
+      { title: '100 отжиманий за день', desc: 'Можно разбить на подходы', type: 'daily', exp: 35, stat: 'str' },
+      { title: 'Растяжка', desc: '15 минут растяжки всего тела', type: 'daily', exp: 15, stat: 'agi' },
+      { title: 'Силовая тренировка', desc: 'Полноценная тренировка в зале 45+ минут', type: 'main', exp: 50, stat: 'str' },
+      { title: 'Холодный душ', desc: 'Прими холодный душ для закалки воли', type: 'daily', exp: 20, stat: 'vit' },
+      { title: '10000 шагов', desc: 'Пройди 10000 шагов за день', type: 'daily', exp: 25, stat: 'vit' },
+      { title: 'Марафон отказа от сахара', desc: '7 дней без сахара и сладкого', type: 'main', exp: 80, stat: 'vit' },
+    ]
+  },
+  mind: {
+    name: '🧠 Разум',
+    color: '#4a9eff',
+    quests: [
+      { title: 'Чтение книги', desc: 'Прочитай минимум 20 страниц любой полезной книги', type: 'mind', exp: 20, stat: 'int' },
+      { title: 'Изучение языка', desc: '20 минут практики иностранного языка', type: 'mind', exp: 25, stat: 'int' },
+      { title: 'Решение головоломки', desc: 'Реши судоку, шахматную задачу или логическую головоломку', type: 'mind', exp: 15, stat: 'int' },
+      { title: 'Онлайн-курс', desc: 'Пройди один урок на Coursera/Udemy/YouTube', type: 'mind', exp: 30, stat: 'int' },
+      { title: 'Ведение дневника', desc: 'Напиши минимум 10 строк о прошедшем дне', type: 'mind', exp: 15, stat: 'per' },
+      { title: 'Цифровой детокс', desc: '2 часа без телефона и соцсетей', type: 'mind', exp: 25, stat: 'per' },
+      { title: 'Медитация', desc: '10 минут медитации или осознанного дыхания', type: 'mind', exp: 20, stat: 'per' },
+      { title: 'Новое слово', desc: 'Выучи и запомни новое сложное слово', type: 'mind', exp: 10, stat: 'int' },
+      { title: 'Шахматная партия', desc: 'Сыграй партию в шахматы (с человеком или ботом)', type: 'mind', exp: 20, stat: 'int' },
+      { title: 'Разбор своих ошибок', desc: 'Проанализируй неудачу за неделю и сделай выводы', type: 'mind', exp: 25, stat: 'per' },
+      { title: 'Подкаст/лекция', desc: 'Прослушай обучающий подкаст 30+ минут', type: 'mind', exp: 20, stat: 'int' },
+      { title: 'Мозговой штурм', desc: 'Запиши 10 идей по интересующей теме', type: 'mind', exp: 20, stat: 'int' },
+      { title: 'Финансовая грамотность', desc: 'Изучи 1 статью/видео про инвестиции или бюджет', type: 'mind', exp: 25, stat: 'int' },
+      { title: 'Скорочтение', desc: 'Практикуй технику скорочтения 15 минут', type: 'mind', exp: 15, stat: 'per' },
+    ]
+  },
+  spirit: {
+    name: '✨ Дух',
+    color: '#d4af37',
+    quests: [
+      { title: 'Благодарность', desc: 'Запиши 3 вещи, за которые ты благодарен сегодня', type: 'daily', exp: 15, stat: 'per' },
+      { title: 'Ранний подъём', desc: 'Встань до 7 утра', type: 'daily', exp: 20, stat: 'vit' },
+      { title: 'Помощь другому', desc: 'Сделай доброе дело для кого-то без ожидания награды', type: 'side', exp: 25, stat: 'per' },
+      { title: 'Заправленная постель', desc: 'Застели кровать сразу после пробуждения', type: 'daily', exp: 10, stat: 'vit' },
+      { title: 'План на день', desc: 'Составь чёткий план задач на завтра', type: 'daily', exp: 15, stat: 'int' },
+      { title: 'Неделя без жалоб', desc: '7 дней не жаловаться ни на что', type: 'main', exp: 70, stat: 'vit' },
+      { title: 'Уборка пространства', desc: 'Убери и наведи порядок в своей комнате', type: 'side', exp: 20, stat: 'vit' },
+      { title: 'Разговор с близким', desc: 'Позвони родителям или другу, с которым давно не общался', type: 'side', exp: 20, stat: 'per' },
+    ]
+  }
+};
 
 let gameData = {
   name: 'Игрок',
@@ -969,9 +990,10 @@ function loadData() {
 function addDefaultQuests() {
   gameData.quests = [
     { id: Date.now() + 1, title: 'Утренняя зарядка', desc: '20 отжиманий, 20 приседаний, планка 1 минута', type: 'daily', exp: 25, stat: 'str', completed: false },
-    { id: Date.now() + 2, title: 'Чтение книги', desc: 'Прочитай минимум 20 страниц', type: 'daily', exp: 20, stat: 'int', completed: false },
+    { id: Date.now() + 2, title: 'Чтение книги', desc: 'Прочитай минимум 20 страниц', type: 'mind', exp: 20, stat: 'int', completed: false },
     { id: Date.now() + 3, title: 'Пробежка', desc: 'Пробеги минимум 3 км', type: 'daily', exp: 30, stat: 'agi', completed: false },
-    { id: Date.now() + 4, title: 'Победи своего врага - Лень', desc: 'Заверши первую неделю без пропусков', type: 'main', exp: 100, stat: 'vit', completed: false }
+    { id: Date.now() + 4, title: 'Медитация', desc: '10 минут осознанного дыхания', type: 'mind', exp: 20, stat: 'per', completed: false },
+    { id: Date.now() + 5, title: 'Победи своего врага - Лень', desc: 'Заверши первую неделю без пропусков', type: 'main', exp: 100, stat: 'vit', completed: false }
   ];
 }
 
@@ -996,7 +1018,8 @@ function renderPlayer() {
   const rank = getCurrentRank(gameData.level);
   const rankEl = document.getElementById('playerRank');
   rankEl.textContent = rank.name;
-  rankEl.style.background = `linear-gradient(45deg, ${rank.color}, ${rank.color}aa)`;
+  rankEl.style.borderColor = rank.color;
+  rankEl.style.color = rank.color;
   
   document.getElementById('expText').textContent = `${gameData.exp} / ${gameData.expToNext}`;
   const expPercent = (gameData.exp / gameData.expToNext) * 100;
@@ -1047,7 +1070,7 @@ function renderQuests() {
   list.innerHTML = '';
   
   if (gameData.quests.length === 0) {
-    list.innerHTML = `<div class="empty-state"><div class="empty-state-icon">📭</div><div>Нет активных квестов. Создай первый!</div></div>`;
+    list.innerHTML = `<div class="empty-state"><div class="empty-state-icon">📭</div><div>Нет активных квестов. Открой библиотеку или создай свой!</div></div>`;
     return;
   }
   
@@ -1060,13 +1083,18 @@ function renderQuests() {
     const card = document.createElement('div');
     card.className = `quest-card ${quest.type} ${quest.completed ? 'completed' : ''}`;
     
-    const badgeClass = quest.type === 'daily' ? 'badge-daily' : quest.type === 'main' ? 'badge-main' : 'badge-side';
-    const badgeText = quest.type === 'daily' ? 'Ежедневный' : quest.type === 'main' ? 'Основной' : 'Побочный';
+    const badgeMap = {
+      daily: { cls: 'badge-daily', text: 'Ежедневный' },
+      main: { cls: 'badge-main', text: 'Основной' },
+      side: { cls: 'badge-side', text: 'Побочный' },
+      mind: { cls: 'badge-mind', text: 'Разум' }
+    };
+    const badge = badgeMap[quest.type] || badgeMap.side;
     
     card.innerHTML = `
       <div class="quest-header">
         <div class="quest-title">${quest.completed ? '✅ ' : ''}${quest.title}</div>
-        <span class="quest-type-badge ${badgeClass}">${badgeText}</span>
+        <span class="quest-type-badge ${badge.cls}">${badge.text}</span>
       </div>
       <div class="quest-description">${quest.desc || 'Без описания'}</div>
       <div class="quest-rewards">
@@ -1102,11 +1130,11 @@ function renderSkills() {
       <div class="skill-header">
         <div class="skill-icon">${skill.icon}</div>
         <div>
-          <div style="font-weight:bold; color:#fff;">${skill.name}</div>
-          <div style="font-size:0.8em; color:#8888cc;">Уровень ${skill.level}/10</div>
+          <div style="font-weight:700; color:#fff;">${skill.name}</div>
+          <div style="font-size:0.8em; color:#8a7aae;">Уровень ${skill.level}/10</div>
         </div>
       </div>
-      <div style="font-size:0.85em; color:#aaa; margin-bottom:10px;">${skill.desc}</div>
+      <div style="font-size:0.85em; color:#8a7aae; margin-bottom:10px;">${skill.desc}</div>
       <div class="skill-level">${dots}</div>
     `;
     grid.appendChild(card);
@@ -1304,6 +1332,58 @@ function resetProgress() {
   }
 }
 
+// БИБЛИОТЕКА КВЕСТОВ
+function openLibrary() {
+  const content = document.getElementById('libraryContent');
+  content.innerHTML = '';
+  
+  for (const [key, category] of Object.entries(QUEST_LIBRARY)) {
+    const catDiv = document.createElement('div');
+    catDiv.className = 'library-category';
+    
+    let questsHtml = '';
+    category.quests.forEach((q, idx) => {
+      questsHtml += `
+        <div class="library-quest-item">
+          <div class="library-quest-info">
+            <div class="library-quest-title">${q.title}</div>
+            <div class="library-quest-meta">+${q.exp} EXP · ${STAT_INFO[q.stat].icon} ${STAT_INFO[q.stat].name}</div>
+          </div>
+          <button class="library-add-btn" onclick="addFromLibrary('${key}', ${idx})">+ Добавить</button>
+        </div>
+      `;
+    });
+    
+    catDiv.innerHTML = `
+      <div class="library-category-title" style="color:${category.color};">${category.name}</div>
+      ${questsHtml}
+    `;
+    content.appendChild(catDiv);
+  }
+  
+  document.getElementById('libraryModal').classList.add('show');
+}
+
+function closeLibrary() {
+  document.getElementById('libraryModal').classList.remove('show');
+}
+
+function addFromLibrary(categoryKey, questIdx) {
+  const q = QUEST_LIBRARY[categoryKey].quests[questIdx];
+  gameData.quests.push({
+    id: Date.now(),
+    title: q.title,
+    desc: q.desc,
+    type: q.type,
+    exp: q.exp,
+    stat: q.stat,
+    completed: false
+  });
+  saveData();
+  renderQuests();
+  showNotification(`✨ Квест "${q.title}" добавлен!`);
+}
+
 function createParticles() {
   const container = document.getElementById('particles');
   const count = 25;
@@ -1313,7 +1393,7 @@ function createParticles() {
     particle.className = 'particle';
     particle.style.left = Math.random() * 100 + '%';
     particle.style.animationDelay = Math.random() * 15 + 's';
-    particle.style.animationDuration = (10 + Math.random() * 10) + 's';
+    particle.style.animationDuration = (12 + Math.random() * 10) + 's';
     container.appendChild(particle);
   }
 }
@@ -1324,7 +1404,7 @@ function checkDailyReset() {
   
   if (lastReset !== today) {
     gameData.quests.forEach(q => {
-      if (q.type === 'daily') q.completed = false;
+      if (q.type === 'daily' || q.type === 'mind') q.completed = false;
     });
     localStorage.setItem('lastDailyReset', today);
     saveData();
@@ -1346,7 +1426,6 @@ window.onload = function() {
 
 setInterval(saveData, 30000);
 
-// Регистрация Service Worker для PWA
 if ('serviceWorker' in navigator) {
   window.addEventListener('load', () => {
     navigator.serviceWorker.register('sw.js')
