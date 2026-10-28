@@ -2,1048 +2,1820 @@
 <html lang="ru">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover, maximum-scale=1, user-scalable=no">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black">
 <meta name="apple-mobile-web-app-title" content="SYSTEM">
-<meta name="theme-color" content="#000000">
-<title>SYSTEM</title>
+<meta name="theme-color" content="#0a0a14">
 <link rel="manifest" href="manifest.json">
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@500;700;900&family=Rajdhani:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="apple-touch-icon" href="icon.png">
+<title>SYSTEM - Прокачай себя</title>
 <style>
+/* ===================== CSS ПЕРЕМЕННЫЕ ===================== */
 :root{
-  --c-bg:#000000;
-  --c-panel:#120f1c;
-  --c-panel-light:#1b1729;
-  --c-border:#2a2440;
+  --c-bg:#0a0a14;
+  --c-bg-alt:#0d0d1a;
+  --c-panel:#13131f;
+  --c-panel-light:#1b1b2b;
+  --c-border:#2a2a40;
   --c-gold:#d4af37;
   --c-gold-light:#f3dd8a;
-  --c-gold-dim:#8a6d1f;
-  --c-purple:#8a2be2;
-  --c-purple-dark:#6b2fbf;
-  --c-purple-light:#b27cff;
-  --c-text:#d8d4e8;
-  --c-text-dim:#8a84a8;
-  --c-red:#ff4b4b;
+  --c-gold-dim:#8a7226;
+  --c-purple:#6b5bff;
+  --c-purple-dark:#4a3fcc;
+  --c-purple-light:#9b8fff;
+  --c-text:#eae8f5;
+  --c-text-dim:#8d8aa8;
+  --c-red:#ff4b6b;
   --c-blue:#4a9eff;
-  --c-orange:#ff9b6b;
-  --font-head:'Cinzel',serif;
-  --font-body:'Rajdhani',sans-serif;
-  --radius:12px;
-  --radius-sm:8px;
-  --safe-top:env(safe-area-inset-top,0px);
-  --safe-bottom:env(safe-area-inset-bottom,0px);
+  --c-green:#4bff9b;
+  --c-orange:#ff6b4b;
+  --radius:18px;
+  --radius-sm:10px;
+  --font-head:'Cinzel', Georgia, serif;
+  --font-body:-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  --safe-top: env(safe-area-inset-top, 0px);
+  --safe-bottom: env(safe-area-inset-bottom, 0px);
+  --safe-left: env(safe-area-inset-left, 0px);
+  --safe-right: env(safe-area-inset-right, 0px);
 }
 
-*{box-sizing:border-box; -webkit-tap-highlight-color:transparent;}
-html,body{margin:0;padding:0;background:var(--c-bg);color:var(--c-text);font-family:var(--font-body);overscroll-behavior:none;}
+/* ===================== RESET ===================== */
+*{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent;}
+html,body{
+  height:100%;
+  overflow:hidden;
+  background:var(--c-bg);
+  color:var(--c-text);
+  font-family:var(--font-body);
+  -webkit-user-select:none;
+  user-select:none;
+}
 body{
-  min-height:100vh;
-  padding-bottom:calc(72px + var(--safe-bottom));
   background:
-    radial-gradient(ellipse at 50% 30%, rgba(138,43,226,.10), transparent 55%),
+    radial-gradient(circle at 20% 0%, rgba(107,91,255,0.12), transparent 40%),
+    radial-gradient(circle at 80% 100%, rgba(212,175,55,0.08), transparent 45%),
     var(--c-bg);
 }
-h1,h2,h3,.font-head{font-family:var(--font-head);}
-button{font-family:var(--font-body);cursor:pointer;}
-::-webkit-scrollbar{width:4px;}
-::-webkit-scrollbar-thumb{background:var(--c-gold-dim);}
+button{
+  font-family:var(--font-body);
+  border:none;
+  background:none;
+  color:inherit;
+  cursor:pointer;
+}
+input,select,textarea{
+  font-family:var(--font-body);
+  color:var(--c-text);
+  background:var(--c-panel-light);
+  border:1px solid var(--c-border);
+  border-radius:var(--radius-sm);
+  padding:10px 12px;
+  font-size:15px;
+  outline:none;
+}
+::-webkit-scrollbar{width:0;height:0;}
 
+/* ===================== ПЕРЕКРЫТИЕ СТАТУС-БАРА ===================== */
 #statusbarCover{
-  position:fixed;top:0;left:0;right:0;height:var(--safe-top);
-  background:#000;z-index:500;pointer-events:none;
+  position:fixed;
+  top:0;left:0;right:0;
+  height:var(--safe-top);
+  background:#000;
+  z-index:500;
+  pointer-events:none;
 }
 
-/* ==================== SPLASH ==================== */
+/* ===================== SPLASH SCREEN ===================== */
 #splash{
-  position:fixed;inset:0;z-index:999;background:var(--c-bg);
-  display:flex;flex-direction:column;align-items:center;justify-content:center;gap:18px;
+  position:fixed;
+  inset:0;
+  background:var(--c-bg);
+  z-index:9999;
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  justify-content:center;
+  gap:20px;
   transition:opacity .6s ease, visibility .6s ease;
 }
-#splash.hide{opacity:0;visibility:hidden;}
+#splash.hidden{opacity:0;visibility:hidden;pointer-events:none;}
+#splashCanvas{position:absolute;inset:0;width:100%;height:100%;}
 .splash-logo{
-  font-family:var(--font-head);font-weight:900;font-size:38px;letter-spacing:8px;
+  font-family:var(--font-head);
+  font-size:42px;
+  letter-spacing:8px;
   background:linear-gradient(135deg,var(--c-gold-light),var(--c-purple-light));
-  -webkit-background-clip:text;background-clip:text;color:transparent;
-  animation:pulse-glow 1.8s ease-in-out infinite;
+  -webkit-background-clip:text;
+  background-clip:text;
+  color:transparent;
+  z-index:2;
+  animation:pulseGlow 2s ease-in-out infinite;
 }
-.splash-sub{font-size:12px;letter-spacing:4px;color:var(--c-text-dim);text-transform:uppercase;}
-.splash-bar{width:180px;height:2px;background:var(--c-border);border-radius:2px;overflow:hidden;}
-.splash-bar::after{
-  content:'';display:block;height:100%;width:40%;
-  background:linear-gradient(90deg,var(--c-gold),var(--c-purple));
-  animation:loadbar 1.5s ease-in-out infinite;
+.splash-sub{
+  color:var(--c-text-dim);
+  letter-spacing:4px;
+  font-size:12px;
+  z-index:2;
+  text-transform:uppercase;
 }
-@keyframes loadbar{0%{transform:translateX(-100%);}100%{transform:translateX(350%);}}
-@keyframes pulse-glow{0%,100%{filter:drop-shadow(0 0 6px rgba(212,175,55,.5));}50%{filter:drop-shadow(0 0 16px rgba(138,43,226,.7));}}
-
-/* ==================== PARTICLES ==================== */
-#particles{position:fixed;inset:0;z-index:0;pointer-events:none;}
-
-/* ==================== APP ==================== */
-#app{display:none;position:relative;z-index:1;}
-
-/* ---- HUD ---- */
-.hud{
-  padding:calc(14px + var(--safe-top)) 16px 14px;
-  background:linear-gradient(180deg, rgba(18,15,28,.95), rgba(10,8,16,.85));
-  border-bottom:1px solid var(--c-border);
-  position:sticky;top:0;z-index:20;
-  backdrop-filter:blur(8px);
-}
-.hud-top{display:flex;align-items:center;gap:12px;}
-.avatar-wrap{position:relative;width:54px;height:54px;flex-shrink:0;}
-.avatar-ring{
-  position:absolute;inset:0;border-radius:50%;
-  border:2px solid transparent;
-  background:conic-gradient(var(--c-gold),var(--c-purple),var(--c-gold)) border-box;
-  -webkit-mask:linear-gradient(#000 0 0) padding-box, linear-gradient(#000 0 0);
-  -webkit-mask-composite:xor;mask-composite:exclude;
-  animation:spin 6s linear infinite;
+.splash-ring{
+  position:relative;
+  width:90px;height:90px;
+  border-radius:50%;
+  border:2px solid var(--c-border);
+  border-top-color:var(--c-gold);
+  animation:spin 1.2s linear infinite;
+  z-index:2;
 }
 @keyframes spin{to{transform:rotate(360deg);}}
-.avatar{
-  position:absolute;inset:4px;border-radius:50%;background:var(--c-panel);
-  display:flex;align-items:center;justify-content:center;font-size:24px;
-  box-shadow:inset 0 0 10px rgba(0,0,0,.6);
+@keyframes pulseGlow{
+  0%,100%{filter:drop-shadow(0 0 6px rgba(212,175,55,0.4));}
+  50%{filter:drop-shadow(0 0 18px rgba(155,143,255,0.6));}
 }
-.hud-info{flex:1;min-width:0;}
-.hud-name{font-family:var(--font-head);font-weight:700;font-size:16px;color:var(--c-gold-light);line-height:1.2;}
-.hud-title{font-size:11px;font-style:italic;color:var(--c-purple-light);margin:1px 0 3px;}
-.hud-rank{font-size:10px;letter-spacing:2px;text-transform:uppercase;font-weight:700;}
-.hud-icons{display:flex;gap:12px;align-items:center;}
-.hud-icon{display:flex;align-items:center;gap:4px;font-size:12px;font-weight:600;color:var(--c-gold-light);}
-.hud-icon svg{color:var(--c-gold);}
-.hud-icon.flame svg{color:var(--c-orange);}
-.hud-level-row{display:flex;justify-content:space-between;align-items:baseline;margin-top:10px;font-size:11px;color:var(--c-text-dim);}
-.hud-level-row b{color:var(--c-gold-light);font-size:13px;}
-.exp-bar{height:7px;border-radius:6px;background:var(--c-panel-light);overflow:hidden;margin-top:4px;position:relative;border:1px solid var(--c-border);}
-.exp-fill{height:100%;background:linear-gradient(90deg,var(--c-purple-dark),var(--c-purple),var(--c-gold));border-radius:6px;position:relative;transition:width .6s ease;}
-.exp-fill::after{
-  content:'';position:absolute;inset:0;
-  background:linear-gradient(90deg,transparent,rgba(255,255,255,.5),transparent);
-  width:40%;animation:shimmer 2.2s linear infinite;
-}
-@keyframes shimmer{0%{transform:translateX(-100%);}100%{transform:translateX(350%);}}
 
-/* ---- TABS NAV ---- */
-.tabs{
-  position:fixed;left:0;right:0;bottom:0;z-index:30;
-  display:flex;justify-content:space-around;
-  background:linear-gradient(0deg, rgba(5,4,10,.98), rgba(10,8,18,.9));
+/* ===================== APP LAYOUT ===================== */
+#app{
+  position:fixed;
+  inset:0;
+  display:flex;
+  flex-direction:column;
+  padding-top:var(--safe-top);
+  padding-bottom:var(--safe-bottom);
+}
+#particlesCanvas{
+  position:fixed;
+  inset:0;
+  z-index:0;
+  pointer-events:none;
+  opacity:.5;
+}
+
+/* ===================== HUD ===================== */
+#hud{
+  position:relative;
+  z-index:10;
+  display:flex;
+  align-items:center;
+  gap:12px;
+  padding:14px 16px 10px 16px;
+  background:linear-gradient(180deg, rgba(19,19,31,0.95), rgba(19,19,31,0.75));
+  border-bottom:1px solid var(--c-border);
+  backdrop-filter:blur(10px);
+}
+.hud-avatar-wrap{
+  position:relative;
+  width:54px;height:54px;
+  flex-shrink:0;
+}
+.hud-avatar-ring{
+  position:absolute;
+  inset:-4px;
+  border-radius:50%;
+  background:conic-gradient(from 0deg, var(--c-gold), var(--c-purple), var(--c-gold));
+  animation:spin 4s linear infinite;
+}
+.hud-avatar{
+  position:absolute;
+  inset:0;
+  border-radius:50%;
+  background:var(--c-panel-light);
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  border:2px solid var(--c-bg);
+  font-size:24px;
+  overflow:hidden;
+}
+.hud-avatar svg{width:28px;height:28px;}
+.hud-info{
+  flex:1;
+  min-width:0;
+  display:flex;
+  flex-direction:column;
+  gap:2px;
+}
+.hud-name-row{
+  display:flex;
+  align-items:center;
+  gap:6px;
+}
+.hud-name{
+  font-weight:700;
+  font-size:16px;
+  white-space:nowrap;
+  overflow:hidden;
+  text-overflow:ellipsis;
+}
+.hud-rank{
+  font-family:var(--font-head);
+  font-size:11px;
+  padding:2px 7px;
+  border-radius:6px;
+  border:1px solid var(--c-gold-dim);
+  color:var(--c-gold-light);
+  background:rgba(212,175,55,0.08);
+  flex-shrink:0;
+}
+.hud-title{
+  font-size:11px;
+  color:var(--c-purple-light);
+  white-space:nowrap;
+  overflow:hidden;
+  text-overflow:ellipsis;
+}
+.hud-exp-row{
+  display:flex;
+  align-items:center;
+  gap:6px;
+  margin-top:2px;
+}
+.hud-level{
+  font-size:11px;
+  color:var(--c-text-dim);
+  font-weight:600;
+  flex-shrink:0;
+}
+.hud-exp-track{
+  flex:1;
+  height:6px;
+  background:var(--c-bg-alt);
+  border-radius:4px;
+  overflow:hidden;
+  border:1px solid var(--c-border);
+}
+.hud-exp-fill{
+  height:100%;
+  background:linear-gradient(90deg,var(--c-purple-dark),var(--c-purple-light));
+  border-radius:4px;
+  position:relative;
+  transition:width .5s ease;
+}
+.hud-exp-fill::after{
+  content:'';
+  position:absolute;
+  top:0;right:0;bottom:0;
+  width:20px;
+  background:linear-gradient(90deg,transparent,rgba(255,255,255,0.5));
+  animation:expShine 2s ease-in-out infinite;
+}
+@keyframes expShine{0%,100%{opacity:.3;}50%{opacity:1;}}
+.hud-exp-text{
+  font-size:10px;
+  color:var(--c-text-dim);
+  flex-shrink:0;
+}
+.hud-side{
+  display:flex;
+  flex-direction:column;
+  align-items:flex-end;
+  gap:4px;
+  flex-shrink:0;
+}
+.hud-badge{
+  display:flex;
+  align-items:center;
+  gap:4px;
+  font-size:12px;
+  font-weight:600;
+}
+.hud-badge svg{width:15px;height:15px;}
+.hud-badge.fire{color:var(--c-orange);}
+.hud-badge.crystal{color:var(--c-blue);}
+
+/* ===================== NAV ===================== */
+#nav{
+  position:relative;
+  z-index:10;
+  display:flex;
+  justify-content:space-around;
+  padding:8px 6px calc(8px + var(--safe-bottom)) 6px;
+  background:linear-gradient(0deg, rgba(19,19,31,0.97), rgba(19,19,31,0.85));
   border-top:1px solid var(--c-border);
-  padding:7px 4px calc(7px + var(--safe-bottom));
   backdrop-filter:blur(10px);
 }
 .nav-btn{
-  background:none;border:none;color:var(--c-text-dim);display:flex;flex-direction:column;align-items:center;gap:2px;
-  font-size:8.5px;letter-spacing:.2px;padding:4px 6px;border-radius:var(--radius-sm);transition:color .2s;font-weight:600;
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  gap:3px;
+  padding:6px 10px;
+  border-radius:var(--radius-sm);
+  color:var(--c-text-dim);
+  transition:color .2s ease;
+  flex:1;
 }
-.nav-btn svg{transition:filter .2s;}
+.nav-btn svg{width:22px;height:22px;}
+.nav-btn span{font-size:10px;font-weight:600;}
 .nav-btn.active{color:var(--c-gold-light);}
-.nav-btn.active svg{filter:drop-shadow(0 0 5px rgba(212,175,55,.7));}
+.nav-btn.active svg{filter:drop-shadow(0 0 5px rgba(212,175,55,0.6));}
 
-/* ---- TAB CONTENT ---- */
-.tab-content{display:none;padding:16px;animation:fadein .3s ease;}
-.tab-content.active{display:block;}
-@keyframes fadein{from{opacity:0;transform:translateY(6px);}to{opacity:1;transform:none;}}
+/* ===================== MAIN CONTENT ===================== */
+#content{
+  flex:1;
+  overflow-y:auto;
+  position:relative;
+  z-index:5;
+  padding:16px 14px 24px 14px;
+  -webkit-overflow-scrolling:touch;
+}
+.tab-page{display:none;animation:fadeIn .3s ease;}
+.tab-page.active{display:block;}
+@keyframes fadeIn{from{opacity:0;transform:translateY(8px);}to{opacity:1;transform:translateY(0);}}
 
 .section-title{
-  font-family:var(--font-head);font-size:13px;letter-spacing:1.5px;text-transform:uppercase;
-  color:var(--c-gold-light);margin:0 0 12px;
+  font-family:var(--font-head);
+  font-size:14px;
+  letter-spacing:2px;
+  text-transform:uppercase;
+  color:var(--c-gold-light);
+  margin:18px 0 10px 0;
+  display:flex;
+  align-items:center;
+  gap:8px;
+}
+.section-title svg{width:16px;height:16px;}
+.section-title:first-child{margin-top:0;}
+
+/* ===================== КАРТОЧКА (базовая) ===================== */
+.card{
+  background:var(--c-panel);
+  border:1px solid var(--c-border);
+  border-radius:var(--radius);
+  padding:14px;
+  position:relative;
 }
 
-/* ---- CARD BASE ---- */
-.card{
-  position:relative;background:var(--c-panel);border:1px solid var(--c-border);border-radius:var(--radius);
-  padding:14px;margin-bottom:10px;
-}
+/* золотые уголки только для модалок */
+.corner{position:relative;}
 .corner::before,.corner::after{
-  content:'';position:absolute;width:14px;height:14px;border:2px solid var(--c-gold);opacity:.6;
+  content:'';
+  position:absolute;
+  width:14px;height:14px;
+  border:2px solid var(--c-gold);
+  z-index:2;
 }
 .corner::before{top:-1px;left:-1px;border-right:none;border-bottom:none;}
 .corner::after{bottom:-1px;right:-1px;border-left:none;border-top:none;}
 
-/* ---- STATS (ПРЕМИУМ ВЕРСИЯ) ---- */
+/* ===================== POINTS BANNER ===================== */
 .points-banner{
-  position:relative;overflow:hidden;
-  display:flex;justify-content:space-between;align-items:center;
-  background:linear-gradient(135deg, rgba(212,175,55,.14), rgba(138,43,226,.14));
-  border:1px solid var(--c-gold);border-radius:16px;padding:14px 18px;margin-bottom:16px;
-  box-shadow:0 0 22px rgba(212,175,55,.18), inset 0 0 24px rgba(138,43,226,.08);
-}
-.points-banner .label{font-size:11px;letter-spacing:1.5px;text-transform:uppercase;color:var(--c-text-dim);}
-.points-banner b{font-family:var(--font-head);color:var(--c-gold-light);font-size:24px;text-shadow:0 0 10px rgba(212,175,55,.6);}
-
-.stat-card{
-  position:relative;
-  display:flex;align-items:center;gap:14px;
-  background:linear-gradient(135deg, rgba(255,255,255,.035), rgba(0,0,0,.25));
-  border:1px solid var(--c-border);
-  border-radius:16px;
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  background:linear-gradient(135deg, rgba(212,175,55,0.12), rgba(107,91,255,0.08));
+  border:1px solid var(--c-gold-dim);
+  border-radius:var(--radius);
   padding:14px 16px;
-  margin-bottom:12px;
+  margin-bottom:16px;
+  box-shadow:0 0 20px rgba(212,175,55,0.08) inset;
+}
+.points-banner-label{
+  font-size:12px;
+  color:var(--c-text-dim);
+  text-transform:uppercase;
+  letter-spacing:1px;
+}
+.points-banner-value{
+  font-family:var(--font-head);
+  font-size:26px;
+  color:var(--c-gold-light);
+  text-shadow:0 0 12px rgba(212,175,55,0.5);
+}
+
+/* ===================== STAT CARDS (премиум) ===================== */
+.stats-grid{
+  display:flex;
+  flex-direction:column;
+  gap:12px;
+}
+.stat-card{
+  --accent:#fff;
+  --accent-light:#fff;
+  --accent-glow:rgba(255,255,255,0.3);
+  position:relative;
+  display:flex;
+  align-items:center;
+  gap:14px;
+  background:linear-gradient(135deg, var(--c-panel), var(--c-panel-light));
+  border:1px solid var(--c-border);
+  border-radius:var(--radius);
+  padding:14px;
   overflow:hidden;
 }
 .stat-card::before{
   content:'';
-  position:absolute;top:-50%;left:-15%;
-  width:150px;height:150px;border-radius:50%;
+  position:absolute;
+  top:-30%;right:-20%;
+  width:140px;height:140px;
   background:radial-gradient(circle, var(--accent-glow), transparent 70%);
   pointer-events:none;
 }
 .stat-icon-badge{
-  position:relative;z-index:1;
-  width:50px;height:50px;border-radius:14px;flex-shrink:0;
-  display:flex;align-items:center;justify-content:center;
-  background:linear-gradient(145deg, rgba(255,255,255,.06), rgba(0,0,0,.35));
-  border:1px solid var(--accent);
-  box-shadow:0 0 14px var(--accent-glow), inset 0 0 8px rgba(0,0,0,.4);
+  position:relative;
+  width:50px;height:50px;
+  border-radius:14px;
+  background:rgba(255,255,255,0.03);
+  border:1.5px solid var(--accent);
+  box-shadow:0 0 14px var(--accent-glow);
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  flex-shrink:0;
 }
-.stat-icon-badge svg{color:var(--accent);filter:drop-shadow(0 0 4px var(--accent));}
+.stat-icon-badge svg{
+  width:26px;height:26px;
+  color:var(--accent);
+  filter:drop-shadow(0 0 4px var(--accent-glow));
+}
 .stat-body{flex:1;min-width:0;position:relative;z-index:1;}
-.stat-head{display:flex;align-items:center;justify-content:space-between;margin-bottom:5px;}
-.stat-name{font-size:11px;letter-spacing:1.5px;color:var(--c-text-dim);text-transform:uppercase;font-weight:600;}
+.stat-head{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  margin-bottom:6px;
+}
+.stat-name{
+  font-size:13px;
+  font-weight:700;
+  color:var(--c-text);
+  letter-spacing:.5px;
+}
 .stat-rank-badge{
-  font-family:var(--font-head);font-size:9.5px;font-weight:700;letter-spacing:1px;
-  color:var(--accent);border:1px solid var(--accent);border-radius:5px;padding:2px 7px;
+  font-family:var(--font-head);
+  font-size:11px;
+  font-weight:700;
+  padding:1px 8px;
+  border-radius:6px;
+  border:1px solid var(--accent);
+  color:var(--accent-light);
+  background:rgba(255,255,255,0.04);
 }
-.stat-value-row{display:flex;align-items:center;justify-content:space-between;}
-.stat-value{font-family:var(--font-head);font-size:26px;color:var(--c-text);font-weight:700;}
+.stat-value-row{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  margin-bottom:6px;
+}
+.stat-value{
+  font-family:var(--font-head);
+  font-size:24px;
+  color:var(--accent-light);
+  text-shadow:0 0 10px var(--accent-glow);
+}
 .stat-plus-v2{
-  width:30px;height:30px;border-radius:50%;flex-shrink:0;
-  border:1px solid var(--accent);background:rgba(255,255,255,.02);color:var(--accent);
-  font-size:17px;line-height:1;display:flex;align-items:center;justify-content:center;
-  transition:transform .15s, box-shadow .15s;
+  width:30px;height:30px;
+  border-radius:50%;
+  border:1.5px solid var(--accent);
+  color:var(--accent-light);
+  font-size:18px;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  background:rgba(255,255,255,0.03);
+  transition:transform .15s ease;
 }
-.stat-plus-v2:active{transform:scale(.88);}
-.stat-plus-v2:not(:disabled):active{box-shadow:0 0 10px var(--accent);}
-.stat-plus-v2:disabled{opacity:.2;}
-.stat-progress-track{height:5px;border-radius:4px;background:var(--c-panel-light);margin-top:9px;overflow:hidden;}
-.stat-progress-fill{height:100%;border-radius:4px;background:linear-gradient(90deg, var(--accent), var(--accent-light));transition:width .4s ease;}
+.stat-plus-v2:active{transform:scale(0.88);}
+.stat-progress-track{
+  width:100%;
+  height:5px;
+  border-radius:4px;
+  background:var(--c-bg-alt);
+  overflow:hidden;
+  border:1px solid var(--c-border);
+}
+.stat-progress-fill{
+  height:100%;
+  border-radius:4px;
+  background:linear-gradient(90deg, var(--accent), var(--accent-light));
+  transition:width .4s ease;
+}
 
-.icon-btn-row{display:flex;gap:10px;margin-top:4px;}
+/* ===================== ICON BUTTON ROW ===================== */
+.icon-btn-row{
+  display:flex;
+  gap:12px;
+  margin-top:16px;
+}
 .icon-btn{
-  flex:1;display:flex;align-items:center;justify-content:center;gap:6px;padding:12px;
-  background:var(--c-panel-light);border:1px solid var(--c-border);border-radius:14px;
-  color:var(--c-text-dim);font-size:12px;font-weight:600;letter-spacing:.3px;
+  flex:1;
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  gap:6px;
+  padding:14px 8px;
+  background:var(--c-panel);
+  border:1px solid var(--c-border);
+  border-radius:var(--radius);
 }
-.icon-btn svg{color:var(--c-gold);}
-.icon-btn.danger svg{color:var(--c-red);}
+.icon-btn svg{width:22px;height:22px;color:var(--c-text-dim);}
+.icon-btn span{font-size:11px;color:var(--c-text-dim);font-weight:600;}
+.icon-btn.danger svg,.icon-btn.danger span{color:var(--c-red);}
 
-/* ---- QUESTS ---- */
-.quest-card{border-left:3px solid var(--c-gold);display:flex;align-items:center;gap:10px;}
-.quest-info{flex:1;min-width:0;}
-.quest-name{font-size:14px;font-weight:600;color:var(--c-text);}
-.quest-meta{font-size:11px;color:var(--c-text-dim);margin-top:2px;}
-.quest-done{opacity:.4;text-decoration:line-through;}
-.quest-btn{
-  width:34px;height:34px;border-radius:50%;border:1px solid var(--c-gold);background:none;color:var(--c-gold);
-  display:flex;align-items:center;justify-content:center;flex-shrink:0;
+/* ===================== КВЕСТЫ ===================== */
+.quest-card{
+  display:flex;
+  align-items:center;
+  gap:12px;
+  background:var(--c-panel);
+  border:1px solid var(--c-border);
+  border-radius:var(--radius);
+  padding:13px 14px;
+  margin-bottom:10px;
 }
-.quest-del{background:none;border:none;color:var(--c-text-dim);font-size:16px;padding:4px;}
-.add-quest-btn{
-  width:100%;padding:12px;border-radius:var(--radius);border:1px dashed var(--c-gold-dim);background:none;
-  color:var(--c-gold-light);font-size:13px;letter-spacing:1px;margin-top:4px;
+.quest-check{
+  width:26px;height:26px;
+  border-radius:50%;
+  border:2px solid var(--c-border);
+  flex-shrink:0;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  transition:all .2s ease;
 }
-.lib-btn{
-  width:100%;padding:12px;border-radius:var(--radius);border:1px solid var(--c-purple-dark);
-  background:rgba(138,43,226,.08);color:var(--c-purple-light);font-size:13px;letter-spacing:1px;margin-top:8px;
-  display:flex;align-items:center;justify-content:center;gap:8px;
+.quest-check svg{width:14px;height:14px;opacity:0;transition:opacity .2s ease;}
+.quest-card.done .quest-check{background:var(--c-green);border-color:var(--c-green);}
+.quest-card.done .quest-check svg{opacity:1;color:#06210f;}
+.quest-card.done .quest-name{text-decoration:line-through;color:var(--c-text-dim);}
+.quest-main{flex:1;min-width:0;}
+.quest-name{font-size:14px;font-weight:600;margin-bottom:3px;}
+.quest-meta{display:flex;gap:8px;align-items:center;font-size:11px;color:var(--c-text-dim);}
+.quest-type-tag{
+  padding:1px 7px;
+  border-radius:5px;
+  font-size:10px;
+  font-weight:700;
+  text-transform:uppercase;
 }
+.quest-type-tag.daily{background:rgba(74,158,255,0.15);color:var(--c-blue);}
+.quest-type-tag.main{background:rgba(212,175,55,0.15);color:var(--c-gold-light);}
+.quest-type-tag.side{background:rgba(75,255,155,0.15);color:var(--c-green);}
+.quest-type-tag.mind{background:rgba(107,91,255,0.15);color:var(--c-purple-light);}
+.quest-del{width:22px;height:22px;flex-shrink:0;color:var(--c-text-dim);}
+.quest-del svg{width:18px;height:18px;}
+.fab{
+  position:fixed;
+  right:calc(20px + var(--safe-right));
+  bottom:calc(90px + var(--safe-bottom));
+  width:56px;height:56px;
+  border-radius:50%;
+  background:linear-gradient(135deg,var(--c-purple),var(--c-purple-dark));
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  box-shadow:0 6px 20px rgba(107,91,255,0.5);
+  z-index:20;
+}
+.fab svg{width:26px;height:26px;color:#fff;}
 
-/* ---- ACHIEVEMENTS ---- */
-.ach-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;}
-.ach-card{text-align:center;padding:16px 8px;}
-.ach-icon{font-size:26px;margin-bottom:6px;}
-.ach-icon svg{color:var(--c-text-dim);}
-.ach-title{font-size:12px;font-weight:700;color:var(--c-gold-light);}
-.ach-desc{font-size:10px;color:var(--c-text-dim);margin-top:3px;}
-.ach-card.locked{opacity:.4;}
-
-/* ---- SKILLS ---- */
-.skill-card{display:flex;align-items:center;gap:12px;}
-.skill-icon{font-size:22px;}
-.skill-name{font-size:14px;font-weight:600;}
-.skill-desc{font-size:11px;color:var(--c-text-dim);}
-.skill-card.locked{opacity:.35;}
-
-/* ---- SHOP ---- */
-.shop-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;}
-.shop-card{text-align:center;padding:14px 10px;}
-.shop-icon{font-size:28px;margin-bottom:6px;}
-.shop-name{font-size:12px;font-weight:600;margin-bottom:8px;}
-.shop-buy{
-  width:100%;padding:8px;border-radius:var(--radius-sm);border:1px solid var(--c-gold);background:none;
-  color:var(--c-gold-light);font-size:12px;display:flex;align-items:center;justify-content:center;gap:5px;
+/* ===================== КАЛЕНДАРЬ ===================== */
+.cal-card{
+  background:var(--c-panel);
+  border:1px solid var(--c-border);
+  border-radius:var(--radius);
+  padding:14px;
 }
-.shop-buy:disabled{opacity:.3;}
-
-/* ---- CALENDAR ---- */
-.streak-box{
-  display:flex;align-items:center;gap:10px;background:rgba(255,155,107,.08);border:1px solid var(--c-orange);
-  border-radius:var(--radius);padding:12px;margin-bottom:14px;font-size:13px;
+.cal-header{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  margin-bottom:12px;
 }
-.streak-box svg{color:var(--c-orange);}
-.streak-box b{color:var(--c-orange);font-size:18px;}
-.cal-card{background:var(--c-panel);border:1px solid var(--c-border);border-radius:var(--radius);padding:14px;}
-.cal-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:12px;}
-.cal-month{font-family:var(--font-head);color:var(--c-gold-light);font-size:14px;letter-spacing:1px;}
-.cal-nav{background:none;border:1px solid var(--c-border);color:var(--c-gold-light);width:28px;height:28px;border-radius:50%;font-size:15px;line-height:1;}
-.cal-weekdays{display:grid;grid-template-columns:repeat(7,1fr);text-align:center;font-size:10px;color:var(--c-text-dim);margin-bottom:6px;letter-spacing:.5px;}
-.cal-days{display:grid;grid-template-columns:repeat(7,1fr);gap:4px;}
-.cal-day{aspect-ratio:1;display:flex;align-items:center;justify-content:center;border-radius:7px;font-size:11px;color:var(--c-text-dim);background:var(--c-panel-light);}
+.cal-nav-btn{
+  width:32px;height:32px;
+  border-radius:50%;
+  background:var(--c-panel-light);
+  display:flex;align-items:center;justify-content:center;
+  color:var(--c-gold-light);
+  font-size:18px;
+}
+.cal-month{
+  font-family:var(--font-head);
+  font-size:15px;
+  color:var(--c-gold-light);
+  text-transform:capitalize;
+}
+.cal-weekdays{
+  display:grid;
+  grid-template-columns:repeat(7,1fr);
+  margin-bottom:6px;
+}
+.cal-weekdays span{
+  text-align:center;
+  font-size:10px;
+  color:var(--c-text-dim);
+  font-weight:700;
+}
+.cal-days{
+  display:grid;
+  grid-template-columns:repeat(7,1fr);
+  gap:4px;
+}
+.cal-day{
+  aspect-ratio:1;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  border-radius:8px;
+  font-size:12px;
+  color:var(--c-text-dim);
+  background:var(--c-bg-alt);
+  border:1px solid transparent;
+}
 .cal-day.empty{background:none;}
-.cal-day.today{border:1px solid var(--c-gold);color:var(--c-gold-light);font-weight:700;}
-.cal-day.cal-l1{background:#3a2d55;color:var(--c-text);}
-.cal-day.cal-l2{background:#5c3f8a;color:#fff;}
-.cal-day.cal-l3{background:#8a2be2;color:#fff;}
-.cal-day.cal-l4{background:var(--c-gold);color:#1a1206;font-weight:700;}
-.cal-legend{display:flex;align-items:center;justify-content:center;gap:6px;margin-top:12px;font-size:10px;color:var(--c-text-dim);}
-.cal-dot{width:12px;height:12px;border-radius:3px;}
-.cal-dot.cal-l0{background:var(--c-panel-light);}
-.cal-dot.cal-l1{background:#3a2d55;}
-.cal-dot.cal-l2{background:#5c3f8a;}
-.cal-dot.cal-l3{background:#8a2be2;}
-.cal-dot.cal-l4{background:var(--c-gold);}
+.cal-day.cal-l1{background:rgba(75,255,155,0.15);color:var(--c-text);}
+.cal-day.cal-l2{background:rgba(75,255,155,0.3);color:var(--c-text);}
+.cal-day.cal-l3{background:rgba(75,255,155,0.5);color:#fff;}
+.cal-day.cal-l4{background:rgba(75,255,155,0.75);color:#06210f;font-weight:700;}
+.cal-day.today{border-color:var(--c-gold);color:var(--c-gold-light);font-weight:700;}
 
-/* ---- MODALS ---- */
+/* ===================== ДОСТИЖЕНИЯ ===================== */
+.ach-card{
+  display:flex;
+  align-items:center;
+  gap:12px;
+  background:var(--c-panel);
+  border:1px solid var(--c-border);
+  border-radius:var(--radius);
+  padding:12px 14px;
+  margin-bottom:10px;
+  opacity:.45;
+}
+.ach-card.unlocked{opacity:1;border-color:var(--c-gold-dim);}
+.ach-icon{
+  width:42px;height:42px;
+  border-radius:12px;
+  background:var(--c-panel-light);
+  display:flex;align-items:center;justify-content:center;
+  flex-shrink:0;
+}
+.ach-icon svg{width:22px;height:22px;color:var(--c-text-dim);}
+.ach-card.unlocked .ach-icon svg{color:var(--c-gold-light);}
+.ach-card.unlocked .ach-icon{box-shadow:0 0 12px rgba(212,175,55,0.3);}
+.ach-name{font-size:14px;font-weight:700;margin-bottom:2px;}
+.ach-desc{font-size:12px;color:var(--c-text-dim);}
+
+/* ===================== МАГАЗИН ===================== */
+.shop-card{
+  display:flex;
+  align-items:center;
+  gap:12px;
+  background:var(--c-panel);
+  border:1px solid var(--c-border);
+  border-radius:var(--radius);
+  padding:12px 14px;
+  margin-bottom:10px;
+}
+.shop-icon{
+  width:42px;height:42px;
+  border-radius:12px;
+  background:var(--c-panel-light);
+  display:flex;align-items:center;justify-content:center;
+  flex-shrink:0;
+  color:var(--c-blue);
+}
+.shop-icon svg{width:22px;height:22px;}
+.shop-name{font-size:14px;font-weight:700;}
+.shop-price{font-size:12px;color:var(--c-blue);display:flex;align-items:center;gap:4px;margin-top:2px;}
+.shop-price svg{width:13px;height:13px;}
+.shop-buy{
+  padding:8px 14px;
+  border-radius:var(--radius-sm);
+  background:var(--c-purple);
+  color:#fff;
+  font-size:12px;
+  font-weight:700;
+  flex-shrink:0;
+}
+.shop-buy:disabled{background:var(--c-border);color:var(--c-text-dim);}
+
+/* ===================== МОДАЛКИ ===================== */
 .overlay{
-  position:fixed;inset:0;background:rgba(0,0,0,.75);z-index:90;display:none;
-  align-items:flex-end;justify-content:center;backdrop-filter:blur(4px);
+  position:fixed;
+  inset:0;
+  background:rgba(5,5,10,0.8);
+  backdrop-filter:blur(4px);
+  z-index:100;
+  display:flex;
+  align-items:flex-end;
+  justify-content:center;
+  opacity:0;
+  visibility:hidden;
+  transition:opacity .25s ease, visibility .25s ease;
 }
-.overlay.show{display:flex;}
+.overlay.open{opacity:1;visibility:visible;}
 .modal{
-  position:relative;width:100%;max-width:480px;background:var(--c-panel);border:1px solid var(--c-gold-dim);
-  border-radius:var(--radius) var(--radius) 0 0;padding:20px;padding-bottom:calc(24px + var(--safe-bottom));
-  max-height:82vh;overflow-y:auto;
+  width:100%;
+  max-width:480px;
+  max-height:85vh;
+  overflow-y:auto;
+  background:var(--c-panel);
+  border:1px solid var(--c-gold-dim);
+  border-radius:24px 24px 0 0;
+  padding:22px 18px calc(22px + var(--safe-bottom)) 18px;
+  transform:translateY(100%);
+  transition:transform .3s ease;
 }
-.modal-title{font-family:var(--font-head);color:var(--c-gold-light);font-size:16px;margin-bottom:16px;letter-spacing:1px;}
-.field{margin-bottom:12px;}
-.field label{font-size:11px;color:var(--c-text-dim);text-transform:uppercase;letter-spacing:1px;display:block;margin-bottom:5px;}
-.field input,.field select{
-  width:100%;padding:10px;background:var(--c-panel-light);border:1px solid var(--c-border);border-radius:var(--radius-sm);
-  color:var(--c-text);font-family:var(--font-body);font-size:14px;
+.overlay.open .modal{transform:translateY(0);}
+.modal-title{
+  font-family:var(--font-head);
+  font-size:18px;
+  color:var(--c-gold-light);
+  margin-bottom:16px;
+  text-align:center;
+  letter-spacing:1px;
 }
-.type-row{display:flex;gap:8px;}
-.type-chip{flex:1;padding:8px;text-align:center;border-radius:var(--radius-sm);border:1px solid var(--c-border);font-size:11px;color:var(--c-text-dim);}
-.type-chip.active{border-color:var(--c-gold);color:var(--c-gold-light);background:rgba(212,175,55,.1);}
-.modal-actions{display:flex;gap:10px;margin-top:16px;}
-.btn{flex:1;padding:12px;border-radius:var(--radius-sm);border:none;font-weight:700;font-size:13px;letter-spacing:1px;}
-.btn-primary{background:linear-gradient(135deg,var(--c-gold),var(--c-gold-dim));color:#1a1206;}
-.btn-ghost{background:var(--c-panel-light);color:var(--c-text-dim);border:1px solid var(--c-border);}
+.field-label{font-size:12px;color:var(--c-text-dim);margin:12px 0 6px 0;}
+.field-label:first-child{margin-top:0;}
+.full-w{width:100%;}
+.modal-actions{display:flex;gap:10px;margin-top:20px;}
+.btn-main{
+  flex:1;
+  padding:13px;
+  border-radius:var(--radius-sm);
+  background:linear-gradient(135deg,var(--c-gold),var(--c-gold-dim));
+  color:#1a1500;
+  font-weight:700;
+  font-size:14px;
+}
+.btn-ghost{
+  flex:1;
+  padding:13px;
+  border-radius:var(--radius-sm);
+  background:var(--c-panel-light);
+  border:1px solid var(--c-border);
+  color:var(--c-text-dim);
+  font-weight:600;
+  font-size:14px;
+}
 
-.lib-cat{margin-bottom:18px;}
-.lib-cat-title{font-size:12px;letter-spacing:1px;color:var(--c-purple-light);margin-bottom:8px;text-transform:uppercase;}
-.lib-item{display:flex;justify-content:space-between;align-items:center;padding:9px 0;border-bottom:1px solid var(--c-border);font-size:13px;}
-.lib-item span{color:var(--c-text-dim);font-size:11px;}
-.lib-add{background:none;border:1px solid var(--c-gold);color:var(--c-gold-light);border-radius:50%;width:26px;height:26px;font-size:16px;}
-
-/* ---- TOASTS ---- */
-.toast-container{position:fixed;top:calc(90px + var(--safe-top));left:0;right:0;z-index:200;display:flex;flex-direction:column;align-items:center;gap:8px;pointer-events:none;}
+/* ===================== TOAST / ЭФФЕКТЫ ===================== */
+#toastBox{
+  position:fixed;
+  top:calc(var(--safe-top) + 10px);
+  left:0;right:0;
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  gap:8px;
+  z-index:300;
+  pointer-events:none;
+}
 .sys-toast{
-  background:rgba(10,8,16,.95);border:1px solid var(--c-gold);border-radius:var(--radius-sm);
-  padding:10px 18px;text-align:center;min-width:220px;animation:toastin .3s ease, toastout .4s ease 2.6s forwards;
-  box-shadow:0 0 18px rgba(212,175,55,.35);
+  background:rgba(10,10,20,0.95);
+  border:1px solid var(--c-gold-dim);
+  border-radius:12px;
+  padding:10px 18px;
+  font-size:12px;
+  color:var(--c-gold-light);
+  letter-spacing:1px;
+  box-shadow:0 0 20px rgba(212,175,55,0.2);
+  animation:toastIn .3s ease, toastOut .4s ease 2.6s forwards;
 }
-.sys-toast .tt{font-family:var(--font-head);font-size:10px;letter-spacing:2px;color:var(--c-gold);}
-.sys-toast .tm{font-size:13px;color:var(--c-text);margin-top:3px;}
-@keyframes toastin{from{opacity:0;transform:translateY(-10px);}to{opacity:1;transform:none;}}
-@keyframes toastout{to{opacity:0;transform:translateY(-10px);}}
-
-/* ---- FX ---- */
-#flashOverlay{position:fixed;inset:0;background:#fff;opacity:0;pointer-events:none;z-index:300;}
-#flashOverlay.flash{animation:flash .4s ease;}
-@keyframes flash{0%{opacity:0;}20%{opacity:.85;}100%{opacity:0;}}
+@keyframes toastIn{from{opacity:0;transform:translateY(-10px);}to{opacity:1;transform:translateY(0);}}
+@keyframes toastOut{to{opacity:0;transform:translateY(-10px);}}
 .float-text{
-  position:fixed;z-index:250;font-family:var(--font-head);font-weight:700;font-size:15px;pointer-events:none;
-  animation:floatup 1.4s ease forwards;
+  position:fixed;
+  z-index:250;
+  font-weight:700;
+  font-size:15px;
+  pointer-events:none;
+  animation:floatUp 1.1s ease forwards;
 }
-.float-text.gold{color:var(--c-gold-light);}
-.float-text.purple{color:var(--c-purple-light);}
-@keyframes floatup{0%{opacity:1;transform:translateY(0);}100%{opacity:0;transform:translateY(-60px);}}
-.burst-p{position:fixed;z-index:250;width:5px;height:5px;border-radius:50%;background:var(--c-gold);pointer-events:none;transition:all .8s cubic-bezier(.2,.6,.4,1);}
+@keyframes floatUp{
+  0%{opacity:1;transform:translateY(0) scale(1);}
+  100%{opacity:0;transform:translateY(-60px) scale(1.2);}
+}
+#flashOverlay{
+  position:fixed;inset:0;
+  background:#fff;
+  opacity:0;
+  z-index:400;
+  pointer-events:none;
+}
+.burst-particle{
+  position:fixed;
+  width:6px;height:6px;
+  border-radius:50%;
+  z-index:240;
+  pointer-events:none;
+}
 </style>
 </head>
 <body>
 
+<!-- ПЕРЕКРЫТИЕ СТАТУС-БАРА IPHONE -->
 <div id="statusbarCover"></div>
+
+<!-- ===================== SPLASH SCREEN ===================== -->
 <div id="splash">
+  <canvas id="splashCanvas"></canvas>
+  <div class="splash-ring"></div>
   <div class="splash-logo">SYSTEM</div>
-  <div class="splash-sub">Загрузка реальности</div>
-  <div class="splash-bar"></div>
+  <div class="splash-sub">инициализация...</div>
 </div>
 
-<canvas id="particles"></canvas>
-<div id="flashOverlay"></div>
-<div class="toast-container" id="toastContainer"></div>
-
+<!-- ===================== ОСНОВНОЕ ПРИЛОЖЕНИЕ ===================== -->
 <div id="app">
+<canvas id="particlesCanvas"></canvas>
 
-  <div class="hud">
-    <div class="hud-top">
-      <div class="avatar-wrap">
-        <div class="avatar-ring"></div>
-        <div class="avatar" id="hudAvatar">🗡️</div>
-      </div>
-      <div class="hud-info">
-        <div class="hud-name" id="hudName">Игрок</div>
-        <div class="hud-title" id="hudTitle">Без титула</div>
-        <div class="hud-rank" id="hudRank">E-RANK</div>
-      </div>
-      <div class="hud-icons">
-        <div class="hud-icon flame"><span id="icFlame"></span><span id="hudStreak">0</span></div>
-        <div class="hud-icon"><span id="icGem"></span><span id="hudGems">0</span></div>
+  <!-- ===================== HUD ===================== -->
+  <div id="hud">
+    <div class="hud-avatar-wrap">
+      <div class="hud-avatar-ring"></div>
+      <div class="hud-avatar">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="color:var(--c-gold-light)">
+          <circle cx="12" cy="8" r="4"></circle>
+          <path d="M4 21c0-4.4 3.6-8 8-8s8 3.6 8 8"></path>
+        </svg>
       </div>
     </div>
-    <div class="hud-level-row">
-      <span>Уровень <b id="hudLevel">1</b></span>
-      <span id="hudExpText">0 / 100</span>
-    </div>
-    <div class="exp-bar"><div class="exp-fill" id="hudExpFill" style="width:0%"></div></div>
-  </div>
-
-  <div class="tab-content active" id="tab-profile">
-    <div class="points-banner">
-      <span class="label">Свободные очки</span>
-      <b id="pointsVal">0</b>
-    </div>
-    <div id="statsGrid"></div>
-    <div class="icon-btn-row">
-      <button class="icon-btn" onclick="openSettings()"><span id="icGear"></span> Настройки</button>
-      <button class="icon-btn danger" onclick="resetProgress()"><span id="icTrash"></span> Сброс</button>
-    </div>
-  </div>
-
-  <div class="tab-content" id="tab-quests">
-    <div class="section-title">Активные Квесты</div>
-    <div id="questsList"></div>
-    <button class="add-quest-btn" onclick="openAddQuest()">+ Создать квест</button>
-    <button class="lib-btn" onclick="openLibrary()"><span id="icBook"></span> Библиотека квестов</button>
-  </div>
-
-  <div class="tab-content" id="tab-achievements">
-    <div class="section-title">Достижения</div>
-    <div class="ach-grid" id="achGrid"></div>
-  </div>
-
-  <div class="tab-content" id="tab-skills">
-    <div class="section-title">Навыки</div>
-    <div id="skillsList"></div>
-  </div>
-
-  <div class="tab-content" id="tab-shop">
-    <div class="section-title">Магазин Наград</div>
-    <div class="shop-grid" id="shopGrid"></div>
-  </div>
-
-  <div class="tab-content" id="tab-calendar">
-    <div class="section-title">Календарь Активности</div>
-    <div class="streak-box"><span id="icFlame2"></span> Серия: <b id="streakVal">0</b> дней</div>
-    <div class="cal-card">
-      <div class="cal-header">
-        <button class="cal-nav" onclick="changeMonth(-1)">‹</button>
-        <div class="cal-month" id="calMonthLabel">—</div>
-        <button class="cal-nav" onclick="changeMonth(1)">›</button>
+    <div class="hud-info">
+      <div class="hud-name-row">
+        <span class="hud-name" id="hudName">Охотник</span>
+        <span class="hud-rank" id="hudRank">E-RANK</span>
       </div>
-      <div class="cal-weekdays"><span>Пн</span><span>Вт</span><span>Ср</span><span>Чт</span><span>Пт</span><span>Сб</span><span>Вс</span></div>
-      <div class="cal-days" id="calDays"></div>
+      <div class="hud-title" id="hudTitle">Пробудившийся</div>
+      <div class="hud-exp-row">
+        <span class="hud-level" id="hudLevel">Lv.1</span>
+        <div class="hud-exp-track"><div class="hud-exp-fill" id="hudExpFill" style="width:0%"></div></div>
+        <span class="hud-exp-text" id="hudExpText">0/100</span>
+      </div>
     </div>
-    <div class="cal-legend">
-      <span>Меньше</span>
-      <div class="cal-dot cal-l0"></div><div class="cal-dot cal-l1"></div><div class="cal-dot cal-l2"></div><div class="cal-dot cal-l3"></div><div class="cal-dot cal-l4"></div>
-      <span>Больше</span>
+    <div class="hud-side">
+      <div class="hud-badge fire">
+        <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2c1 4-3 5-3 9a3 3 0 0 0 6 0c0-1-0.5-2-1-3 2 1 4 3 4 6a6 6 0 0 1-12 0c0-5 4-6 6-12z"/></svg>
+        <span id="hudStreak">0</span>
+      </div>
+      <div class="hud-badge crystal">
+        <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2 2 9l10 13L22 9z"/></svg>
+        <span id="hudCrystals">0</span>
+      </div>
     </div>
   </div>
 
-  <div class="tabs">
-    <button class="nav-btn active" data-tab="profile" onclick="switchTab('profile')"><span id="navProfile"></span>ПРОФИЛЬ</button>
-    <button class="nav-btn" data-tab="quests" onclick="switchTab('quests')"><span id="navQuests"></span>КВЕСТЫ</button>
-    <button class="nav-btn" data-tab="achievements" onclick="switchTab('achievements')"><span id="navAch"></span>НАГРАДЫ</button>
-    <button class="nav-btn" data-tab="skills" onclick="switchTab('skills')"><span id="navSkills"></span>НАВЫКИ</button>
-    <button class="nav-btn" data-tab="shop" onclick="switchTab('shop')"><span id="navShop"></span>МАГАЗИН</button>
-    <button class="nav-btn" data-tab="calendar" onclick="switchTab('calendar')"><span id="navCal"></span>КАЛЕНДАРЬ</button>
+  <!-- ===================== КОНТЕНТ (ВКЛАДКИ) ===================== -->
+  <div id="content">
+
+    <!-- ---------- ВКЛАДКА: ГЛАВНАЯ (КВЕСТЫ) ---------- -->
+    <div class="tab-page active" id="tab-home">
+      <div class="section-title">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg>
+        Активные квесты
+      </div>
+      <div id="questsList"></div>
+
+      <div class="icon-btn-row" style="margin-top:18px">
+        <div class="icon-btn" onclick="openLibrary()">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg>
+          <span>Библиотека квестов</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- ---------- ВКЛАДКА: ПРОФИЛЬ (СТАТЫ) ---------- -->
+    <div class="tab-page" id="tab-profile">
+
+      <div class="points-banner">
+        <div>
+          <div class="points-banner-label">Свободные очки</div>
+          <div class="points-banner-value" id="freePointsVal">0</div>
+        </div>
+        <svg viewBox="0 0 24 24" fill="none" stroke="var(--c-gold)" stroke-width="2" width="36" height="36"><path d="M12 2l2.4 7.2H22l-6 4.4 2.3 7.2L12 16.4 5.7 20.8 8 13.6l-6-4.4h7.6z"/></svg>
+      </div>
+
+      <div class="stats-grid" id="statsGrid">
+
+        <!-- СИЛА -->
+        <div class="stat-card" data-stat="str" style="--accent:#ff6b4b;--accent-light:#ffb199;--accent-glow:rgba(255,107,75,0.35)">
+          <div class="stat-icon-badge">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M6.5 6.5 3 10l3 3"/><path d="M17.5 17.5 21 14l-3-3"/><path d="M8 8l8 8"/><path d="M14 4l6 6"/><path d="M4 14l6 6"/></svg>
+          </div>
+          <div class="stat-body">
+            <div class="stat-head">
+              <span class="stat-name">Сила</span>
+              <span class="stat-rank-badge" id="statRank-str">F</span>
+            </div>
+            <div class="stat-value-row">
+              <span class="stat-value" id="statVal-str">10</span>
+              <button class="stat-plus-v2" onclick="addStatPoint('str')">+</button>
+            </div>
+            <div class="stat-progress-track"><div class="stat-progress-fill" id="statBar-str" style="width:0%"></div></div>
+          </div>
+        </div>
+
+        <!-- ЛОВКОСТЬ -->
+        <div class="stat-card" data-stat="agi" style="--accent:#4bff9b;--accent-light:#b3ffe0;--accent-glow:rgba(75,255,155,0.35)">
+          <div class="stat-icon-badge">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M4 12h4l3-8 4 16 3-8h2"/></svg>
+          </div>
+          <div class="stat-body">
+            <div class="stat-head">
+              <span class="stat-name">Ловкость</span>
+              <span class="stat-rank-badge" id="statRank-agi">F</span>
+            </div>
+            <div class="stat-value-row">
+              <span class="stat-value" id="statVal-agi">10</span>
+              <button class="stat-plus-v2" onclick="addStatPoint('agi')">+</button>
+            </div>
+            <div class="stat-progress-track"><div class="stat-progress-fill" id="statBar-agi" style="width:0%"></div></div>
+          </div>
+        </div>
+
+        <!-- ИНТЕЛЛЕКТ -->
+        <div class="stat-card" data-stat="int" style="--accent:#4a9eff;--accent-light:#a8d4ff;--accent-glow:rgba(74,158,255,0.35)">
+          <div class="stat-icon-badge">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M9.5 2a4.5 4.5 0 0 0-4.5 4.5c0 1 .3 1.8.8 2.5A4 4 0 0 0 4 12.5 4 4 0 0 0 7 16.3V19a2 2 0 0 0 2 2h1v-5"/><path d="M14.5 2a4.5 4.5 0 0 1 4.5 4.5c0 1-.3 1.8-.8 2.5a4 4 0 0 1 1.8 3.5A4 4 0 0 1 17 16.3V19a2 2 0 0 1-2 2h-1v-5"/></svg>
+          </div>
+          <div class="stat-body">
+            <div class="stat-head">
+              <span class="stat-name">Интеллект</span>
+              <span class="stat-rank-badge" id="statRank-int">F</span>
+            </div>
+            <div class="stat-value-row">
+              <span class="stat-value" id="statVal-int">10</span>
+              <button class="stat-plus-v2" onclick="addStatPoint('int')">+</button>
+            </div>
+            <div class="stat-progress-track"><div class="stat-progress-fill" id="statBar-int" style="width:0%"></div></div>
+          </div>
+        </div>
+
+        <!-- ВЫНОСЛИВОСТЬ -->
+        <div class="stat-card" data-stat="vit" style="--accent:#ff4b6b;--accent-light:#ffb3c2;--accent-glow:rgba(255,75,107,0.35)">
+          <div class="stat-icon-badge">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20.8 4.6a5.5 5.5 0 0 0-7.8 0L12 5.6l-1-1a5.5 5.5 0 0 0-7.8 7.8l1 1L12 21l7.8-7.6 1-1a5.5 5.5 0 0 0 0-7.8z"/></svg>
+          </div>
+          <div class="stat-body">
+            <div class="stat-head">
+              <span class="stat-name">Выносливость</span>
+              <span class="stat-rank-badge" id="statRank-vit">F</span>
+            </div>
+            <div class="stat-value-row">
+              <span class="stat-value" id="statVal-vit">10</span>
+              <button class="stat-plus-v2" onclick="addStatPoint('vit')">+</button>
+            </div>
+            <div class="stat-progress-track"><div class="stat-progress-fill" id="statBar-vit" style="width:0%"></div></div>
+          </div>
+        </div>
+
+        <!-- ВОСПРИЯТИЕ -->
+        <div class="stat-card" data-stat="per" style="--accent:#d4af37;--accent-light:#f3dd8a;--accent-glow:rgba(212,175,55,0.35)">
+          <div class="stat-icon-badge">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-7 11-7 11 7 11 7-4 7-11 7-11-7-11-7z"/><circle cx="12" cy="12" r="3"></circle></svg>
+          </div>
+          <div class="stat-body">
+            <div class="stat-head">
+              <span class="stat-name">Восприятие</span>
+              <span class="stat-rank-badge" id="statRank-per">F</span>
+            </div>
+            <div class="stat-value-row">
+              <span class="stat-value" id="statVal-per">10</span>
+              <button class="stat-plus-v2" onclick="addStatPoint('per')">+</button>
+            </div>
+            <div class="stat-progress-track"><div class="stat-progress-fill" id="statBar-per" style="width:0%"></div></div>
+          </div>
+        </div>
+
+      </div>
+
+      <div class="icon-btn-row">
+        <div class="icon-btn" onclick="openSettings()">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"></circle><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
+          <span>Настройки</span>
+        </div>
+        <div class="icon-btn danger" onclick="confirmReset()">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"></polyline><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg>
+          <span>Сброс</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- ---------- ВКЛАДКА: КАЛЕНДАРЬ ---------- -->
+    <div class="tab-page" id="tab-calendar">
+      <div class="section-title">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2"></rect><line x1="16" y1="2" x2="16" y2="6"></line><line x1="8" y1="2" x2="8" y2="6"></line><line x1="3" y1="10" x2="21" y2="10"></line></svg>
+        Календарь активности
+      </div>
+      <div class="cal-card">
+        <div class="cal-header">
+          <button class="cal-nav-btn" onclick="changeMonth(-1)">‹</button>
+          <span class="cal-month" id="calMonthLabel">Месяц Год</span>
+          <button class="cal-nav-btn" onclick="changeMonth(1)">›</button>
+        </div>
+        <div class="cal-weekdays">
+          <span>Пн</span><span>Вт</span><span>Ср</span><span>Чт</span><span>Пт</span><span>Сб</span><span>Вс</span>
+        </div>
+        <div class="cal-days" id="calDaysGrid"></div>
+      </div>
+    </div>
+
+    <!-- ---------- ВКЛАДКА: ДОСТИЖЕНИЯ ---------- -->
+    <div class="tab-page" id="tab-achievements">
+      <div class="section-title">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="8" r="6"></circle><path d="M9 14l-2 7 5-3 5 3-2-7"/></svg>
+        Достижения
+      </div>
+      <div id="achievementsList"></div>
+    </div>
+
+    <!-- ---------- ВКЛАДКА: МАГАЗИН ---------- -->
+    <div class="tab-page" id="tab-shop">
+      <div class="section-title">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="9" cy="21" r="1"></circle><circle cx="20" cy="21" r="1"></circle><path d="M1 1h4l2.7 13.4a2 2 0 0 0 2 1.6h9.7a2 2 0 0 0 2-1.6L23 6H6"/></svg>
+        Магазин наград
+      </div>
+      <div id="shopList"></div>
+    </div>
+
   </div>
+
+  <!-- FAB ДОБАВИТЬ КВЕСТ -->
+  <div class="fab" id="fabAddQuest" onclick="openAddQuest()">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>
+  </div>
+
+  <!-- ===================== НИЖНЯЯ НАВИГАЦИЯ ===================== -->
+  <div id="nav">
+    <div class="nav-btn active" data-tab="tab-home" onclick="switchTab('tab-home', this)">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"></polyline></svg>
+      <span>Главная</span>
+    </div>
+    <div class="nav-btn" data-tab="tab-profile" onclick="switchTab('tab-profile', this)">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"></circle></svg>
+      <span>Профиль</span>
+    </div>
+    <div class="nav-btn" data-tab="tab-calendar" onclick="switchTab('tab-calendar', this)">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2"></rect><line x1="16" y1="2" x2="16" y2="6"></line><line x1="8" y1="2" x2="8" y2="6"></line><line x1="3" y1="10" x2="21" y2="10"></line></svg>
+      <span>Календарь</span>
+    </div>
+    <div class="nav-btn" data-tab="tab-achievements" onclick="switchTab('tab-achievements', this)">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="8" r="6"></circle><path d="M9 14l-2 7 5-3 5 3-2-7"/></svg>
+      <span>Награды</span>
+    </div>
+    <div class="nav-btn" data-tab="tab-shop" onclick="switchTab('tab-shop', this)">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="9" cy="21" r="1"></circle><circle cx="20" cy="21" r="1"></circle><path d="M1 1h4l2.7 13.4a2 2 0 0 0 2 1.6h9.7a2 2 0 0 0 2-1.6L23 6H6"/></svg>
+      <span>Магазин</span>
+    </div>
+  </div>
+
 </div>
 
+<!-- ===================== МОДАЛКА: ДОБАВИТЬ КВЕСТ ===================== -->
 <div class="overlay" id="addQuestOverlay">
   <div class="modal corner">
-    <div class="modal-title">◆ Новый квест ◆</div>
-    <div class="field">
-      <label>Название</label>
-      <input type="text" id="newQuestName" placeholder="Например: Пробежка 3км">
-    </div>
-    <div class="field">
-      <label>Тип</label>
-      <div class="type-row" id="typeRow"></div>
-    </div>
-    <div class="field">
-      <label>Опыт за выполнение</label>
-      <input type="number" id="newQuestExp" value="20" min="1">
-    </div>
-    <div class="field">
-      <label>Связанный стат</label>
-      <select id="newQuestStat"></select>
-    </div>
+    <div class="modal-title">Новый квест</div>
+
+    <div class="field-label">Название</div>
+    <input type="text" id="newQuestName" class="full-w" placeholder="Например: Пробежка 3 км">
+
+    <div class="field-label">Тип квеста</div>
+    <select id="newQuestType" class="full-w">
+      <option value="daily">Ежедневный</option>
+      <option value="main">Основной</option>
+      <option value="side">Побочный</option>
+      <option value="mind">Умственный</option>
+    </select>
+
+    <div class="field-label">Награда (опыт)</div>
+    <input type="number" id="newQuestExp" class="full-w" placeholder="50" value="50">
+
+    <div class="field-label">Какой стат развивает</div>
+    <select id="newQuestStat" class="full-w">
+      <option value="str">Сила</option>
+      <option value="agi">Ловкость</option>
+      <option value="int">Интеллект</option>
+      <option value="vit">Выносливость</option>
+      <option value="per">Восприятие</option>
+    </select>
+
     <div class="modal-actions">
-      <button class="btn btn-ghost" onclick="closeAddQuest()">Отмена</button>
-      <button class="btn btn-primary" onclick="submitAddQuest()">Создать</button>
+      <div class="btn-ghost" onclick="closeOverlay('addQuestOverlay')">Отмена</div>
+      <div class="btn-main" onclick="saveNewQuest()">Создать</div>
     </div>
   </div>
 </div>
 
+<!-- ===================== МОДАЛКА: БИБЛИОТЕКА КВЕСТОВ ===================== -->
 <div class="overlay" id="libraryOverlay">
   <div class="modal corner">
-    <div class="modal-title">◆ Библиотека квестов ◆</div>
-    <div id="libraryContent"></div>
+    <div class="modal-title">Библиотека квестов</div>
+    <div class="icon-btn-row" style="margin-top:0">
+      <div class="icon-btn" onclick="showLibraryCat('body')"><span>Тело</span></div>
+      <div class="icon-btn" onclick="showLibraryCat('mind')"><span>Разум</span></div>
+      <div class="icon-btn" onclick="showLibraryCat('spirit')"><span>Дух</span></div>
+    </div>
+    <div id="libraryList" style="margin-top:14px"></div>
     <div class="modal-actions">
-      <button class="btn btn-ghost" onclick="closeLibrary()">Закрыть</button>
+      <div class="btn-ghost full-w" onclick="closeOverlay('libraryOverlay')">Закрыть</div>
     </div>
   </div>
 </div>
 
+<!-- ===================== МОДАЛКА: НАСТРОЙКИ ===================== -->
 <div class="overlay" id="settingsOverlay">
   <div class="modal corner">
-    <div class="modal-title">◆ Настройки ◆</div>
-    <div class="field">
-      <label>Имя игрока</label>
-      <input type="text" id="settingsName">
-    </div>
-    <div class="field">
-      <label>Аватар (эмодзи)</label>
-      <input type="text" id="settingsAvatar" maxlength="2">
-    </div>
-    <div class="field">
-      <label>Титул</label>
-      <select id="settingsTitle"></select>
-    </div>
+    <div class="modal-title">Настройки</div>
+
+    <div class="field-label">Имя охотника</div>
+    <input type="text" id="settingsName" class="full-w" placeholder="Охотник">
+
+    <div class="field-label">Титул</div>
+    <select id="settingsTitle" class="full-w"></select>
+
     <div class="modal-actions">
-      <button class="btn btn-ghost" onclick="closeSettings()">Отмена</button>
-      <button class="btn btn-primary" onclick="saveSettings()">Сохранить</button>
+      <div class="btn-ghost" onclick="closeOverlay('settingsOverlay')">Закрыть</div>
+      <div class="btn-main" onclick="saveSettings()">Сохранить</div>
     </div>
   </div>
 </div>
 
+<!-- ===================== TOAST / ЭФФЕКТЫ ===================== -->
+<div id="toastBox"></div>
+<div id="flashOverlay"></div>
+
+</body>
 <script>
-const SVG_ICONS = {
-  str:'<path d="M12 3l9 18H3L12 3z"/>',
-  agi:'<path d="M13 2L4 14h6l-1 8 9-12h-6l1-8z"/>',
-  int:'<path d="M9 18h6M10 21h4M12 3a6 6 0 0 0-3 11c.6.5 1 1.2 1 2h4c0-.8.4-1.5 1-2a6 6 0 0 0-3-11z"/>',
-  vit:'<path d="M12 2l8 4v6c0 5-3.5 8.5-8 10-4.5-1.5-8-5-8-10V6l8-4z"/>',
-  per:'<path d="M1 12s4-7 11-7 11 7 11 7-4 7-11 7-11-7-11-7z"/><circle cx="12" cy="12" r="3"/>',
-  lock:'<rect x="5" y="11" width="14" height="9" rx="2"/><path d="M8 11V7a4 4 0 0 1 8 0v4"/>',
-  gem:'<path d="M6 3h12l4 6-10 12L2 9l4-6z"/><path d="M2 9h20M9 3l3 6-3 12M15 3l-3 6 3 12"/>',
-  flame:'<path d="M12 2s5 5 5 10a5 5 0 0 1-10 0c0-2 1-3 1-3s.5 2 2 2c-1-3 0-5 2-9z"/>',
-  gear:'<circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.7 1.7 0 0 0 .3 1.9l.1.1a2 2 0 1 1-2.8 2.8l-.1-.1a1.7 1.7 0 0 0-1.9-.3 1.7 1.7 0 0 0-1 1.6V21a2 2 0 1 1-4 0v-.1a1.7 1.7 0 0 0-1-1.6 1.7 1.7 0 0 0-1.9.3l-.1.1a2 2 0 1 1-2.8-2.8l.1-.1a1.7 1.7 0 0 0 .3-1.9 1.7 1.7 0 0 0-1.6-1H3a2 2 0 1 1 0-4h.1a1.7 1.7 0 0 0 1.6-1 1.7 1.7 0 0 0-.3-1.9l-.1-.1a2 2 0 1 1 2.8-2.8l.1.1a1.7 1.7 0 0 0 1.9.3H9a1.7 1.7 0 0 0 1-1.6V3a2 2 0 1 1 4 0v.1a1.7 1.7 0 0 0 1 1.6 1.7 1.7 0 0 0 1.9-.3l.1-.1a2 2 0 1 1 2.8 2.8l-.1.1a1.7 1.7 0 0 0-.3 1.9V9a1.7 1.7 0 0 0 1.6 1H21a2 2 0 1 1 0 4h-.1a1.7 1.7 0 0 0-1.6 1z"/>',
-  trash:'<path d="M3 6h18M8 6V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2m3 0-1 14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2L4 6h16z"/>',
-  book:'<path d="M4 4.5A2.5 2.5 0 0 1 6.5 2H20v16H6.5A2.5 2.5 0 0 0 4 20.5z"/><path d="M4 4.5v16"/>',
-  arrowUp:'<path d="M12 19V5M5 12l7-7 7 7"/>',
-  nProfile:'<circle cx="12" cy="8" r="4"/><path d="M4 21c0-4 4-7 8-7s8 3 8 7"/>',
-  nQuests:'<path d="M8 6h13M8 12h13M8 18h13M3 6h.01M3 12h.01M3 18h.01"/>',
-  nAch:'<path d="M8 21h8M12 17v4M7 4h10v4a5 5 0 0 1-10 0V4z"/><path d="M7 5H4a3 3 0 0 0 3 5M17 5h3a3 3 0 0 1-3 5"/>',
-  nSkills:'<circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="5"/><circle cx="12" cy="12" r="1"/>',
-  nShop:'<path d="M6 7h12l1 13H5z"/><path d="M9 7V5a3 3 0 0 1 6 0v2"/>',
-  nCal:'<rect x="3" y="5" width="18" height="16" rx="2"/><path d="M16 3v4M8 3v4M3 10h18"/>'
-};
-function ic(name,size=20){
-  return `<svg width="${size}" height="${size}" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round">${SVG_ICONS[name]||''}</svg>`;
-}
-function hexToRgba(hex, alpha){
-  hex = hex.replace('#','');
-  const r=parseInt(hex.substring(0,2),16), g=parseInt(hex.substring(2,4),16), b=parseInt(hex.substring(4,6),16);
-  return `rgba(${r},${g},${b},${alpha})`;
-}
-function statRank(v){
-  const tiers = [
-    {min:0,label:'F'},{min:10,label:'E'},{min:20,label:'D'},
-    {min:30,label:'C'},{min:40,label:'B'},{min:50,label:'A'},{min:70,label:'S'}
-  ];
-  let r=tiers[0];
-  tiers.forEach(t=>{ if(v>=t.min) r=t; });
-  return r.label;
-}
+/* ========================================================
+   ДАННЫЕ / КОНСТАНТЫ
+======================================================== */
+const STORAGE_KEY = 'soloLevelingData';
 
 const RANKS = [
-  {name:'E-RANK',min:1,color:'#8a7aae'},
-  {name:'D-RANK',min:10,color:'#4bff6b'},
-  {name:'C-RANK',min:20,color:'#4a9eff'},
-  {name:'B-RANK',min:30,color:'#bb6bff'},
-  {name:'A-RANK',min:40,color:'#ff9b6b'},
-  {name:'S-RANK',min:50,color:'#d4af37'}
+  {name:'E-RANK', min:1},
+  {name:'D-RANK', min:10},
+  {name:'C-RANK', min:20},
+  {name:'B-RANK', min:30},
+  {name:'A-RANK', min:40},
+  {name:'S-RANK', min:50}
 ];
+
 const STAT_INFO = {
-  str:{label:'Сила',icon:'str',color:'#ff6b4b',light:'#ffb199'},
-  agi:{label:'Ловкость',icon:'agi',color:'#4bff9b',light:'#b3ffe0'},
-  int:{label:'Интеллект',icon:'int',color:'#4a9eff',light:'#a8d4ff'},
-  vit:{label:'Выносливость',icon:'vit',color:'#ff4b6b',light:'#ffb3c2'},
-  per:{label:'Восприятие',icon:'per',color:'#d4af37',light:'#f3dd8a'}
+  str:{label:'Сила', color:'#ff6b4b'},
+  agi:{label:'Ловкость', color:'#4bff9b'},
+  int:{label:'Интеллект', color:'#4a9eff'},
+  vit:{label:'Выносливость', color:'#ff4b6b'},
+  per:{label:'Восприятие', color:'#d4af37'}
 };
-const QUEST_TYPES = {
-  daily:{label:'Ежедневный',color:'var(--c-gold)'},
-  main:{label:'Основной',color:'var(--c-red)'},
-  side:{label:'Побочный',color:'var(--c-blue)'},
-  mind:{label:'Разума',color:'var(--c-purple)'}
-};
+
 const TITLES_LIST = [
-  {id:'none',name:'Без титула',cond:()=>true},
-  {id:'novice',name:'Новичок',cond:d=>d.completedCount>=1},
-  {id:'disciplined',name:'Дисциплинированный',cond:d=>d.streak>=7},
-  {id:'shadow_guard',name:'Страж Тени',cond:d=>d.level>=10},
-  {id:'elite_hunter',name:'Элитный Охотник',cond:d=>d.level>=20},
-  {id:'iron_will',name:'Железная Воля',cond:d=>d.streak>=30},
-  {id:'national',name:'Нац. Уровень',cond:d=>d.level>=40},
-  {id:'shadow_monarch',name:'Монарх Теней',cond:d=>d.level>=50},
-  {id:'monarch',name:'Монарх',cond:d=>d.completedCount>=100}
+  {name:'Пробудившийся', reqLevel:1},
+  {name:'Новичок-Охотник', reqLevel:5},
+  {name:'Уверенный Боец', reqLevel:10},
+  {name:'Элитный Охотник', reqLevel:15},
+  {name:'Мастер Клинка', reqLevel:20},
+  {name:'Повелитель Теней', reqLevel:30},
+  {name:'Легендарный Охотник', reqLevel:40},
+  {name:'Монарх', reqLevel:50},
+  {name:'Правитель Системы', reqLevel:60}
 ];
+
 const ACHIEVEMENTS_LIST = [
-  {id:'first_quest',title:'Первый шаг',desc:'Выполни 1 квест',icon:'🔰',cond:d=>d.completedCount>=1},
-  {id:'quest_10',title:'Исполнитель',desc:'Выполни 10 квестов',icon:'📜',cond:d=>d.completedCount>=10},
-  {id:'quest_50',title:'Ветеран',desc:'Выполни 50 квестов',icon:'🗡️',cond:d=>d.completedCount>=50},
-  {id:'quest_100',title:'Легенда',desc:'Выполни 100 квестов',icon:'🏆',cond:d=>d.completedCount>=100},
-  {id:'level_5',title:'Растущая сила',desc:'Достигни 5 уровня',icon:'⭐',cond:d=>d.level>=5},
-  {id:'level_10',title:'Пробуждение',desc:'Достигни 10 уровня',icon:'🌟',cond:d=>d.level>=10},
-  {id:'level_20',title:'Возвышение',desc:'Достигни 20 уровня',icon:'💫',cond:d=>d.level>=20},
-  {id:'level_50',title:'Монарх',desc:'Достигни 50 уровня',icon:'👑',cond:d=>d.level>=50},
-  {id:'streak_7',title:'Неделя огня',desc:'7 дней подряд',icon:'🔥',cond:d=>d.streak>=7},
-  {id:'streak_30',title:'Месяц стали',desc:'30 дней подряд',icon:'⚡',cond:d=>d.streak>=30},
-  {id:'strong',title:'Силач',desc:'Сила 20+',icon:'💪',cond:d=>d.stats.str>=20},
-  {id:'genius',title:'Гений',desc:'Интеллект 20+',icon:'🧠',cond:d=>d.stats.int>=20},
-  {id:'main_quest',title:'Герой',desc:'Выполни основной квест',icon:'📖',cond:d=>d.mainQuestDone}
+  {id:'first_quest', name:'Первый шаг', desc:'Выполните первый квест', check:s=>s.totalCompleted>=1},
+  {id:'streak_3', name:'Разгон', desc:'Стрик 3 дня подряд', check:s=>s.streak>=3},
+  {id:'streak_7', name:'Неделя силы', desc:'Стрик 7 дней подряд', check:s=>s.streak>=7},
+  {id:'streak_30', name:'Железная воля', desc:'Стрик 30 дней подряд', check:s=>s.streak>=30},
+  {id:'level_5', name:'Пятый уровень', desc:'Достигните 5 уровня', check:s=>s.level>=5},
+  {id:'level_10', name:'Десятый уровень', desc:'Достигните 10 уровня', check:s=>s.level>=10},
+  {id:'level_20', name:'Двадцатый уровень', desc:'Достигните 20 уровня', check:s=>s.level>=20},
+  {id:'level_30', name:'Тридцатый уровень', desc:'Достигните 30 уровня', check:s=>s.level>=30},
+  {id:'rank_d', name:'Выход из E-ранга', desc:'Достигните D-RANK', check:s=>s.level>=10},
+  {id:'rank_c', name:'Поднимаясь выше', desc:'Достигните C-RANK', check:s=>s.level>=20},
+  {id:'rank_b', name:'Элита', desc:'Достигните B-RANK', check:s=>s.level>=30},
+  {id:'stat_50', name:'Пробитый потолок', desc:'Любой стат достиг 50', check:s=>Object.values(s.stats).some(v=>v>=50)},
+  {id:'quests_100', name:'Сотня побед', desc:'Выполните 100 квестов', check:s=>s.totalCompleted>=100}
 ];
+
 const SHOP_ITEMS = [
-  {id:'episode',name:'Серия сериала',icon:'📺',cost:40},
-  {id:'game',name:'Час игр',icon:'🎮',cost:50},
-  {id:'snack',name:'Сладость',icon:'🍫',cost:25},
-  {id:'sleepin',name:'Поспать подольше',icon:'😴',cost:35},
-  {id:'movie',name:'Фильм',icon:'🎬',cost:180},
-  {id:'shopping',name:'Покупка себе',icon:'🛍️',cost:150},
-  {id:'dayoff',name:'Выходной день',icon:'🏖️',cost:220},
-  {id:'royal',name:'Королевский день',icon:'👑',cost:400}
+  {id:'rest_day', name:'День отдыха (без потери стрика)', price:50, type:'consumable'},
+  {id:'exp_boost', name:'Бустер опыта x2 (24ч)', price:80, type:'consumable'},
+  {id:'title_shadow', name:'Титул: Тень Монарха', price:150, type:'single'},
+  {id:'title_flame', name:'Титул: Пламенный Клинок', price:150, type:'single'},
+  {id:'stat_reset', name:'Сброс распределения статов', price:100, type:'consumable'},
+  {id:'avatar_frame_gold', name:'Золотая рамка аватара', price:120, type:'single'},
+  {id:'bonus_points', name:'+3 очка статов', price:60, type:'consumable'},
+  {id:'crystal_x15', name:'Множитель кристаллов x1.5 (24ч)', price:100, type:'consumable'}
 ];
+
 const QUEST_LIBRARY = {
-  body:{label:'Тело',emoji:'💪',items:[
-    {name:'Отжимания 20 раз',type:'daily',exp:15,stat:'str'},
-    {name:'Пробежка 2км',type:'daily',exp:25,stat:'vit'},
-    {name:'Растяжка 10 минут',type:'daily',exp:10,stat:'agi'},
-    {name:'Тренировка в зале',type:'main',exp:40,stat:'str'},
-    {name:'10000 шагов',type:'daily',exp:20,stat:'vit'},
-    {name:'Холодный душ',type:'side',exp:15,stat:'vit'},
-    {name:'Планка 2 минуты',type:'daily',exp:12,stat:'str'},
-    {name:'Турник 5 подходов',type:'side',exp:18,stat:'str'}
-  ]},
-  mind:{label:'Разум',emoji:'🧠',items:[
-    {name:'Читать 30 минут',type:'mind',exp:20,stat:'int'},
-    {name:'Урок языка',type:'mind',exp:18,stat:'int'},
-    {name:'Решить задачу/код',type:'mind',exp:25,stat:'int'},
-    {name:'Без соцсетей 3 часа',type:'mind',exp:20,stat:'per'},
-    {name:'Записать 3 идеи',type:'mind',exp:12,stat:'int'},
-    {name:'Изучить новую тему',type:'main',exp:35,stat:'int'},
-    {name:'Планирование дня',type:'daily',exp:10,stat:'per'},
-    {name:'Медитация 10 минут',type:'mind',exp:15,stat:'per'}
-  ]},
-  spirit:{label:'Дух',emoji:'✨',items:[
-    {name:'Встать рано',type:'daily',exp:15,stat:'per'},
-    {name:'Благодарность — 3 вещи',type:'daily',exp:10,stat:'per'},
-    {name:'Помочь кому-то',type:'side',exp:20,stat:'per'},
-    {name:'Без жалоб весь день',type:'main',exp:30,stat:'per'},
-    {name:'Убраться дома',type:'side',exp:18,stat:'vit'},
-    {name:'Новый контакт/разговор',type:'side',exp:20,stat:'per'}
-  ]}
+  body:[
+    {name:'20 отжиманий', exp:30, stat:'str', type:'daily'},
+    {name:'Пробежка 2 км', exp:50, stat:'vit', type:'daily'},
+    {name:'Растяжка 10 минут', exp:20, stat:'agi', type:'daily'},
+    {name:'100 приседаний', exp:60, stat:'str', type:'side'},
+    {name:'Холодный душ', exp:40, stat:'vit', type:'daily'}
+  ],
+  mind:[
+    {name:'Прочитать 20 страниц книги', exp:40, stat:'int', type:'mind'},
+    {name:'Решить 5 логических задач', exp:50, stat:'int', type:'mind'},
+    {name:'Выучить 10 новых слов', exp:30, stat:'int', type:'mind'},
+    {name:'Медитация 15 минут', exp:35, stat:'per', type:'mind'},
+    {name:'Написать план на день', exp:20, stat:'per', type:'daily'}
+  ],
+  spirit:[
+    {name:'Сделать доброе дело', exp:40, stat:'per', type:'side'},
+    {name:'День без соцсетей', exp:70, stat:'vit', type:'side'},
+    {name:'Благодарность: 3 пункта', exp:25, stat:'per', type:'daily'},
+    {name:'Ранний подъём (до 7:00)', exp:50, stat:'vit', type:'daily'},
+    {name:'Не есть сладкое весь день', exp:45, stat:'vit', type:'daily'}
+  ]
 };
-const SKILLS_LIST = [
-  {name:'Воля к действию',icon:'🎯',levelReq:1,desc:'Базовая решимость разблокирована'},
-  {name:'Второе дыхание',icon:'⚡',levelReq:10,desc:'Выносливость растёт быстрее'},
-  {name:'Пробуждение Монарха',icon:'🔥',levelReq:25,desc:'Полный контроль над собой'}
-];
 
-function defaultData(){
-  return {
-    name:'Игрок', avatar:'🗡️', level:1, exp:0, gems:0, points:0,
-    stats:{str:1,agi:1,int:1,vit:1,per:1},
-    quests:[], completedCount:0, mainQuestDone:false,
-    streak:0, lastActiveDate:null, activityLog:{},
-    unlockedAchievements:[], unlockedTitles:['none'], selectedTitle:'none'
-  };
-}
-let gameData = loadData();
-function loadData(){
-  try{
-    const raw = localStorage.getItem('soloLevelingData');
-    if(raw) return Object.assign(defaultData(), JSON.parse(raw));
-  }catch(e){}
-  return defaultData();
-}
-function saveData(){ localStorage.setItem('soloLevelingData', JSON.stringify(gameData)); }
-setInterval(saveData, 30000);
-
-function expForLevel(l){ return Math.floor(100*Math.pow(1.15,l-1)); }
-function getRank(level){ let r=RANKS[0]; for(const x of RANKS){ if(level>=x.min) r=x; } return r; }
-function getStreakMultiplier(s){ if(s>=30) return 2; if(s>=14) return 1.5; if(s>=7) return 1.25; if(s>=3) return 1.1; return 1; }
-function todayStr(){ return new Date().toISOString().slice(0,10); }
-
-function logActivity(){
-  const today = todayStr();
-  gameData.activityLog[today] = (gameData.activityLog[today]||0)+1;
-  if(gameData.lastActiveDate!==today){
-    const yesterday = new Date(Date.now()-86400000).toISOString().slice(0,10);
-    gameData.streak = (gameData.lastActiveDate===yesterday) ? gameData.streak+1 : 1;
-    gameData.lastActiveDate = today;
-  }
-}
-
-function addExp(amount){
-  gameData.exp += amount;
-  let needed = expForLevel(gameData.level);
-  let leveled=false;
-  while(gameData.exp >= needed){
-    gameData.exp -= needed;
-    gameData.level++;
-    gameData.points += 3;
-    needed = expForLevel(gameData.level);
-    leveled=true;
-  }
-  if(leveled) levelUpEffect();
-  updateTitleUnlocks();
-}
-
-function levelUpEffect(){
-  flashOverlay();
-  spawnBurst();
-  showToast('LEVEL UP', 'Уровень '+gameData.level+' достигнут');
-}
-
-let addQuestType = 'daily';
-function openAddQuest(){
-  document.getElementById('newQuestName').value='';
-  document.getElementById('newQuestExp').value=20;
-  const statSel = document.getElementById('newQuestStat');
-  statSel.innerHTML = Object.keys(STAT_INFO).map(k=>`<option value="${k}">${STAT_INFO[k].label}</option>`).join('');
-  renderTypeRow();
-  document.getElementById('addQuestOverlay').classList.add('show');
-}
-function renderTypeRow(){
-  const typeRow = document.getElementById('typeRow');
-  typeRow.innerHTML = Object.keys(QUEST_TYPES).map(k=>`<div class="type-chip ${k===addQuestType?'active':''}" onclick="pickType('${k}')">${QUEST_TYPES[k].label}</div>`).join('');
-}
-function pickType(t){ addQuestType=t; renderTypeRow(); }
-function closeAddQuest(){ document.getElementById('addQuestOverlay').classList.remove('show'); }
-function submitAddQuest(){
-  const name = document.getElementById('newQuestName').value.trim();
-  if(!name){ showToast('Ошибка','Введи название квеста'); return; }
-  const exp = parseInt(document.getElementById('newQuestExp').value)||10;
-  const stat = document.getElementById('newQuestStat').value;
-  gameData.quests.push({id:Date.now(), name, type:addQuestType, exp, stat, done:false});
-  saveData(); render(); closeAddQuest();
-}
-function completeQuest(id){
-  const q = gameData.quests.find(x=>x.id===id);
-  if(!q || q.done) return;
-  q.done = true;
-  logActivity();
-  const mult = getStreakMultiplier(gameData.streak);
-  const expGain = Math.round(q.exp*mult);
-  const gemsGain = Math.max(1, Math.round(expGain/10));
-  gameData.completedCount++;
-  if(q.type==='main') gameData.mainQuestDone = true;
-  gameData.gems += gemsGain;
-  addExp(expGain);
-  spawnFloatText('+'+expGain+' EXP','gold');
-  spawnFloatText('+'+gemsGain+' 💎','purple');
-  showToast('Квест выполнен', q.name);
-  checkAchievements();
-  saveData(); render();
-}
-function deleteQuest(id){
-  gameData.quests = gameData.quests.filter(x=>x.id!==id);
-  saveData(); render();
-}
-
-function openLibrary(){
-  let html='';
-  for(const key in QUEST_LIBRARY){
-    const cat = QUEST_LIBRARY[key];
-    html += `<div class="lib-cat"><div class="lib-cat-title">${cat.emoji} ${cat.label}</div>`;
-    cat.items.forEach((it,i)=>{
-      html += `<div class="lib-item"><div>${it.name}<br><span>${QUEST_TYPES[it.type].label} · ${it.exp} EXP</span></div><button class="lib-add" onclick="addFromLibrary('${key}',${i})">+</button></div>`;
-    });
-    html += `</div>`;
-  }
-  document.getElementById('libraryContent').innerHTML = html;
-  document.getElementById('libraryOverlay').classList.add('show');
-}
-function closeLibrary(){ document.getElementById('libraryOverlay').classList.remove('show'); }
-function addFromLibrary(catKey, idx){
-  const it = QUEST_LIBRARY[catKey].items[idx];
-  gameData.quests.push({id:Date.now(), name:it.name, type:it.type, exp:it.exp, stat:it.stat, done:false});
-  saveData(); render();
-  showToast('Квест добавлен', it.name);
-}
-
-function allocatePoint(stat){
-  if(gameData.points<=0) return;
-  gameData.stats[stat]++; gameData.points--;
-  saveData(); render(); checkAchievements();
-}
-function updateTitleUnlocks(){
-  TITLES_LIST.forEach(t=>{
-    if(t.cond(gameData) && !gameData.unlockedTitles.includes(t.id)){
-      gameData.unlockedTitles.push(t.id);
-      if(t.id!=='none') showToast('Новый титул', t.name);
-    }
-  });
-}
-
-function checkAchievements(){
-  ACHIEVEMENTS_LIST.forEach(a=>{
-    if(a.cond(gameData) && !gameData.unlockedAchievements.includes(a.id)){
-      gameData.unlockedAchievements.push(a.id);
-      showToast('Достижение разблокировано', a.title);
-      spawnBurst();
-    }
-  });
-  saveData();
-}
-
-function buyItem(id){
-  const item = SHOP_ITEMS.find(i=>i.id===id);
-  if(!item) return;
-  if(gameData.gems < item.cost){ showToast('Недостаточно кристаллов',''); return; }
-  gameData.gems -= item.cost;
-  saveData(); render();
-  showToast('Покупка совершена', item.name);
-}
-
-function openSettings(){
-  document.getElementById('settingsName').value = gameData.name;
-  document.getElementById('settingsAvatar').value = gameData.avatar;
-  const titleSel = document.getElementById('settingsTitle');
-  titleSel.innerHTML = TITLES_LIST.filter(t=>gameData.unlockedTitles.includes(t.id))
-    .map(t=>`<option value="${t.id}" ${t.id===gameData.selectedTitle?'selected':''}>${t.name}</option>`).join('');
-  document.getElementById('settingsOverlay').classList.add('show');
-}
-function closeSettings(){ document.getElementById('settingsOverlay').classList.remove('show'); }
-function saveSettings(){
-  gameData.name = document.getElementById('settingsName').value.trim() || 'Игрок';
-  gameData.avatar = document.getElementById('settingsAvatar').value.trim() || '🗡️';
-  gameData.selectedTitle = document.getElementById('settingsTitle').value;
-  saveData(); render(); closeSettings();
-}
-function resetProgress(){
-  if(confirm('Точно сбросить весь прогресс?')){
-    localStorage.removeItem('soloLevelingData');
-    location.reload();
-  }
-}
-
-function switchTab(tab){
-  document.querySelectorAll('.tab-content').forEach(el=>el.classList.remove('active'));
-  document.getElementById('tab-'+tab).classList.add('active');
-  document.querySelectorAll('.nav-btn').forEach(b=>b.classList.remove('active'));
-  document.querySelector(`.nav-btn[data-tab="${tab}"]`).classList.add('active');
-  if(tab==='calendar') renderCalendar();
-}
-
-function render(){
-  document.getElementById('hudAvatar').textContent = gameData.avatar;
-  document.getElementById('hudName').textContent = gameData.name;
-  const titleObj = TITLES_LIST.find(t=>t.id===gameData.selectedTitle) || TITLES_LIST[0];
-  document.getElementById('hudTitle').textContent = titleObj.name;
-  const rank = getRank(gameData.level);
-  const rankEl = document.getElementById('hudRank');
-  rankEl.textContent = rank.name; rankEl.style.color = rank.color;
-  document.getElementById('hudLevel').textContent = gameData.level;
-  const needed = expForLevel(gameData.level);
-  document.getElementById('hudExpText').textContent = gameData.exp+' / '+needed;
-  document.getElementById('hudExpFill').style.width = Math.min(100,(gameData.exp/needed*100))+'%';
-  document.getElementById('hudGems').textContent = gameData.gems;
-  document.getElementById('hudStreak').textContent = gameData.streak;
-  document.getElementById('icFlame').innerHTML = ic('flame',14);
-  document.getElementById('icFlame2').innerHTML = ic('flame',16);
-  document.getElementById('icGem').innerHTML = ic('gem',14);
-  document.getElementById('icGear').innerHTML = ic('gear',16);
-  document.getElementById('icTrash').innerHTML = ic('trash',16);
-  document.getElementById('icBook').innerHTML = ic('book',16);
-  document.getElementById('navProfile').innerHTML = ic('nProfile',17);
-  document.getElementById('navQuests').innerHTML = ic('nQuests',17);
-  document.getElementById('navAch').innerHTML = ic('nAch',17);
-  document.getElementById('navSkills').innerHTML = ic('nSkills',17);
-  document.getElementById('navShop').innerHTML = ic('nShop',17);
-  document.getElementById('navCal').innerHTML = ic('nCal',17);
-
-  document.getElementById('pointsVal').textContent = gameData.points;
-  document.getElementById('statsGrid').innerHTML = Object.keys(STAT_INFO).map(k=>{
-    const info = STAT_INFO[k];
-    const val = gameData.stats[k];
-    const rank = statRank(val);
-    const progress = (val%10)*10;
-    const glow = hexToRgba(info.color,.45);
-    return `<div class="stat-card" style="--accent:${info.color};--accent-light:${info.light};--accent-glow:${glow}">
-      <div class="stat-icon-badge">${ic(info.icon,24)}</div>
-      <div class="stat-body">
-        <div class="stat-head">
-          <span class="stat-name">${info.label}</span>
-          <span class="stat-rank-badge">${rank}-RANK</span>
-        </div>
-        <div class="stat-value-row">
-          <span class="stat-value">${val}</span>
-          <button class="stat-plus-v2" ${gameData.points<=0?'disabled':''} onclick="allocatePoint('${k}')">+</button>
-        </div>
-        <div class="stat-progress-track"><div class="stat-progress-fill" style="width:${progress}%"></div></div>
-      </div>
-    </div>`;
-  }).join('');
-
-  const ql = document.getElementById('questsList');
-  if(gameData.quests.length===0){
-    ql.innerHTML = `<div class="card" style="text-align:center;color:var(--c-text-dim);">Квестов пока нет. Создай новый или возьми из библиотеки.</div>`;
-  } else {
-    ql.innerHTML = gameData.quests.map(q=>`
-      <div class="card quest-card" style="border-left-color:${QUEST_TYPES[q.type].color}">
-        <div class="quest-info ${q.done?'quest-done':''}">
-          <div class="quest-name">${q.name}</div>
-          <div class="quest-meta">${QUEST_TYPES[q.type].label} · ${q.exp} EXP · ${STAT_INFO[q.stat].label}</div>
-        </div>
-        ${q.done
-          ? `<button class="quest-del" onclick="deleteQuest(${q.id})">✕</button>`
-          : `<button class="quest-btn" onclick="completeQuest(${q.id})">${ic('arrowUp',16)}</button>`}
-      </div>`).join('');
-  }
-
-  document.getElementById('achGrid').innerHTML = ACHIEVEMENTS_LIST.map(a=>{
-    const unlocked = gameData.unlockedAchievements.includes(a.id);
-    return `<div class="card ach-card ${unlocked?'':'locked'}">
-      <div class="ach-icon">${unlocked ? a.icon : ic('lock',22)}</div>
-      <div class="ach-title">${a.title}</div>
-      <div class="ach-desc">${a.desc}</div>
-    </div>`;
-  }).join('');
-
-  document.getElementById('skillsList').innerHTML = SKILLS_LIST.map(s=>{
-    const unlocked = gameData.level >= s.levelReq;
-    return `<div class="card skill-card ${unlocked?'':'locked'}">
-      <div class="skill-icon">${unlocked ? s.icon : '🔒'}</div>
-      <div><div class="skill-name">${s.name}</div><div class="skill-desc">${unlocked ? s.desc : 'Открывается на уровне '+s.levelReq}</div></div>
-    </div>`;
-  }).join('');
-
-  document.getElementById('shopGrid').innerHTML = SHOP_ITEMS.map(it=>`
-    <div class="card shop-card">
-      <div class="shop-icon">${it.icon}</div>
-      <div class="shop-name">${it.name}</div>
-      <button class="shop-buy" ${gameData.gems<it.cost?'disabled':''} onclick="buyItem('${it.id}')">${ic('gem',12)} ${it.cost}</button>
-    </div>`).join('');
-
-  document.getElementById('streakVal').textContent = gameData.streak;
-}
+/* ========================================================
+   СОСТОЯНИЕ
+======================================================== */
+let state = {
+  name:'Охотник',
+  level:1,
+  exp:0,
+  crystals:0,
+  streak:0,
+  lastActiveDate:null,
+  lastResetDate:null,
+  freePoints:0,
+  selectedTitle:'Пробудившийся',
+  extraTitles:[],
+  stats:{str:10, agi:10, int:10, vit:10, per:10},
+  quests:[],
+  completedDates:{},
+  unlockedAchievements:[],
+  totalCompleted:0,
+  expBoostUntil:0,
+  crystalBoostUntil:0
+};
 
 let calendarDate = new Date();
+let currentLibCat = 'body';
+
+/* ========================================================
+   УТИЛИТЫ
+======================================================== */
+function todayStr(d){
+  const dt = d || new Date();
+  return dt.getFullYear()+'-'+String(dt.getMonth()+1).padStart(2,'0')+'-'+String(dt.getDate()).padStart(2,'0');
+}
+function expNeeded(level){
+  return Math.floor(100 * Math.pow(1.15, level-1));
+}
+function getRank(level){
+  let r = RANKS[0];
+  for(const x of RANKS){ if(level>=x.min) r=x; }
+  return r.name;
+}
+function statRank(v){
+  if(v>=70) return 'S';
+  if(v>=50) return 'A';
+  if(v>=40) return 'B';
+  if(v>=30) return 'C';
+  if(v>=20) return 'D';
+  if(v>=10) return 'E';
+  return 'F';
+}
+function statProgress(v){
+  const rank = statRank(v);
+  if(rank==='S') return 100;
+  return Math.min(100,(v%10)*10);
+}
+function getStreakMultiplier(streak){
+  if(streak>=30) return 2;
+  if(streak>=14) return 1.5;
+  if(streak>=7) return 1.25;
+  if(streak>=3) return 1.1;
+  return 1;
+}
+function hexToRgba(hex, alpha){
+  const h = hex.replace('#','');
+  const r = parseInt(h.substring(0,2),16);
+  const g = parseInt(h.substring(2,4),16);
+  const b = parseInt(h.substring(4,6),16);
+  return `rgba(${r},${g},${b},${alpha})`;
+}
+function uid(){ return Date.now().toString(36)+Math.random().toString(36).substr(2,5); }
+
+/* ========================================================
+   СОХРАНЕНИЕ / ЗАГРУЗКА
+======================================================== */
+function saveData(){
+  localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
+}
+function loadData(){
+  const raw = localStorage.getItem(STORAGE_KEY);
+  if(raw){
+    try{
+      const parsed = JSON.parse(raw);
+      state = Object.assign(state, parsed);
+    }catch(e){ console.warn('Ошибка загрузки данных', e); }
+  }
+}
+setInterval(saveData, 30000);
+
+/* ========================================================
+   ЕЖЕДНЕВНЫЙ СБРОС / СТРИК
+======================================================== */
+function checkDailyReset(){
+  const today = todayStr();
+  if(state.lastResetDate !== today){
+    state.quests.forEach(q=>{ if(q.type==='daily') q.done=false; });
+    if(state.lastActiveDate){
+      const last = new Date(state.lastActiveDate);
+      const diffDays = Math.round((new Date(today) - new Date(todayStr(last))) / 86400000);
+      if(diffDays > 1){ state.streak = 0; }
+    }
+    state.lastResetDate = today;
+    saveData();
+  }
+}
+
+/* ========================================================
+   РЕНДЕР: HUD
+======================================================== */
+function renderHUD(){
+  document.getElementById('hudName').textContent = state.name;
+  document.getElementById('hudRank').textContent = getRank(state.level);
+  document.getElementById('hudTitle').textContent = state.selectedTitle;
+  document.getElementById('hudLevel').textContent = 'Lv.'+state.level;
+  document.getElementById('hudStreak').textContent = state.streak;
+  document.getElementById('hudCrystals').textContent = state.crystals;
+  const need = expNeeded(state.level);
+  const pct = Math.min(100, Math.round((state.exp/need)*100));
+  document.getElementById('hudExpFill').style.width = pct+'%';
+  document.getElementById('hudExpText').textContent = state.exp+'/'+need;
+}
+
+/* ========================================================
+   РЕНДЕР: СТАТЫ
+======================================================== */
+function renderStats(){
+  document.getElementById('freePointsVal').textContent = state.freePoints;
+  Object.keys(STAT_INFO).forEach(key=>{
+    const v = state.stats[key];
+    document.getElementById('statVal-'+key).textContent = v;
+    document.getElementById('statRank-'+key).textContent = statRank(v);
+    document.getElementById('statBar-'+key).style.width = statProgress(v)+'%';
+  });
+}
+function addStatPoint(stat){
+  if(state.freePoints <= 0){
+    showToast('Нет свободных очков');
+    return;
+  }
+  state.freePoints--;
+  state.stats[stat]++;
+  saveData();
+  renderStats();
+  renderHUD();
+  const btn = event.target.getBoundingClientRect();
+  spawnFloatText(btn.left, btn.top, '+1', STAT_INFO[stat].color);
+  spawnBurst(btn.left, btn.top, STAT_INFO[stat].color);
+}
+
+/* ========================================================
+   РЕНДЕР: КВЕСТЫ
+======================================================== */
+function renderQuests(){
+  const box = document.getElementById('questsList');
+  if(state.quests.length===0){
+    box.innerHTML = '<div style="text-align:center;color:var(--c-text-dim);padding:30px 10px;font-size:13px;">Нет активных квестов.<br>Добавьте новый или откройте библиотеку.</div>';
+    return;
+  }
+  box.innerHTML = state.quests.map(q=>`
+    <div class="quest-card ${q.done?'done':''}">
+      <div class="quest-check" onclick="toggleQuest('${q.id}')">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>
+      </div>
+      <div class="quest-main" onclick="toggleQuest('${q.id}')">
+        <div class="quest-name">${escapeHtml(q.name)}</div>
+        <div class="quest-meta">
+          <span class="quest-type-tag ${q.type}">${typeLabel(q.type)}</span>
+          <span>+${q.exp} опыта</span>
+          <span>${STAT_INFO[q.stat].label}</span>
+        </div>
+      </div>
+      <div class="quest-del" onclick="deleteQuest('${q.id}')">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
+      </div>
+    </div>
+  `).join('');
+}
+function typeLabel(t){
+  return {daily:'Дейли', main:'Основной', side:'Побочный', mind:'Разум'}[t] || t;
+}
+function escapeHtml(str){
+  const div = document.createElement('div');
+  div.textContent = str;
+  return div.innerHTML;
+}
+
+/* ========================================================
+   ДЕЙСТВИЯ: КВЕСТЫ
+======================================================== */
+function openAddQuest(){ openOverlay('addQuestOverlay'); }
+function saveNewQuest(){
+  const name = document.getElementById('newQuestName').value.trim();
+  const type = document.getElementById('newQuestType').value;
+  const exp = parseInt(document.getElementById('newQuestExp').value) || 50;
+  const stat = document.getElementById('newQuestStat').value;
+  if(!name){ showToast('Введите название квеста'); return; }
+  state.quests.push({id:uid(), name, type, exp, stat, done:false});
+  saveData();
+  renderQuests();
+  closeOverlay('addQuestOverlay');
+  document.getElementById('newQuestName').value='';
+  showToast('Квест добавлен');
+}
+function deleteQuest(id){
+  state.quests = state.quests.filter(q=>q.id!==id);
+  saveData();
+  renderQuests();
+}
+function toggleQuest(id){
+  const q = state.quests.find(x=>x.id===id);
+  if(!q) return;
+
+  if(!q.done){
+    q.done = true;
+    const mult = getStreakMultiplier(state.streak);
+    let boostMult = (Date.now() < state.expBoostUntil) ? 2 : 1;
+    const expGain = Math.round(q.exp * mult * boostMult);
+    let crystalBoost = (Date.now() < state.crystalBoostUntil) ? 1.5 : 1;
+    const crystalGain = Math.max(1, Math.round((expGain/10) * crystalBoost));
+
+    state.exp += expGain;
+    state.crystals += crystalGain;
+    state.stats[q.stat] += 1;
+    state.totalCompleted += 1;
+
+    const today = todayStr();
+    if(state.lastActiveDate !== today){
+      const last = state.lastActiveDate ? new Date(state.lastActiveDate) : null;
+      if(last){
+        const diffDays = Math.round((new Date(today) - new Date(todayStr(last))) / 86400000);
+        state.streak = (diffDays===1) ? state.streak+1 : 1;
+      } else {
+        state.streak = 1;
+      }
+      state.lastActiveDate = today;
+    }
+    state.completedDates[today] = (state.completedDates[today]||0) + 1;
+
+    checkLevelUp();
+    checkAchievements();
+    saveData();
+    renderHUD();
+    renderStats();
+    renderQuests();
+    renderCalendar();
+
+    showToast('+'+expGain+' опыта · +'+crystalGain+' кристаллов');
+  } else {
+    q.done = false;
+    saveData();
+    renderQuests();
+  }
+}
+function checkLevelUp(){
+  let leveled = false;
+  while(state.exp >= expNeeded(state.level)){
+    state.exp -= expNeeded(state.level);
+    state.level += 1;
+    state.freePoints += 3;
+    leveled = true;
+  }
+  if(leveled){
+    flashOverlay();
+    showToast('◆ УРОВЕНЬ ПОВЫШЕН: '+state.level+' ◆');
+  }
+}
+
+/* ========================================================
+   БИБЛИОТЕКА КВЕСТОВ
+======================================================== */
+function openLibrary(){
+  openOverlay('libraryOverlay');
+  showLibraryCat(currentLibCat);
+}
+function showLibraryCat(cat){
+  currentLibCat = cat;
+  const list = QUEST_LIBRARY[cat];
+  const box = document.getElementById('libraryList');
+  box.innerHTML = list.map((item,i)=>`
+    <div class="quest-card" style="margin-bottom:8px">
+      <div class="quest-main">
+        <div class="quest-name">${escapeHtml(item.name)}</div>
+        <div class="quest-meta">
+          <span class="quest-type-tag ${item.type}">${typeLabel(item.type)}</span>
+          <span>+${item.exp} опыта</span>
+          <span>${STAT_INFO[item.stat].label}</span>
+        </div>
+      </div>
+      <div class="shop-buy" style="padding:7px 12px" onclick="addFromLibrary('${cat}', ${i})">+</div>
+    </div>
+  `).join('');
+}
+function addFromLibrary(cat, index){
+  const item = QUEST_LIBRARY[cat][index];
+  state.quests.push({id:uid(), name:item.name, type:item.type, exp:item.exp, stat:item.stat, done:false});
+  saveData();
+  renderQuests();
+  showToast('Квест добавлен из библиотеки');
+}
+
+/* ========================================================
+   КАЛЕНДАРЬ
+======================================================== */
 function changeMonth(delta){
   calendarDate.setMonth(calendarDate.getMonth()+delta);
   renderCalendar();
 }
 function renderCalendar(){
-  const monthNames = ['Январь','Февраль','Март','Апрель','Май','Июнь','Июль','Август','Сентябрь','Октябрь','Ноябрь','Декабрь'];
-  const y = calendarDate.getFullYear(), m = calendarDate.getMonth();
-  document.getElementById('calMonthLabel').textContent = monthNames[m]+' '+y;
-  const firstDay = new Date(y,m,1);
-  let startWeekday = firstDay.getDay();
-  startWeekday = startWeekday===0 ? 6 : startWeekday-1;
-  const daysInMonth = new Date(y,m+1,0).getDate();
+  const months = ['Январь','Февраль','Март','Апрель','Май','Июнь','Июль','Август','Сентябрь','Октябрь','Ноябрь','Декабрь'];
+  const y = calendarDate.getFullYear();
+  const m = calendarDate.getMonth();
+  document.getElementById('calMonthLabel').textContent = months[m]+' '+y;
+
+  const firstDay = new Date(y, m, 1);
+  let startOffset = firstDay.getDay() - 1;
+  if(startOffset < 0) startOffset = 6;
+  const daysInMonth = new Date(y, m+1, 0).getDate();
   const todayStrVal = todayStr();
-  let html='';
-  for(let i=0;i<startWeekday;i++) html += '<div class="cal-day empty"></div>';
+
+  let html = '';
+  for(let i=0;i<startOffset;i++){
+    html += '<div class="cal-day empty"></div>';
+  }
   for(let d=1; d<=daysInMonth; d++){
     const dateStr = y+'-'+String(m+1).padStart(2,'0')+'-'+String(d).padStart(2,'0');
-    const count = gameData.activityLog[dateStr]||0;
-    let lvl='';
-    if(count>=6) lvl='cal-l4'; else if(count>=4) lvl='cal-l3'; else if(count>=2) lvl='cal-l2'; else if(count>=1) lvl='cal-l1';
+    const count = state.completedDates[dateStr] || 0;
+    let levelClass = '';
+    if(count>=4) levelClass='cal-l4';
+    else if(count>=3) levelClass='cal-l3';
+    else if(count>=2) levelClass='cal-l2';
+    else if(count>=1) levelClass='cal-l1';
     const isToday = dateStr===todayStrVal ? 'today' : '';
-    html += `<div class="cal-day ${lvl} ${isToday}">${d}</div>`;
+    html += `<div class="cal-day ${levelClass} ${isToday}">${d}</div>`;
   }
-  document.getElementById('calDays').innerHTML = html;
+  document.getElementById('calDaysGrid').innerHTML = html;
 }
 
-function flashOverlay(){
-  const el = document.getElementById('flashOverlay');
-  el.classList.remove('flash'); void el.offsetWidth; el.classList.add('flash');
+/* ========================================================
+   ДОСТИЖЕНИЯ
+======================================================== */
+function checkAchievements(){
+  ACHIEVEMENTS_LIST.forEach(a=>{
+    if(!state.unlockedAchievements.includes(a.id) && a.check(state)){
+      state.unlockedAchievements.push(a.id);
+      showToast('◆ ДОСТИЖЕНИЕ: '+a.name+' ◆');
+    }
+  });
+  saveData();
+  renderAchievements();
 }
-function spawnFloatText(text,color){
-  const el = document.createElement('div');
-  el.className = 'float-text '+color;
-  el.textContent = text;
-  el.style.left = (window.innerWidth/2 - 30 + Math.random()*60)+'px';
-  el.style.top = '45%';
-  document.body.appendChild(el);
-  setTimeout(()=>el.remove(), 1500);
+function renderAchievements(){
+  const box = document.getElementById('achievementsList');
+  box.innerHTML = ACHIEVEMENTS_LIST.map(a=>{
+    const unlocked = state.unlockedAchievements.includes(a.id);
+    return `
+    <div class="ach-card ${unlocked?'unlocked':''}">
+      <div class="ach-icon">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="8" r="6"></circle><path d="M9 14l-2 7 5-3 5 3-2-7"/></svg>
+      </div>
+      <div>
+        <div class="ach-name">${a.name}</div>
+        <div class="ach-desc">${a.desc}</div>
+      </div>
+    </div>`;
+  }).join('');
 }
-function spawnBurst(){
-  const cx = window.innerWidth/2, cy = window.innerHeight/2;
-  for(let i=0;i<22;i++){
-    const p = document.createElement('div');
-    p.className='burst-p';
-    p.style.left = cx+'px'; p.style.top = cy+'px';
-    p.style.background = Math.random()>.5 ? 'var(--c-gold)' : 'var(--c-purple)';
-    document.body.appendChild(p);
-    const angle = Math.random()*Math.PI*2, dist = 80+Math.random()*120;
-    requestAnimationFrame(()=>{
-      p.style.left = (cx+Math.cos(angle)*dist)+'px';
-      p.style.top = (cy+Math.sin(angle)*dist)+'px';
-      p.style.opacity='0';
-    });
-    setTimeout(()=>p.remove(), 850);
+
+/* ========================================================
+   МАГАЗИН
+======================================================== */
+function renderShop(){
+  const box = document.getElementById('shopList');
+  box.innerHTML = SHOP_ITEMS.map(item=>{
+    const owned = state.extraTitles.includes(item.id);
+    const disabled = (item.type==='single' && owned) || state.crystals < item.price;
+    return `
+    <div class="shop-card">
+      <div class="shop-icon">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="9" cy="21" r="1"></circle><circle cx="20" cy="21" r="1"></circle><path d="M1 1h4l2.7 13.4a2 2 0 0 0 2 1.6h9.7a2 2 0 0 0 2-1.6L23 6H6"/></svg>
+      </div>
+      <div style="flex:1">
+        <div class="shop-name">${item.name}</div>
+        <div class="shop-price">
+          <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2 2 9l10 13L22 9z"/></svg>
+          ${item.price}
+        </div>
+      </div>
+      <button class="shop-buy" ${disabled?'disabled':''} onclick="buyItem('${item.id}')">
+        ${item.type==='single' && owned ? 'Куплено' : 'Купить'}
+      </button>
+    </div>`;
+  }).join('');
+}
+function buyItem(id){
+  const item = SHOP_ITEMS.find(x=>x.id===id);
+  if(!item) return;
+  if(state.crystals < item.price){ showToast('Недостаточно кристаллов'); return; }
+
+  state.crystals -= item.price;
+
+  switch(id){
+    case 'bonus_points':
+      state.freePoints += 3;
+      showToast('+3 очка статов получено');
+      break;
+    case 'exp_boost':
+      state.expBoostUntil = Date.now() + 24*3600*1000;
+      showToast('Бустер опыта x2 активирован на 24ч');
+      break;
+    case 'crystal_x15':
+      state.crystalBoostUntil = Date.now() + 24*3600*1000;
+      showToast('Множитель кристаллов активирован на 24ч');
+      break;
+    case 'stat_reset':
+      const total = Object.values(state.stats).reduce((a,b)=>a+b,0) - 50;
+      state.stats = {str:10, agi:10, int:10, vit:10, per:10};
+      state.freePoints += Math.max(0,total);
+      showToast('Статы сброшены, очки возвращены');
+      break;
+    case 'rest_day':
+      state.lastActiveDate = todayStr();
+      showToast('День отдыха использован');
+      break;
+    case 'title_shadow':
+      state.extraTitles.push('title_shadow');
+      TITLES_LIST.push({name:'Тень Монарха', reqLevel:0});
+      showToast('Титул "Тень Монарха" открыт');
+      break;
+    case 'title_flame':
+      state.extraTitles.push('title_flame');
+      TITLES_LIST.push({name:'Пламенный Клинок', reqLevel:0});
+      showToast('Титул "Пламенный Клинок" открыт');
+      break;
+    case 'avatar_frame_gold':
+      state.extraTitles.push('avatar_frame_gold');
+      showToast('Золотая рамка аватара активирована');
+      break;
+  }
+
+  saveData();
+  renderHUD();
+  renderStats();
+  renderShop();
+}
+
+/* ========================================================
+   НАСТРОЙКИ
+======================================================== */
+function openSettings(){
+  document.getElementById('settingsName').value = state.name;
+  const select = document.getElementById('settingsTitle');
+  select.innerHTML = TITLES_LIST
+    .filter(t=>t.reqLevel<=state.level)
+    .map(t=>`<option value="${t.name}" ${t.name===state.selectedTitle?'selected':''}>${t.name}</option>`)
+    .join('');
+  openOverlay('settingsOverlay');
+}
+function saveSettings(){
+  const name = document.getElementById('settingsName').value.trim();
+  const title = document.getElementById('settingsTitle').value;
+  if(name) state.name = name;
+  if(title) state.selectedTitle = title;
+  saveData();
+  renderHUD();
+  closeOverlay('settingsOverlay');
+  showToast('Настройки сохранены');
+}
+function confirmReset(){
+  if(confirm('Точно сбросить весь прогресс? Это необратимо.')){
+    localStorage.removeItem(STORAGE_KEY);
+    location.reload();
   }
 }
-function showToast(title, msg){
+
+/* ========================================================
+   НАВИГАЦИЯ / ОВЕРЛЕИ
+======================================================== */
+function switchTab(tabId, el){
+  document.querySelectorAll('.tab-page').forEach(p=>p.classList.remove('active'));
+  document.getElementById(tabId).classList.add('active');
+  document.querySelectorAll('.nav-btn').forEach(b=>b.classList.remove('active'));
+  el.classList.add('active');
+  document.getElementById('fabAddQuest').style.display = (tabId==='tab-home') ? 'flex' : 'none';
+}
+function openOverlay(id){ document.getElementById(id).classList.add('open'); }
+function closeOverlay(id){ document.getElementById(id).classList.remove('open'); }
+
+/* ========================================================
+   ЭФФЕКТЫ
+======================================================== */
+function showToast(msg){
+  const box = document.getElementById('toastBox');
   const el = document.createElement('div');
-  el.className='sys-toast';
-  el.innerHTML = `<div class="tt">◆ СИСТЕМА ◆</div><div class="tt" style="margin-top:2px;">${title}</div><div class="tm">${msg}</div>`;
-  document.getElementById('toastContainer').appendChild(el);
+  el.className = 'sys-toast';
+  el.textContent = '◆ '+msg+' ◆';
+  box.appendChild(el);
   setTimeout(()=>el.remove(), 3100);
 }
-
-const canvas = document.getElementById('particles');
-const ctx = canvas.getContext('2d');
-let particles = [];
-function resizeCanvas(){ canvas.width=window.innerWidth; canvas.height=window.innerHeight; }
-window.addEventListener('resize', resizeCanvas);
-resizeCanvas();
-for(let i=0;i<26;i++){
-  particles.push({
-    x: Math.random()*canvas.width, y: Math.random()*canvas.height,
-    r: 1+Math.random()*2, speed: .2+Math.random()*.5,
-    color: Math.random()>.5 ? '212,175,55' : '138,43,226',
-    alpha: .2+Math.random()*.5
-  });
+function spawnFloatText(x,y,text,color){
+  const el = document.createElement('div');
+  el.className = 'float-text';
+  el.textContent = text;
+  el.style.left = x+'px';
+  el.style.top = y+'px';
+  el.style.color = color || '#fff';
+  document.body.appendChild(el);
+  setTimeout(()=>el.remove(), 1200);
 }
-function animateParticles(){
-  ctx.clearRect(0,0,canvas.width,canvas.height);
-  particles.forEach(p=>{
-    p.y -= p.speed;
-    if(p.y<-5){ p.y=canvas.height+5; p.x=Math.random()*canvas.width; }
-    ctx.beginPath();
-    ctx.arc(p.x,p.y,p.r,0,Math.PI*2);
-    ctx.fillStyle = `rgba(${p.color},${p.alpha})`;
-    ctx.fill();
-  });
-  requestAnimationFrame(animateParticles);
+function spawnBurst(x,y,color){
+  for(let i=0;i<10;i++){
+    const p = document.createElement('div');
+    p.className = 'burst-particle';
+    p.style.left = x+'px';
+    p.style.top = y+'px';
+    p.style.background = color || '#fff';
+    document.body.appendChild(p);
+    const angle = Math.random()*Math.PI*2;
+    const dist = 30+Math.random()*40;
+    const dx = Math.cos(angle)*dist;
+    const dy = Math.sin(angle)*dist;
+    p.animate([
+      {transform:'translate(0,0)', opacity:1},
+      {transform:`translate(${dx}px,${dy}px)`, opacity:0}
+    ], {duration:600+Math.random()*300, easing:'ease-out'});
+    setTimeout(()=>p.remove(), 950);
+  }
 }
-animateParticles();
+function flashOverlay(){
+  const el = document.getElementById('flashOverlay');
+  el.animate([{opacity:0.6},{opacity:0}], {duration:500, easing:'ease-out'});
+}
 
-function init(){
-  render();
+/* ========================================================
+   ЧАСТИЦЫ ФОНА
+======================================================== */
+function initParticles(canvasId, count){
+  const canvas = document.getElementById(canvasId);
+  if(!canvas) return;
+  const ctx = canvas.getContext('2d');
+  let w, h, particles=[];
+  function resize(){
+    w = canvas.width = canvas.offsetWidth || window.innerWidth;
+    h = canvas.height = canvas.offsetHeight || window.innerHeight;
+  }
+  resize();
+  window.addEventListener('resize', resize);
+  for(let i=0;i<count;i++){
+    particles.push({
+      x:Math.random()*w, y:Math.random()*h,
+      r:1+Math.random()*2,
+      vy:0.2+Math.random()*0.4,
+      alpha:0.2+Math.random()*0.5
+    });
+  }
+  function loop(){
+    ctx.clearRect(0,0,w,h);
+    particles.forEach(p=>{
+      p.y -= p.vy;
+      if(p.y < -5){ p.y = h+5; p.x = Math.random()*w; }
+      ctx.beginPath();
+      ctx.arc(p.x,p.y,p.r,0,Math.PI*2);
+      ctx.fillStyle = `rgba(212,175,55,${p.alpha})`;
+      ctx.fill();
+    });
+    requestAnimationFrame(loop);
+  }
+  loop();
+}
+
+/* ========================================================
+   ИНИЦИАЛИЗАЦИЯ
+======================================================== */
+function renderAll(){
+  renderHUD();
+  renderStats();
+  renderQuests();
+  renderCalendar();
+  renderAchievements();
+  renderShop();
+}
+
+window.addEventListener('load', ()=>{
+  loadData();
+  checkDailyReset();
+  renderAll();
+
+  initParticles('splashCanvas', 40);
+  initParticles('particlesCanvas', 25);
+
   setTimeout(()=>{
-    document.getElementById('splash').classList.add('hide');
-    document.getElementById('app').style.display='block';
-  }, 1400);
-}
-document.addEventListener('DOMContentLoaded', init);
+    document.getElementById('splash').classList.add('hidden');
+  }, 1800);
 
-if('serviceWorker' in navigator){
-  window.addEventListener('load', ()=>{
-    navigator.serviceWorker.register('sw.js').catch(()=>{});
-  });
-}
+  if('serviceWorker' in navigator){
+    navigator.serviceWorker.register('sw.js').catch(e=>console.warn('SW error', e));
+  }
+});
 </script>
 </body>
 </html>
