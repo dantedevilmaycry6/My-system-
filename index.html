@@ -1,0 +1,1360 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+<title>SYSTEM - Solo Leveling</title>
+
+<!-- iOS PWA настройки -->
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="SYSTEM">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="theme-color" content="#0a0a14">
+
+<!-- Иконки -->
+<link rel="apple-touch-icon" href="icon-180.png">
+<link rel="apple-touch-icon" sizes="152x152" href="icon-152.png">
+<link rel="apple-touch-icon" sizes="167x167" href="icon-167.png">
+<link rel="apple-touch-icon" sizes="180x180" href="icon-180.png">
+<link rel="icon" type="image/png" sizes="192x192" href="icon-192.png">
+
+<!-- Манифест -->
+<link rel="manifest" href="manifest.json">
+
+<style>
+  * {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Segoe UI', Arial, sans-serif;
+    -webkit-tap-highlight-color: transparent;
+  }
+
+  html, body {
+    overscroll-behavior: none;
+  }
+
+  body {
+    background: #0a0a14;
+    color: #e0e0ff;
+    overflow-x: hidden;
+    min-height: 100vh;
+    min-height: -webkit-fill-available;
+    background-image: 
+      radial-gradient(circle at 20% 20%, rgba(100, 50, 255, 0.1) 0%, transparent 50%),
+      radial-gradient(circle at 80% 80%, rgba(50, 100, 255, 0.1) 0%, transparent 50%);
+    padding-top: env(safe-area-inset-top);
+    padding-bottom: env(safe-area-inset-bottom);
+  }
+
+  .particles {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 0;
+    pointer-events: none;
+  }
+
+  .particle {
+    position: absolute;
+    width: 2px;
+    height: 2px;
+    background: #6b5bff;
+    border-radius: 50%;
+    animation: float 15s infinite linear;
+    opacity: 0.6;
+  }
+
+  @keyframes float {
+    0% { transform: translateY(100vh) translateX(0); opacity: 0; }
+    10% { opacity: 0.8; }
+    90% { opacity: 0.8; }
+    100% { transform: translateY(-10vh) translateX(100px); opacity: 0; }
+  }
+
+  .container {
+    position: relative;
+    z-index: 1;
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 20px;
+  }
+
+  .system-header {
+    text-align: center;
+    padding: 30px 0;
+    position: relative;
+  }
+
+  .system-title {
+    font-size: 3em;
+    font-weight: 900;
+    background: linear-gradient(45deg, #6b5bff, #9b7bff, #6b5bff);
+    background-size: 200% 200%;
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    animation: shine 3s linear infinite;
+    text-shadow: 0 0 30px rgba(107, 91, 255, 0.5);
+    letter-spacing: 3px;
+  }
+
+  @keyframes shine {
+    0% { background-position: 0% 50%; }
+    50% { background-position: 100% 50%; }
+    100% { background-position: 0% 50%; }
+  }
+
+  .subtitle {
+    color: #8888cc;
+    font-size: 0.9em;
+    margin-top: 10px;
+    letter-spacing: 2px;
+  }
+
+  .player-card {
+    background: linear-gradient(135deg, rgba(20, 20, 40, 0.9), rgba(30, 20, 60, 0.9));
+    border: 2px solid #6b5bff;
+    border-radius: 15px;
+    padding: 25px;
+    margin: 20px 0;
+    box-shadow: 0 0 40px rgba(107, 91, 255, 0.3);
+    position: relative;
+    overflow: hidden;
+  }
+
+  .player-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+    flex-wrap: wrap;
+    gap: 15px;
+  }
+
+  .player-name-section {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+  }
+
+  .player-avatar {
+    width: 70px;
+    height: 70px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, #6b5bff, #9b7bff);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 2em;
+    font-weight: bold;
+    box-shadow: 0 0 20px rgba(107, 91, 255, 0.6);
+    cursor: pointer;
+    transition: transform 0.3s;
+  }
+
+  .player-avatar:active {
+    transform: scale(0.95);
+  }
+
+  .player-info h2 {
+    font-size: 1.5em;
+    color: #fff;
+    margin-bottom: 5px;
+  }
+
+  .player-rank {
+    display: inline-block;
+    padding: 4px 15px;
+    background: linear-gradient(45deg, #ff6b6b, #ff9b6b);
+    border-radius: 20px;
+    font-weight: bold;
+    font-size: 0.8em;
+    box-shadow: 0 0 15px rgba(255, 107, 107, 0.5);
+  }
+
+  .level-display {
+    text-align: right;
+  }
+
+  .level-number {
+    font-size: 2.5em;
+    font-weight: 900;
+    color: #6b5bff;
+    text-shadow: 0 0 20px rgba(107, 91, 255, 0.8);
+  }
+
+  .level-label {
+    color: #8888cc;
+    font-size: 0.8em;
+    letter-spacing: 2px;
+  }
+
+  .exp-container {
+    margin: 15px 0;
+  }
+
+  .exp-labels {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 5px;
+    font-size: 0.85em;
+    color: #aaa;
+  }
+
+  .exp-bar-bg {
+    width: 100%;
+    height: 20px;
+    background: rgba(0,0,0,0.5);
+    border-radius: 10px;
+    overflow: hidden;
+    border: 1px solid rgba(107, 91, 255, 0.3);
+    position: relative;
+  }
+
+  .exp-bar-fill {
+    height: 100%;
+    background: linear-gradient(90deg, #6b5bff, #9b7bff);
+    border-radius: 10px;
+    transition: width 0.5s ease;
+    box-shadow: 0 0 10px rgba(107, 91, 255, 0.8);
+    position: relative;
+    overflow: hidden;
+  }
+
+  .exp-bar-fill::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: linear-gradient(90deg, transparent, rgba(255,255,255,0.3), transparent);
+    animation: shimmer 2s infinite;
+  }
+
+  @keyframes shimmer {
+    0% { transform: translateX(-100%); }
+    100% { transform: translateX(100%); }
+  }
+
+  .stats-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+    gap: 15px;
+    margin-top: 20px;
+  }
+
+  .stat-box {
+    background: rgba(0,0,0,0.3);
+    border: 1px solid rgba(107, 91, 255, 0.3);
+    border-radius: 10px;
+    padding: 15px;
+    text-align: center;
+    transition: all 0.3s;
+  }
+
+  .stat-icon {
+    font-size: 1.8em;
+    margin-bottom: 5px;
+  }
+
+  .stat-name {
+    font-size: 0.75em;
+    color: #8888cc;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+  }
+
+  .stat-value {
+    font-size: 1.8em;
+    font-weight: bold;
+    color: #fff;
+    margin: 5px 0;
+  }
+
+  .stat-points-btn {
+    background: #6b5bff;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    width: 30px;
+    height: 30px;
+    cursor: pointer;
+    font-weight: bold;
+    transition: all 0.2s;
+    font-size: 1.1em;
+  }
+
+  .stat-points-btn:active {
+    background: #9b7bff;
+    transform: scale(0.95);
+  }
+
+  .free-points {
+    text-align: center;
+    margin-top: 10px;
+    color: #ffd700;
+    font-weight: bold;
+  }
+
+  .nav-tabs {
+    display: flex;
+    gap: 10px;
+    margin: 20px 0;
+    flex-wrap: wrap;
+  }
+
+  .nav-tab {
+    padding: 12px 25px;
+    background: rgba(20, 20, 40, 0.7);
+    border: 1px solid rgba(107, 91, 255, 0.3);
+    border-radius: 10px;
+    color: #aaa;
+    cursor: pointer;
+    transition: all 0.3s;
+    font-weight: 600;
+    flex: 1;
+    min-width: 120px;
+    text-align: center;
+    user-select: none;
+  }
+
+  .nav-tab.active {
+    background: linear-gradient(135deg, #6b5bff, #4b3bdd);
+    border-color: #9b7bff;
+    color: #fff;
+    box-shadow: 0 0 20px rgba(107, 91, 255, 0.5);
+  }
+
+  .tab-content {
+    display: none;
+    animation: fadeIn 0.5s;
+  }
+
+  .tab-content.active {
+    display: block;
+  }
+
+  @keyframes fadeIn {
+    from { opacity: 0; transform: translateY(10px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  .section-title {
+    font-size: 1.5em;
+    color: #9b7bff;
+    margin-bottom: 20px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+
+  .quest-card {
+    background: rgba(20, 20, 40, 0.7);
+    border: 1px solid rgba(107, 91, 255, 0.3);
+    border-left: 4px solid #6b5bff;
+    border-radius: 10px;
+    padding: 20px;
+    margin-bottom: 15px;
+    transition: all 0.3s;
+  }
+
+  .quest-card.completed {
+    opacity: 0.6;
+    border-left-color: #4bff6b;
+  }
+
+  .quest-card.daily {
+    border-left-color: #ffd700;
+  }
+
+  .quest-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-bottom: 10px;
+    gap: 10px;
+  }
+
+  .quest-title {
+    font-size: 1.1em;
+    font-weight: bold;
+    color: #fff;
+  }
+
+  .quest-type-badge {
+    padding: 3px 10px;
+    border-radius: 15px;
+    font-size: 0.7em;
+    font-weight: bold;
+    text-transform: uppercase;
+    white-space: nowrap;
+  }
+
+  .badge-daily { background: #ffd700; color: #333; }
+  .badge-main { background: #ff6b6b; color: white; }
+  .badge-side { background: #6b9bff; color: white; }
+
+  .quest-description {
+    color: #aaa;
+    font-size: 0.9em;
+    margin-bottom: 15px;
+  }
+
+  .quest-rewards {
+    display: flex;
+    gap: 15px;
+    margin-bottom: 15px;
+    flex-wrap: wrap;
+  }
+
+  .reward-item {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    font-size: 0.85em;
+    color: #ffd700;
+  }
+
+  .quest-actions {
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+  }
+
+  .btn {
+    padding: 12px 20px;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    font-weight: 600;
+    transition: all 0.3s;
+    font-size: 0.9em;
+    -webkit-appearance: none;
+  }
+
+  .btn:active {
+    transform: scale(0.97);
+  }
+
+  .btn-primary {
+    background: linear-gradient(135deg, #6b5bff, #4b3bdd);
+    color: white;
+  }
+
+  .btn-success {
+    background: linear-gradient(135deg, #4bff6b, #2bdd4b);
+    color: white;
+  }
+
+  .btn-danger {
+    background: linear-gradient(135deg, #ff6b6b, #dd4b4b);
+    color: white;
+  }
+
+  .btn-secondary {
+    background: rgba(255,255,255,0.1);
+    color: #ccc;
+    border: 1px solid rgba(255,255,255,0.2);
+  }
+
+  .btn:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+  }
+
+  .add-quest-form {
+    background: rgba(20, 20, 40, 0.7);
+    border: 2px dashed rgba(107, 91, 255, 0.4);
+    border-radius: 10px;
+    padding: 20px;
+    margin-bottom: 20px;
+  }
+
+  .form-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 15px;
+    margin-bottom: 15px;
+  }
+
+  .form-group {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+  }
+
+  .form-group.full {
+    grid-column: 1 / -1;
+  }
+
+  .form-group label {
+    font-size: 0.85em;
+    color: #8888cc;
+  }
+
+  input, select, textarea {
+    background: rgba(0,0,0,0.4);
+    border: 1px solid rgba(107, 91, 255, 0.3);
+    border-radius: 8px;
+    padding: 12px;
+    color: #fff;
+    font-size: 16px; /* важно для iOS - предотвращает зум при фокусе */
+    -webkit-appearance: none;
+  }
+
+  input:focus, select:focus, textarea:focus {
+    outline: none;
+    border-color: #6b5bff;
+    box-shadow: 0 0 10px rgba(107, 91, 255, 0.3);
+  }
+
+  textarea {
+    resize: vertical;
+    min-height: 60px;
+  }
+
+  .achievements-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+    gap: 15px;
+  }
+
+  .achievement-card {
+    background: rgba(20, 20, 40, 0.7);
+    border: 2px solid rgba(107, 91, 255, 0.2);
+    border-radius: 12px;
+    padding: 20px;
+    text-align: center;
+    transition: all 0.3s;
+  }
+
+  .achievement-card.unlocked {
+    border-color: #ffd700;
+    box-shadow: 0 0 20px rgba(255, 215, 0, 0.3);
+  }
+
+  .achievement-card.locked {
+    opacity: 0.4;
+    filter: grayscale(1);
+  }
+
+  .achievement-icon {
+    font-size: 3em;
+    margin-bottom: 10px;
+  }
+
+  .achievement-name {
+    font-weight: bold;
+    color: #fff;
+    margin-bottom: 5px;
+    font-size: 0.9em;
+  }
+
+  .achievement-desc {
+    font-size: 0.75em;
+    color: #aaa;
+  }
+
+  .skills-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+    gap: 15px;
+  }
+
+  .skill-card {
+    background: rgba(20, 20, 40, 0.7);
+    border: 1px solid rgba(107, 91, 255, 0.3);
+    border-radius: 12px;
+    padding: 20px;
+  }
+
+  .skill-header {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 10px;
+  }
+
+  .skill-icon {
+    font-size: 2em;
+  }
+
+  .skill-level {
+    display: flex;
+    gap: 3px;
+    margin-top: 10px;
+    flex-wrap: wrap;
+  }
+
+  .skill-level-dot {
+    width: 20px;
+    height: 8px;
+    background: rgba(255,255,255,0.1);
+    border-radius: 4px;
+  }
+
+  .skill-level-dot.filled {
+    background: linear-gradient(90deg, #6b5bff, #9b7bff);
+  }
+
+  .log-container {
+    background: rgba(0,0,0,0.3);
+    border-radius: 10px;
+    padding: 15px;
+    max-height: 400px;
+    overflow-y: auto;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  .log-entry {
+    padding: 10px;
+    border-bottom: 1px solid rgba(107, 91, 255, 0.1);
+    display: flex;
+    justify-content: space-between;
+    font-size: 0.85em;
+    gap: 10px;
+    flex-wrap: wrap;
+  }
+
+  .log-time {
+    color: #8888cc;
+    font-size: 0.8em;
+    white-space: nowrap;
+  }
+
+  .level-up-modal {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0,0,0,0.85);
+    display: none;
+    align-items: center;
+    justify-content: center;
+    z-index: 1000;
+  }
+
+  .level-up-modal.show {
+    display: flex;
+  }
+
+  .level-up-content {
+    text-align: center;
+    animation: levelUpAppear 0.6s ease;
+    padding: 20px;
+  }
+
+  @keyframes levelUpAppear {
+    0% { transform: scale(0.5); opacity: 0; }
+    60% { transform: scale(1.1); }
+    100% { transform: scale(1); opacity: 1; }
+  }
+
+  .level-up-text {
+    font-size: 3em;
+    font-weight: 900;
+    background: linear-gradient(45deg, #ffd700, #fff, #ffd700);
+    background-size: 200% 200%;
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    animation: shine 1.5s linear infinite;
+    text-shadow: 0 0 50px rgba(255, 215, 0, 0.8);
+    margin-bottom: 20px;
+  }
+
+  .level-up-subtext {
+    font-size: 1.3em;
+    color: #fff;
+    margin-bottom: 30px;
+  }
+
+  .quest-notification {
+    position: fixed;
+    top: calc(20px + env(safe-area-inset-top));
+    right: 20px;
+    left: 20px;
+    background: linear-gradient(135deg, rgba(20, 20, 40, 0.95), rgba(30, 20, 60, 0.95));
+    border: 2px solid #6b5bff;
+    border-radius: 10px;
+    padding: 15px 20px;
+    box-shadow: 0 0 30px rgba(107, 91, 255, 0.6);
+    transform: translateY(-150px);
+    transition: transform 0.4s ease;
+    z-index: 999;
+    text-align: center;
+  }
+
+  .quest-notification.show {
+    transform: translateY(0);
+  }
+
+  .empty-state {
+    text-align: center;
+    padding: 40px;
+    color: #666;
+  }
+
+  .empty-state-icon {
+    font-size: 3em;
+    margin-bottom: 15px;
+    opacity: 0.5;
+  }
+
+  @media (max-width: 600px) {
+    .system-title { font-size: 2em; }
+    .form-row { grid-template-columns: 1fr; }
+    .player-header { flex-direction: column; align-items: flex-start; }
+    .level-display { text-align: left; }
+    .quest-notification { right: 10px; left: 10px; }
+  }
+
+  ::-webkit-scrollbar {
+    width: 8px;
+  }
+  ::-webkit-scrollbar-track {
+    background: rgba(0,0,0,0.2);
+  }
+  ::-webkit-scrollbar-thumb {
+    background: #6b5bff;
+    border-radius: 4px;
+  }
+
+  .modal-overlay {
+    position: fixed;
+    top: 0; left: 0; right: 0; bottom: 0;
+    background: rgba(0,0,0,0.7);
+    display: none;
+    align-items: center;
+    justify-content: center;
+    z-index: 1000;
+    padding: 20px;
+  }
+  .modal-overlay.show { display: flex; }
+  .modal-box {
+    background: #15152a;
+    border: 2px solid #6b5bff;
+    border-radius: 15px;
+    padding: 30px;
+    max-width: 400px;
+    width: 100%;
+    box-shadow: 0 0 50px rgba(107, 91, 255, 0.5);
+  }
+  .modal-box h3 {
+    margin-bottom: 20px;
+    color: #9b7bff;
+  }
+</style>
+</head>
+<body>
+
+<div class="particles" id="particles"></div>
+
+<div class="container">
+  <div class="system-header">
+    <div class="system-title">⚔️ SYSTEM ⚔️</div>
+    <div class="subtitle">ТЫ ПОЛУЧИЛ ВОЗМОЖНОСТЬ СТАТЬ ИГРОКОМ</div>
+  </div>
+
+  <div class="player-card">
+    <div class="player-header">
+      <div class="player-name-section">
+        <div class="player-avatar" id="avatarDisplay" onclick="openSettings()">👤</div>
+        <div class="player-info">
+          <h2 id="playerName">Игрок</h2>
+          <span class="player-rank" id="playerRank">E-RANK</span>
+        </div>
+      </div>
+      <div class="level-display">
+        <div class="level-number" id="levelNumber">1</div>
+        <div class="level-label">LEVEL</div>
+      </div>
+    </div>
+
+    <div class="exp-container">
+      <div class="exp-labels">
+        <span>EXP</span>
+        <span id="expText">0 / 100</span>
+      </div>
+      <div class="exp-bar-bg">
+        <div class="exp-bar-fill" id="expBar" style="width: 0%"></div>
+      </div>
+    </div>
+
+    <div class="free-points" id="freePointsDisplay" style="display:none;">
+      ⭐ Доступно очков характеристик: <span id="freePointsCount">0</span>
+    </div>
+
+    <div class="stats-grid" id="statsGrid"></div>
+  </div>
+
+  <div class="nav-tabs">
+    <div class="nav-tab active" onclick="switchTab('quests', this)">📜 Квесты</div>
+    <div class="nav-tab" onclick="switchTab('skills', this)">⚡ Навыки</div>
+    <div class="nav-tab" onclick="switchTab('achievements', this)">🏆 Награды</div>
+    <div class="nav-tab" onclick="switchTab('log', this)">📋 История</div>
+  </div>
+
+  <div class="tab-content active" id="quests">
+    <div class="section-title">📜 Активные квесты</div>
+    
+    <div class="add-quest-form">
+      <div class="form-row">
+        <div class="form-group">
+          <label>Название квеста</label>
+          <input type="text" id="questTitle" placeholder="Например: Отжаться 50 раз">
+        </div>
+        <div class="form-group">
+          <label>Тип квеста</label>
+          <select id="questType">
+            <option value="daily">Ежедневный</option>
+            <option value="main">Основной</option>
+            <option value="side">Побочный</option>
+          </select>
+        </div>
+      </div>
+      <div class="form-row">
+        <div class="form-group">
+          <label>Опыт (EXP)</label>
+          <input type="number" id="questExp" value="20" min="1">
+        </div>
+        <div class="form-group">
+          <label>Основной стат</label>
+          <select id="questStat">
+            <option value="str">💪 Сила</option>
+            <option value="agi">🏃 Ловкость</option>
+            <option value="int">🧠 Интеллект</option>
+            <option value="vit">❤️ Выносливость</option>
+            <option value="per">👁️ Восприятие</option>
+          </select>
+        </div>
+      </div>
+      <div class="form-group full">
+        <label>Описание</label>
+        <textarea id="questDesc" placeholder="Детали выполнения квеста..."></textarea>
+      </div>
+      <button class="btn btn-primary" onclick="addQuest()" style="width:100%; margin-top:10px;">
+        + Создать квест
+      </button>
+    </div>
+
+    <div id="questsList"></div>
+  </div>
+
+  <div class="tab-content" id="skills">
+    <div class="section-title">⚡ Твои навыки</div>
+    <div class="skills-grid" id="skillsGrid"></div>
+  </div>
+
+  <div class="tab-content" id="achievements">
+    <div class="section-title">🏆 Достижения</div>
+    <div class="achievements-grid" id="achievementsGrid"></div>
+  </div>
+
+  <div class="tab-content" id="log">
+    <div class="section-title">📋 Журнал действий</div>
+    <div class="log-container" id="logContainer"></div>
+  </div>
+</div>
+
+<div class="level-up-modal" id="levelUpModal">
+  <div class="level-up-content">
+    <div class="level-up-text">LEVEL UP!</div>
+    <div class="level-up-subtext" id="levelUpText">Ты достиг уровня 2!</div>
+    <button class="btn btn-primary" onclick="closeLevelUp()">Продолжить</button>
+  </div>
+</div>
+
+<div class="modal-overlay" id="settingsModal">
+  <div class="modal-box">
+    <h3>⚙️ Настройки игрока</h3>
+    <div class="form-group" style="margin-bottom:15px;">
+      <label>Имя игрока</label>
+      <input type="text" id="settingsName" placeholder="Введи своё имя">
+    </div>
+    <div class="form-group" style="margin-bottom:20px;">
+      <label>Аватар (эмодзи)</label>
+      <input type="text" id="settingsAvatar" placeholder="👤" maxlength="2">
+    </div>
+    <div style="display:flex; gap:10px;">
+      <button class="btn btn-primary" onclick="saveSettings()" style="flex:1;">Сохранить</button>
+      <button class="btn btn-secondary" onclick="closeSettings()" style="flex:1;">Отмена</button>
+    </div>
+    <hr style="margin:20px 0; border-color:rgba(107,91,255,0.3);">
+    <button class="btn btn-danger" onclick="resetProgress()" style="width:100%;">
+      🗑️ Сбросить весь прогресс
+    </button>
+  </div>
+</div>
+
+<div class="quest-notification" id="questNotif"></div>
+
+<script>
+const STAT_INFO = {
+  str: { name: 'Сила', icon: '💪' },
+  agi: { name: 'Ловкость', icon: '🏃' },
+  int: { name: 'Интеллект', icon: '🧠' },
+  vit: { name: 'Выносливость', icon: '❤️' },
+  per: { name: 'Восприятие', icon: '👁️' }
+};
+
+const RANKS = [
+  { min: 1, max: 9, name: 'E-RANK', color: '#8888cc' },
+  { min: 10, max: 19, name: 'D-RANK', color: '#6bff6b' },
+  { min: 20, max: 29, name: 'C-RANK', color: '#6b9bff' },
+  { min: 30, max: 39, name: 'B-RANK', color: '#bb6bff' },
+  { min: 40, max: 49, name: 'A-RANK', color: '#ff9b6b' },
+  { min: 50, max: 999, name: 'S-RANK', color: '#ffd700' }
+];
+
+const ACHIEVEMENTS_LIST = [
+  { id: 'first_quest', name: 'Первый шаг', desc: 'Выполни первый квест', icon: '🎯', check: (d) => d.questsCompleted >= 1 },
+  { id: 'quest_10', name: 'Начинающий', desc: 'Выполни 10 квестов', icon: '⚔️', check: (d) => d.questsCompleted >= 10 },
+  { id: 'quest_50', name: 'Опытный', desc: 'Выполни 50 квестов', icon: '🗡️', check: (d) => d.questsCompleted >= 50 },
+  { id: 'quest_100', name: 'Охотник', desc: 'Выполни 100 квестов', icon: '🏹', check: (d) => d.questsCompleted >= 100 },
+  { id: 'level_5', name: 'Растущая сила', desc: 'Достигни 5 уровня', icon: '🌟', check: (d) => d.level >= 5 },
+  { id: 'level_10', name: 'D-Rank Hunter', desc: 'Достигни 10 уровня', icon: '✨', check: (d) => d.level >= 10 },
+  { id: 'level_20', name: 'C-Rank Hunter', desc: 'Достигни 20 уровня', icon: '💫', check: (d) => d.level >= 20 },
+  { id: 'level_50', name: 'S-Rank Hunter', desc: 'Монарх теней!', icon: '👑', check: (d) => d.level >= 50 },
+  { id: 'streak_7', name: 'Недельная серия', desc: '7 дней подряд', icon: '🔥', check: (d) => d.streak >= 7 },
+  { id: 'streak_30', name: 'Железная воля', desc: '30 дней подряд', icon: '💎', check: (d) => d.streak >= 30 },
+  { id: 'strong', name: 'Силач', desc: 'Сила до 20', icon: '💪', check: (d) => d.stats.str >= 20 },
+  { id: 'genius', name: 'Гений', desc: 'Интеллект до 20', icon: '🧠', check: (d) => d.stats.int >= 20 },
+  { id: 'main_quest', name: 'Главный герой', desc: '5 основных квестов', icon: '📖', check: (d) => d.mainQuestsCompleted >= 5 },
+];
+
+const DEFAULT_SKILLS = [
+  { id: 'focus', name: 'Концентрация', icon: '🎯', level: 1, desc: 'Улучшает фокус при выполнении задач' },
+  { id: 'discipline', name: 'Дисциплина', icon: '⚡', level: 1, desc: 'Сила воли для регулярных тренировок' },
+  { id: 'endurance', name: 'Выносливость духа', icon: '🔥', level: 1, desc: 'Способность не сдаваться' },
+];
+
+let gameData = {
+  name: 'Игрок',
+  avatar: '👤',
+  level: 1,
+  exp: 0,
+  expToNext: 100,
+  freePoints: 0,
+  stats: { str: 10, agi: 10, int: 10, vit: 10, per: 10 },
+  quests: [],
+  questsCompleted: 0,
+  mainQuestsCompleted: 0,
+  achievements: [],
+  skills: JSON.parse(JSON.stringify(DEFAULT_SKILLS)),
+  logs: [],
+  streak: 0,
+  lastActiveDate: null
+};
+
+function saveData() {
+  localStorage.setItem('soloLevelingData', JSON.stringify(gameData));
+}
+
+function loadData() {
+  const saved = localStorage.getItem('soloLevelingData');
+  if (saved) {
+    const parsed = JSON.parse(saved);
+    gameData = { ...gameData, ...parsed };
+  } else {
+    addDefaultQuests();
+  }
+  checkStreak();
+}
+
+function addDefaultQuests() {
+  gameData.quests = [
+    { id: Date.now() + 1, title: 'Утренняя зарядка', desc: '20 отжиманий, 20 приседаний, планка 1 минута', type: 'daily', exp: 25, stat: 'str', completed: false },
+    { id: Date.now() + 2, title: 'Чтение книги', desc: 'Прочитай минимум 20 страниц', type: 'daily', exp: 20, stat: 'int', completed: false },
+    { id: Date.now() + 3, title: 'Пробежка', desc: 'Пробеги минимум 3 км', type: 'daily', exp: 30, stat: 'agi', completed: false },
+    { id: Date.now() + 4, title: 'Победи своего врага - Лень', desc: 'Заверши первую неделю без пропусков', type: 'main', exp: 100, stat: 'vit', completed: false }
+  ];
+}
+
+function checkStreak() {
+  const today = new Date().toDateString();
+  if (gameData.lastActiveDate) {
+    const last = new Date(gameData.lastActiveDate);
+    const diff = Math.floor((new Date(today) - new Date(last.toDateString())) / (1000*60*60*24));
+    if (diff > 1) gameData.streak = 0;
+  }
+}
+
+function getCurrentRank(level) {
+  return RANKS.find(r => level >= r.min && level <= r.max) || RANKS[0];
+}
+
+function renderPlayer() {
+  document.getElementById('playerName').textContent = gameData.name;
+  document.getElementById('avatarDisplay').textContent = gameData.avatar;
+  document.getElementById('levelNumber').textContent = gameData.level;
+  
+  const rank = getCurrentRank(gameData.level);
+  const rankEl = document.getElementById('playerRank');
+  rankEl.textContent = rank.name;
+  rankEl.style.background = `linear-gradient(45deg, ${rank.color}, ${rank.color}aa)`;
+  
+  document.getElementById('expText').textContent = `${gameData.exp} / ${gameData.expToNext}`;
+  const expPercent = (gameData.exp / gameData.expToNext) * 100;
+  document.getElementById('expBar').style.width = `${expPercent}%`;
+  
+  const freePointsDisplay = document.getElementById('freePointsDisplay');
+  if (gameData.freePoints > 0) {
+    freePointsDisplay.style.display = 'block';
+    document.getElementById('freePointsCount').textContent = gameData.freePoints;
+  } else {
+    freePointsDisplay.style.display = 'none';
+  }
+  
+  renderStats();
+}
+
+function renderStats() {
+  const grid = document.getElementById('statsGrid');
+  grid.innerHTML = '';
+  
+  for (const [key, info] of Object.entries(STAT_INFO)) {
+    const value = gameData.stats[key];
+    const box = document.createElement('div');
+    box.className = 'stat-box';
+    box.innerHTML = `
+      <div class="stat-icon">${info.icon}</div>
+      <div class="stat-name">${info.name}</div>
+      <div class="stat-value">${value}</div>
+      ${gameData.freePoints > 0 ? `<button class="stat-points-btn" onclick="addStatPoint('${key}')">+</button>` : ''}
+    `;
+    grid.appendChild(box);
+  }
+}
+
+function addStatPoint(statKey) {
+  if (gameData.freePoints > 0) {
+    gameData.stats[statKey]++;
+    gameData.freePoints--;
+    addLog(`Характеристика "${STAT_INFO[statKey].name}" увеличена до ${gameData.stats[statKey]}`);
+    saveData();
+    renderPlayer();
+    checkAchievements();
+  }
+}
+
+function renderQuests() {
+  const list = document.getElementById('questsList');
+  list.innerHTML = '';
+  
+  if (gameData.quests.length === 0) {
+    list.innerHTML = `<div class="empty-state"><div class="empty-state-icon">📭</div><div>Нет активных квестов. Создай первый!</div></div>`;
+    return;
+  }
+  
+  const sorted = [...gameData.quests].sort((a, b) => {
+    if (a.completed !== b.completed) return a.completed ? 1 : -1;
+    return 0;
+  });
+  
+  sorted.forEach(quest => {
+    const card = document.createElement('div');
+    card.className = `quest-card ${quest.type} ${quest.completed ? 'completed' : ''}`;
+    
+    const badgeClass = quest.type === 'daily' ? 'badge-daily' : quest.type === 'main' ? 'badge-main' : 'badge-side';
+    const badgeText = quest.type === 'daily' ? 'Ежедневный' : quest.type === 'main' ? 'Основной' : 'Побочный';
+    
+    card.innerHTML = `
+      <div class="quest-header">
+        <div class="quest-title">${quest.completed ? '✅ ' : ''}${quest.title}</div>
+        <span class="quest-type-badge ${badgeClass}">${badgeText}</span>
+      </div>
+      <div class="quest-description">${quest.desc || 'Без описания'}</div>
+      <div class="quest-rewards">
+        <div class="reward-item">⭐ +${quest.exp} EXP</div>
+        <div class="reward-item">${STAT_INFO[quest.stat].icon} +1 ${STAT_INFO[quest.stat].name}</div>
+      </div>
+      <div class="quest-actions">
+        ${!quest.completed ? 
+          `<button class="btn btn-success" onclick="completeQuest(${quest.id})">✓ Выполнить</button>
+           <button class="btn btn-danger" onclick="deleteQuest(${quest.id})">✕ Удалить</button>` :
+          `<button class="btn btn-secondary" disabled>Выполнено</button>`
+        }
+      </div>
+    `;
+    list.appendChild(card);
+  });
+}
+
+function renderSkills() {
+  const grid = document.getElementById('skillsGrid');
+  grid.innerHTML = '';
+  
+  gameData.skills.forEach(skill => {
+    const card = document.createElement('div');
+    card.className = 'skill-card';
+    
+    let dots = '';
+    for (let i = 1; i <= 10; i++) {
+      dots += `<div class="skill-level-dot ${i <= skill.level ? 'filled' : ''}"></div>`;
+    }
+    
+    card.innerHTML = `
+      <div class="skill-header">
+        <div class="skill-icon">${skill.icon}</div>
+        <div>
+          <div style="font-weight:bold; color:#fff;">${skill.name}</div>
+          <div style="font-size:0.8em; color:#8888cc;">Уровень ${skill.level}/10</div>
+        </div>
+      </div>
+      <div style="font-size:0.85em; color:#aaa; margin-bottom:10px;">${skill.desc}</div>
+      <div class="skill-level">${dots}</div>
+    `;
+    grid.appendChild(card);
+  });
+}
+
+function renderAchievements() {
+  const grid = document.getElementById('achievementsGrid');
+  grid.innerHTML = '';
+  
+  ACHIEVEMENTS_LIST.forEach(ach => {
+    const unlocked = gameData.achievements.includes(ach.id);
+    const card = document.createElement('div');
+    card.className = `achievement-card ${unlocked ? 'unlocked' : 'locked'}`;
+    card.innerHTML = `
+      <div class="achievement-icon">${ach.icon}</div>
+      <div class="achievement-name">${ach.name}</div>
+      <div class="achievement-desc">${ach.desc}</div>
+    `;
+    grid.appendChild(card);
+  });
+}
+
+function renderLog() {
+  const container = document.getElementById('logContainer');
+  container.innerHTML = '';
+  
+  if (gameData.logs.length === 0) {
+    container.innerHTML = `<div class="empty-state"><div class="empty-state-icon">📋</div><div>История пуста</div></div>`;
+    return;
+  }
+  
+  [...gameData.logs].reverse().forEach(log => {
+    const entry = document.createElement('div');
+    entry.className = 'log-entry';
+    entry.innerHTML = `<span>${log.text}</span><span class="log-time">${log.time}</span>`;
+    container.appendChild(entry);
+  });
+}
+
+function renderAll() {
+  renderPlayer();
+  renderQuests();
+  renderSkills();
+  renderAchievements();
+  renderLog();
+}
+
+function addLog(text) {
+  const now = new Date();
+  const timeStr = now.toLocaleTimeString('ru-RU', {hour: '2-digit', minute:'2-digit'}) + ' · ' + now.toLocaleDateString('ru-RU');
+  gameData.logs.push({ text, time: timeStr });
+  if (gameData.logs.length > 100) gameData.logs.shift();
+}
+
+function addQuest() {
+  const title = document.getElementById('questTitle').value.trim();
+  const desc = document.getElementById('questDesc').value.trim();
+  const type = document.getElementById('questType').value;
+  const exp = parseInt(document.getElementById('questExp').value) || 20;
+  const stat = document.getElementById('questStat').value;
+  
+  if (!title) {
+    showNotification('⚠️ Введи название квеста!');
+    return;
+  }
+  
+  gameData.quests.push({ id: Date.now(), title, desc, type, exp, stat, completed: false });
+  saveData();
+  renderQuests();
+  
+  document.getElementById('questTitle').value = '';
+  document.getElementById('questDesc').value = '';
+  document.getElementById('questExp').value = '20';
+  
+  showNotification('✨ Новый квест создан!');
+}
+
+function completeQuest(id) {
+  const quest = gameData.quests.find(q => q.id === id);
+  if (!quest || quest.completed) return;
+  
+  quest.completed = true;
+  gameData.questsCompleted++;
+  if (quest.type === 'main') gameData.mainQuestsCompleted++;
+  
+  gameData.stats[quest.stat]++;
+  
+  const today = new Date().toDateString();
+  if (gameData.lastActiveDate !== today) {
+    gameData.streak++;
+    gameData.lastActiveDate = today;
+  }
+  
+  addLog(`Квест выполнен: "${quest.title}" (+${quest.exp} EXP, +1 ${STAT_INFO[quest.stat].name})`);
+  
+  addExp(quest.exp);
+  
+  if (Math.random() > 0.5) {
+    const skill = gameData.skills[Math.floor(Math.random() * gameData.skills.length)];
+    if (skill.level < 10) {
+      skill.level++;
+      addLog(`Навык "${skill.name}" повышен до уровня ${skill.level}!`);
+    }
+  }
+  
+  saveData();
+  renderAll();
+  checkAchievements();
+  showNotification(`✅ Квест выполнен! +${quest.exp} EXP`);
+}
+
+function deleteQuest(id) {
+  gameData.quests = gameData.quests.filter(q => q.id !== id);
+  saveData();
+  renderQuests();
+}
+
+function addExp(amount) {
+  gameData.exp += amount;
+  
+  while (gameData.exp >= gameData.expToNext) {
+    gameData.exp -= gameData.expToNext;
+    gameData.level++;
+    gameData.expToNext = Math.floor(100 * Math.pow(1.15, gameData.level - 1));
+    gameData.freePoints += 3;
+    
+    showLevelUp();
+    addLog(`🎉 ДОСТИГНУТ УРОВЕНЬ ${gameData.level}!`);
+  }
+}
+
+function showLevelUp() {
+  document.getElementById('levelUpText').textContent = `Ты достиг уровня ${gameData.level}!`;
+  document.getElementById('levelUpModal').classList.add('show');
+}
+
+function closeLevelUp() {
+  document.getElementById('levelUpModal').classList.remove('show');
+}
+
+function checkAchievements() {
+  ACHIEVEMENTS_LIST.forEach(ach => {
+    if (!gameData.achievements.includes(ach.id) && ach.check(gameData)) {
+      gameData.achievements.push(ach.id);
+      addLog(`🏆 Достижение разблокировано: "${ach.name}"`);
+      showNotification(`🏆 Достижение: ${ach.name}`);
+    }
+  });
+  saveData();
+  renderAchievements();
+}
+
+function showNotification(text) {
+  const notif = document.getElementById('questNotif');
+  notif.textContent = text;
+  notif.classList.add('show');
+  setTimeout(() => notif.classList.remove('show'), 3000);
+}
+
+function switchTab(tabId, el) {
+  document.querySelectorAll('.tab-content').forEach(t => t.classList.remove('active'));
+  document.querySelectorAll('.nav-tab').forEach(t => t.classList.remove('active'));
+  document.getElementById(tabId).classList.add('active');
+  el.classList.add('active');
+}
+
+function openSettings() {
+  document.getElementById('settingsName').value = gameData.name;
+  document.getElementById('settingsAvatar').value = gameData.avatar;
+  document.getElementById('settingsModal').classList.add('show');
+}
+
+function closeSettings() {
+  document.getElementById('settingsModal').classList.remove('show');
+}
+
+function saveSettings() {
+  const name = document.getElementById('settingsName').value.trim();
+  const avatar = document.getElementById('settingsAvatar').value.trim();
+  
+  if (name) gameData.name = name;
+  if (avatar) gameData.avatar = avatar;
+  
+  saveData();
+  renderPlayer();
+  closeSettings();
+  showNotification('✅ Настройки сохранены!');
+}
+
+function resetProgress() {
+  if (confirm('Ты уверен? Весь прогресс будет удалён безвозвратно!')) {
+    localStorage.removeItem('soloLevelingData');
+    location.reload();
+  }
+}
+
+function createParticles() {
+  const container = document.getElementById('particles');
+  const count = 25;
+  
+  for (let i = 0; i < count; i++) {
+    const particle = document.createElement('div');
+    particle.className = 'particle';
+    particle.style.left = Math.random() * 100 + '%';
+    particle.style.animationDelay = Math.random() * 15 + 's';
+    particle.style.animationDuration = (10 + Math.random() * 10) + 's';
+    container.appendChild(particle);
+  }
+}
+
+function checkDailyReset() {
+  const today = new Date().toDateString();
+  const lastReset = localStorage.getItem('lastDailyReset');
+  
+  if (lastReset !== today) {
+    gameData.quests.forEach(q => {
+      if (q.type === 'daily') q.completed = false;
+    });
+    localStorage.setItem('lastDailyReset', today);
+    saveData();
+  }
+}
+
+window.onload = function() {
+  loadData();
+  checkDailyReset();
+  createParticles();
+  renderAll();
+  
+  if (gameData.questsCompleted === 0 && gameData.level === 1) {
+    setTimeout(() => {
+      showNotification('⚔️ Добро пожаловать, Игрок! Начни свой путь к силе!');
+    }, 1000);
+  }
+};
+
+setInterval(saveData, 30000);
+
+// Регистрация Service Worker для PWA
+if ('serviceWorker' in navigator) {
+  window.addEventListener('load', () => {
+    navigator.serviceWorker.register('sw.js')
+      .then(reg => console.log('Service Worker зарегистрирован'))
+      .catch(err => console.log('Ошибка SW:', err));
+  });
+}
+</script>
+
+</body>
+</html>
