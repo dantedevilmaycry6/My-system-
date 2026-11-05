@@ -1,4 +1,4 @@
-const CACHE = 'system-v2';
+const CACHE = 'system-v3';
 const FILES = ['./', 'index.html', 'manifest.json', 'icon.svg'];
 
 self.addEventListener('install', e => {
