@@ -1,13 +1,14 @@
 {
-  "name": "SYSTEM — Тренировка тела и разума",
-  "short_name": "SYSTEM",
-  "start_url": "./index.html",
+  "name": "Система · Мой путь",
+  "short_name": "Система",
+  "description": "Личный мотиватор в стиле Solo Leveling",
+  "start_url": "./",
   "scope": "./",
   "display": "standalone",
   "orientation": "portrait",
-  "background_color": "#06040f",
-  "theme_color": "#06040f",
+  "background_color": "#04060d",
+  "theme_color": "#04060d",
   "icons": [
-    { "src": "icon.svg", "sizes": "any", "type": "image/svg+xml", "purpose": "any maskable" }
+    { "src": "icon.svg", "sizes": "any", "type": "image/svg+xml", "purpose": "any" }
   ]
 }
